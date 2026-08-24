@@ -1,0 +1,26 @@
+# Generated design canvas — ~2 MB of editor payload, re-seeded from the
+# .dc.html artboards + canvas.json via the design skill's seed-canvas helper.
+design/canvas/vulcx-landing-directions.html
+
+# Secrets — never commit. Deploy tokens, RPC keys, wallet keypairs.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+id_*.json
+keypair*.json
+
+# Claude Code local settings. Never publish: this file holds a permission
+# allowlist, and allowlist entries have carried a plaintext GH_TOKEN. It is also
+# reachable over HTTP once deployed, because .nojekyll disables the Jekyll pass
+# that would otherwise drop dotfiles from the Pages artifact.
+.claude/
+
+# Local tooling noise
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

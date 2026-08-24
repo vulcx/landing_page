@@ -1,0 +1,96 @@
+/* Vulcx design tokens — extracted 2026-08-20 from phantom.com, metamask.io, fogo.io
+   Source of truth for landing_page and (later) widget theming. */
+
+:root {
+  /* ---- Fluid root. Everything below is rem, so the page scales as one unit.
+         0.787vw ≈ 11.9px @ 1512 (MetaMask's ratio). ---- */
+  font-size: clamp(0.75rem, 0.787vw, 1rem);
+
+  /* ---- Ground (Fogo) ---- */
+  --vx-bg:            #080420;
+  --vx-bg-raised:     #0F0A2E;
+  --vx-glass:         rgba(255, 255, 255, 0.05);
+  --vx-hairline:      rgba(255, 255, 255, 0.10);
+
+  /* ---- Ember (Fogo primary) ---- */
+  --vx-ember:         #FF3D01;
+  --vx-ember-soft:    rgba(255, 61, 1, 0.16);
+  --vx-ember-glow:    0 0 2.7rem rgba(255, 61, 1, 0.28);
+
+  /* ---- Mint (Fogo secondary / CTA fill) ---- */
+  --vx-mint:          #C3FBA5;
+  --vx-mint-text:     #D5EBD5;
+  /* The CTA is mint-filled, so its glow is mint. An ember glow around a mint
+     pill reads as a rendering artifact — the two hues fight. Ember glow stays
+     for ember-colored elements (the active route node). */
+  --vx-mint-glow:     0 0 2.7rem rgba(195, 251, 165, 0.30);
+
+  /* ---- Ink ---- */
+  --vx-fg:            #D5EBD5;
+  --vx-fg-muted:      rgba(255, 255, 255, 0.63);
+  --vx-fg-invert:     #080420;
+
+  /* ---- Route / chart accents (Fogo palette, use in this order) ---- */
+  --vx-accent-1:      #00AAFF;
+  --vx-accent-2:      #00FF9D;
+  --vx-accent-3:      #EE00FF;
+  --vx-accent-4:      #FFD000;
+
+  /* ---- Semantic ---- */
+  --vx-success:       #2EC08B;   /* Phantom */
+  --vx-warn:          #FFD000;
+  --vx-danger:        #FF3D01;
+
+  /* ---- Signature: ember horizon under the hero ---- */
+  --vx-horizon: radial-gradient(109.5% 75% at 50% 100%,
+    #FF3D01 0%, #FF3D01 23%, #080420 70.6%, #080420 100%);
+
+  /* ---- Type ---- */
+  --vx-font-display: "Clash Display", "Space Grotesk", system-ui, sans-serif;
+  --vx-font-ui:      "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --vx-font-mono:    "Martian Mono", ui-monospace, "SF Mono", monospace;
+
+  --vx-text-display: 6.5rem;
+  --vx-text-h1:      4.4rem;
+  --vx-text-h2:      3.2rem;
+  --vx-text-h3:      1.6rem;
+  --vx-text-body:    1.35rem;
+  --vx-text-label:   1rem;
+  --vx-text-num:     1.2rem;
+
+  --vx-track-tight:  -0.02em;
+  --vx-track-label:   0.08em;
+
+  /* ---- Space (Phantom rhythm) ---- */
+  --vx-space-1: 0.67rem;  --vx-space-2: 1rem;    --vx-space-3: 1.35rem;
+  --vx-space-4: 2rem;     --vx-space-5: 2.7rem;  --vx-space-6: 4rem;
+  --vx-space-7: 5.4rem;
+  --vx-section:  8rem;   /* 96px */
+  --vx-section-hero: 10.7rem; /* 128px */
+
+  /* ---- Radii ---- */
+  --vx-r-pill:  999px;
+  --vx-r-card:  2rem;    /* 24px */
+  --vx-r-panel: 1rem;    /* 12px */
+  --vx-r-chip:  0.67rem; /* 8px */
+
+  /* ---- Motion (Phantom's expo-out, used everywhere) ---- */
+  --vx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --vx-dur:  0.4s;
+}
+
+/* Every number on the page. Quotes must not reflow while refreshing. */
+.vx-num {
+  font-family: var(--vx-font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--vx-text-num);
+  font-weight: 500;
+}
+
+/* Uppercase mono micro-label — Fogo's nav/CTA voice. */
+.vx-label {
+  font-family: var(--vx-font-mono);
+  font-size: var(--vx-text-label);
+  letter-spacing: var(--vx-track-label);
+  text-transform: uppercase;
+}

@@ -1,0 +1,32 @@
+# Vulcx
+
+> Vulcx is a DEX aggregator and swap-routing engine for Fogo Chain. Give it a token
+> pair and an amount; it searches every pool on Fogo — up to five hops, splitting
+> across pools when splitting wins — and returns a transaction you can sign.
+
+## Endpoints
+
+Base URL: https://api.vulcx.xyz
+
+- `GET /api/v1/quote` — best route and estimated output for a pair
+- `POST /api/v1/swap` — a ready-to-sign transaction
+- `POST /api/v1/instructions` — raw instructions, for callers assembling their own transaction
+- `GET /api/v1/price` — spot/mid USD price derived from live pool state
+- `GET /api/v1/stream` — WebSocket quote stream (this one requires a key)
+
+Rate limits are one published budget for every caller, debited by request cost
+rather than request count. Full reference: https://docs.vulcx.xyz
+
+## Liquidity sources
+
+Vortex (concentrated liquidity), Fluxbeam (constant product and bonding curve),
+and Moonit (bonding curve).
+
+## Links
+
+- Documentation: https://docs.vulcx.xyz
+- Machine-readable docs index: https://docs.vulcx.xyz/llms.txt
+- Source: https://github.com/vulcx
+- X: https://x.com/vulcx_xyz
+- Telegram: https://t.me/vulcxsupport
+- Chain: https://fogo.io

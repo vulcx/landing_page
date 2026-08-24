@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vulcx — Swap routing for Fogo</title>
+<meta name="description" content="Give Vulcx a token pair and an amount. It searches every pool on Fogo — up to five hops, splitting when that wins — and returns a signable transaction.">
+<link rel="canonical" href="https://vulcx.xyz/">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#080420">
+
+<!-- Open Graph. og:image must be an absolute URL and a raster format: scrapers
+     do not fetch relative paths and X does not render SVG. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vulcx">
+<meta property="og:url" content="https://vulcx.xyz/">
+<meta property="og:title" content="Vulcx — Swap routing for Fogo">
+<meta property="og:description" content="Give Vulcx a token pair and an amount. It searches every pool on Fogo — up to five hops, splitting when that wins — and returns a signable transaction.">
+<meta property="og:image" content="https://vulcx.xyz/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Vulcx — swap routing for Fogo. One pair in, every pool searched.">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@vulcx_xyz">
+<meta name="twitter:creator" content="@vulcx_xyz">
+<meta name="twitter:title" content="Vulcx — Swap routing for Fogo">
+<meta name="twitter:description" content="Give Vulcx a token pair and an amount. It searches every pool on Fogo — up to five hops, splitting when that wins — and returns a signable transaction.">
+<meta name="twitter:image" content="https://vulcx.xyz/assets/og.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=clash-display@600,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Martian+Mono:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="design/tokens.css">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0;
+    background: var(--vx-bg);
+    color: var(--vx-fg);
+    font-family: var(--vx-font-ui);
+    font-size: var(--vx-text-body);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--vx-mint); text-decoration: none; transition: color var(--vx-dur) var(--vx-ease); }
+  a:hover { color: var(--vx-ember); }
+  h1, h2, h3 { font-family: var(--vx-font-display); font-weight: 600; letter-spacing: var(--vx-track-tight); margin: 0; text-wrap: balance; }
+  h1 { font-size: var(--vx-text-display); line-height: 0.95; color: #fff; }
+  h2 { font-size: var(--vx-text-h2); line-height: 1.02; color: #fff; }
+  h3 { font-size: var(--vx-text-h3); line-height: 1.3; color: #fff; font-weight: 500; }
+  p  { margin: 0; color: var(--vx-fg-muted); text-wrap: pretty; }
+
+  .shell { width: 100%; max-width: 104rem; margin: 0 auto; padding-inline: var(--vx-space-5); }
+  .eyebrow { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+             letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-ember); }
+
+  /* ---- nav ---- */
+  .nav { position: sticky; top: 0; z-index: 20; background: rgba(8,4,32,0.82);
+         backdrop-filter: blur(12px); border-bottom: 1px solid var(--vx-hairline); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; gap: var(--vx-space-4);
+            padding-block: var(--vx-space-3); }
+  .brand { display: flex; align-items: center; gap: 0.7rem; }
+  .brand span { font-family: var(--vx-font-mono); font-size: 1.25rem; font-weight: 500;
+                letter-spacing: 0.06em; color: #fff; }
+  .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); }
+  .nav-links a { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+                 letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-muted); }
+  .nav-links a:hover { color: #fff; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+         font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+         letter-spacing: var(--vx-track-label); text-transform: uppercase; font-weight: 500;
+         border-radius: var(--vx-r-pill); padding: 1.15rem 2.1rem; min-height: 44px;
+         border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+         transition: background-color var(--vx-dur) var(--vx-ease), color var(--vx-dur) var(--vx-ease),
+                     border-color var(--vx-dur) var(--vx-ease); }
+  .btn-primary { background: var(--vx-mint); color: var(--vx-fg-invert); box-shadow: var(--vx-mint-glow); }
+  .btn-primary:hover { background: #fff; color: var(--vx-fg-invert); }
+  .btn-ghost { border-color: rgba(255,255,255,0.18); color: var(--vx-fg); }
+  .btn-ghost:hover { border-color: var(--vx-mint); color: var(--vx-mint); }
+
+  /* ---- hero ----
+     One light source, and it is motivated: the ember sits behind the live
+     panel, so the hottest point on the page is the thing that is actually
+     running. The grid overlay that used to compete with it is gone. */
+  .hero { position: relative; overflow: hidden; padding-block: var(--vx-section-hero) var(--vx-space-6); }
+  .hero::after { content: ""; position: absolute; pointer-events: none; z-index: 0;
+    width: 46rem; height: 46rem; right: -8rem; top: 50%; transform: translateY(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,61,1,0.30) 0%, rgba(255,61,1,0) 64%); }
+  .hero-in { position: relative; z-index: 1;
+             display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+             gap: var(--vx-space-6); align-items: center; text-align: left; }
+  /* align-items must stay stretch: flex-start sizes children to their content,
+     and the nowrap CTA pills then push the column wider than the viewport. */
+  .hero-copy { display: flex; flex-direction: column; align-items: stretch;
+               gap: var(--vx-space-3); }
+  .hero h1 { font-size: clamp(3.4rem, 4.4vw + 1rem, 5.6rem); }
+  .hero p.lede { font-size: 1.45rem; max-width: 34rem; }
+  .hero-cta { display: flex; gap: var(--vx-space-2); flex-wrap: wrap;
+              justify-content: flex-start; margin-top: var(--vx-space-2); }
+  /* The missing middle of the type scale — bridges the display size and the
+     mono fine print, and names what the panel is about to demonstrate. */
+  .hero-proof { display: flex; align-items: center; gap: var(--vx-space-2);
+                flex-wrap: wrap; margin-top: var(--vx-space-2);
+                font-family: var(--vx-font-mono); font-size: 1rem;
+                letter-spacing: 0.04em; color: rgba(255,255,255,0.5); }
+  .hero-proof b { color: #fff; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .hero-proof span { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .hero-proof span + span::before { content: ""; width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(255,255,255,0.3); margin-right: 0.3rem; }
+  /* The panel is the hero object; it carries elevation nothing else on the
+     page does, so it reads as live rather than as one more glass card. */
+  .hero-in .route { margin-top: 0; background: rgba(15,10,46,0.72);
+    backdrop-filter: blur(18px); border-color: rgba(255,255,255,0.16);
+    box-shadow: 0 2.4rem 5rem rgba(0,0,0,0.5); }
+  /* In a column this narrow the horizontal token → legs → token arrangement
+     starves the split bars, which are the one thing on the row carrying
+     information. Stack it and give the bars the full width. */
+  .hero-in .route-body { flex-direction: column; align-items: stretch;
+                         gap: var(--vx-space-3); }
+  .hero-in .token { flex-direction: row; width: auto; align-items: center;
+                    justify-content: space-between; }
+  .hero-in .token-badge { width: 3.2rem; height: 3.2rem; font-size: 0.85rem; }
+  .hero-in .leg-venue { width: 6rem; }
+  .hero-in .leg-kind { width: 7rem; }
+
+  /* ---- route card (the signature) ---- */
+  .route { width: 100%; margin-top: var(--vx-space-6); background: var(--vx-glass);
+           border: 1px solid var(--vx-hairline); border-radius: 1.7rem;
+           padding: var(--vx-space-4) var(--vx-space-5); display: flex; flex-direction: column;
+           gap: var(--vx-space-3); text-align: left; }
+  .route-head { display: flex; align-items: center; justify-content: space-between;
+                gap: var(--vx-space-3); flex-wrap: wrap; }
+  .mono-mini { font-family: var(--vx-font-mono); font-size: 0.85rem; letter-spacing: 0.1em;
+               text-transform: uppercase; color: rgba(255,255,255,0.45); }
+  .live { display: inline-flex; align-items: center; gap: 0.7rem; }
+  .dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--vx-accent-2);
+         box-shadow: 0 0 0 0 rgba(0,255,157,0.55); animation: pulse 2.6s var(--vx-ease) infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,255,157,0.5); }
+                     70% { box-shadow: 0 0 0 0.75rem rgba(0,255,157,0); }
+                     100% { box-shadow: 0 0 0 0 rgba(0,255,157,0); } }
+
+  .route-body { display: flex; align-items: center; gap: var(--vx-space-4); }
+  .token { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; flex-shrink: 0; width: 11rem; }
+  .token-badge { width: 5rem; height: 5rem; border-radius: 50%; display: flex; align-items: center;
+                 justify-content: center; font-family: var(--vx-font-mono); font-size: 1rem;
+                 background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); color: #fff; }
+  .token-out .token-badge { background: rgba(195,251,165,0.14); border-color: var(--vx-mint); color: var(--vx-mint); }
+  .amount { font-family: var(--vx-font-mono); font-size: var(--vx-text-num);
+            font-variant-numeric: tabular-nums; color: #fff; }
+  .token-out .amount { color: var(--vx-mint); }
+
+  .legs { flex-grow: 1; display: flex; flex-direction: column; gap: 0.9rem; }
+  .leg { display: flex; align-items: center; gap: var(--vx-space-2); }
+  .leg-venue { font-family: var(--vx-font-mono); font-size: 1rem; width: 7.5rem; flex-shrink: 0; }
+  .leg-track { flex-grow: 1; height: 0.85rem; border-radius: var(--vx-r-pill);
+               background: rgba(255,255,255,0.06); overflow: hidden; }
+  .leg-fill { display: block; height: 100%; border-radius: var(--vx-r-pill); width: 0;
+              transition: width 1.1s var(--vx-ease); }
+  .leg-pct { font-family: var(--vx-font-mono); font-size: 1rem; color: #fff; width: 4rem;
+             text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  .leg-kind { font-family: var(--vx-font-mono); font-size: 0.85rem; color: rgba(255,255,255,0.35);
+              width: 10.5rem; text-align: right; flex-shrink: 0; white-space: nowrap; }
+
+  .rule { height: 1px; background: rgba(255,255,255,0.08); }
+  .route-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--vx-space-3); }
+  .meta-k { display: block; font-family: var(--vx-font-mono); font-size: 0.8rem;
+            letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+  .meta-v { display: block; margin-top: 0.4rem; font-family: var(--vx-font-mono);
+            font-size: 1.35rem; color: #fff; font-variant-numeric: tabular-nums; }
+
+  /* ---- live swap panel ---- */
+  .sp { display: flex; flex-direction: column; gap: var(--vx-space-3); }
+  .sp-head { display: flex; align-items: center; justify-content: space-between;
+             gap: var(--vx-space-3); flex-wrap: wrap; }
+  .sp-freshwrap { height: 2px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+  .sp-fresh { display: block; height: 100%; background: var(--vx-accent-2);
+              transform-origin: left center; transform: scaleX(0); }
+  .sp.is-stale .sp-fresh { background: rgba(255,255,255,0.25); }
+  .sp.is-error .sp-fresh { background: var(--vx-ember); transform: scaleX(1); }
+
+  .sp-rows { display: flex; flex-direction: column; gap: 0.5rem; position: relative; }
+  .sp-row { display: flex; align-items: center; gap: var(--vx-space-2);
+            background: rgba(255,255,255,0.04); border: 1px solid var(--vx-hairline);
+            border-radius: var(--vx-r-panel); padding: var(--vx-space-3);
+            transition: border-color var(--vx-dur) var(--vx-ease); }
+  .sp-row:focus-within { border-color: rgba(255,255,255,0.28); }
+  .sp-lab { font-family: var(--vx-font-mono); font-size: 0.8rem; letter-spacing: 0.09em;
+            text-transform: uppercase; color: rgba(255,255,255,0.4); width: 8rem; flex-shrink: 0; }
+  .sp-amt { flex-grow: 1; min-width: 0; background: none; border: 0; outline: none;
+            font-family: var(--vx-font-mono); font-size: 2rem; font-variant-numeric: tabular-nums;
+            color: #fff; padding: 0; }
+  .sp-amt::placeholder { color: rgba(255,255,255,0.25); }
+  .sp-amt[readonly] { color: var(--vx-mint); }
+  .sp-pick { position: relative; flex-shrink: 0; }
+  .sp-token { display: flex; align-items: center; gap: 0.6rem; appearance: none;
+              background: rgba(255,255,255,0.07);
+              border: 1px solid rgba(255,255,255,0.14); border-radius: var(--vx-r-pill);
+              color: #fff; font-family: var(--vx-font-mono); font-size: 1rem;
+              padding: 0.6rem 1.1rem; min-height: 44px; cursor: pointer;
+              transition: border-color var(--vx-dur) var(--vx-ease); }
+  .sp-token:hover { border-color: var(--vx-mint); }
+  .sp-token svg { opacity: 0.5; }
+  .sp-token-logo { width: 1.7rem; height: 1.7rem; border-radius: 50%; display: block;
+                   object-fit: cover; flex-shrink: 0; }
+  .sp-tokenlist { position: absolute; right: 0; top: calc(100% + 0.5rem); z-index: 5;
+                  min-width: 100%; display: flex; flex-direction: column; gap: 0.2rem;
+                  background: #0F0A2E; border: 1px solid var(--vx-hairline);
+                  border-radius: var(--vx-r-panel); padding: 0.4rem;
+                  box-shadow: 0 1rem 2.5rem rgba(0,0,0,0.5); }
+  .sp-tokenlist button { display: flex; align-items: center; gap: 0.6rem; width: 100%;
+                         background: none; border: 0; border-radius: var(--vx-r-chip);
+                         color: var(--vx-fg-muted); font-family: var(--vx-font-mono);
+                         font-size: 1rem; padding: 0.6rem 0.9rem; min-height: 40px;
+                         cursor: pointer; text-align: left;
+                         transition: background-color var(--vx-dur) var(--vx-ease),
+                                     color var(--vx-dur) var(--vx-ease); }
+  .sp-tokenlist button:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .sp-tokenlist button.on { color: var(--vx-mint); }
+  .sp-flip { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+             z-index: 2; width: 2.9rem; height: 2.9rem; border-radius: 50%;
+             background: #0F0A2E; border: 1px solid var(--vx-hairline);
+             color: var(--vx-fg-muted); display: flex; align-items: center;
+             justify-content: center; cursor: pointer;
+             transition: color var(--vx-dur) var(--vx-ease), border-color var(--vx-dur) var(--vx-ease); }
+  .sp-flip:hover { color: var(--vx-ember); border-color: var(--vx-ember); }
+  .sp-warn { margin: 0; display: flex; align-items: center; gap: 0.7rem;
+             font-family: var(--vx-font-mono); font-size: 0.95rem; line-height: 1.5;
+             border-radius: var(--vx-r-chip); padding: 0.85rem 1.1rem;
+             background: rgba(255,61,1,0.10); border: 1px solid rgba(255,61,1,0.35);
+             color: #FF7A47; }
+  .sp-warn.sev-extreme { background: rgba(255,61,1,0.18); border-color: var(--vx-ember); color: #FFB199; }
+  .sp-msg { font-family: var(--vx-font-mono); font-size: 1rem; color: rgba(255,255,255,0.4);
+            padding-block: 0.9rem; }
+  .sp.is-error .sp-msg { color: var(--vx-ember); }
+  #swap-panel .legs { min-height: 6.2rem; justify-content: center; }
+  #swap-panel .leg-fill { transition: width var(--vx-dur) var(--vx-ease); }
+
+  @media (max-width: 720px) {
+    .sp-row { flex-wrap: wrap; }
+    .sp-lab { width: 100%; }
+    .sp-amt { font-size: 1.6rem; }
+    .sp-flip { position: static; transform: none; align-self: center; }
+    .sp-rows { align-items: stretch; }
+  }
+
+  a.leg-kind { color: rgba(255,255,255,0.35); text-decoration: none;
+               transition: color var(--vx-dur) var(--vx-ease); }
+  a.leg-kind:hover { color: var(--vx-mint); text-decoration: underline; }
+
+  .sp-actions { display: flex; align-items: center; justify-content: space-between;
+                gap: var(--vx-space-3); flex-wrap: wrap; }
+  .sp-slip { display: flex; align-items: center; gap: 0.5rem; }
+  .sp-slip .mono-mini { margin-right: 0.4rem; }
+  .sp-slip button { font-family: var(--vx-font-mono); font-size: 0.9rem;
+                    background: rgba(255,255,255,0.05); color: var(--vx-fg-muted);
+                    border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-pill);
+                    padding: 0.55rem 1rem; min-height: 36px; cursor: pointer;
+                    transition: color var(--vx-dur) var(--vx-ease),
+                                border-color var(--vx-dur) var(--vx-ease); }
+  .sp-slip button:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+  .sp-slip button.on { color: var(--vx-fg-invert); background: var(--vx-mint);
+                       border-color: var(--vx-mint); }
+  .sp-go { min-width: 15rem; }
+  .sp-go:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+  .sp-wallet { background: rgba(195,251,165,0.12); border: 1px solid rgba(195,251,165,0.4);
+               color: var(--vx-mint); border-radius: var(--vx-r-pill); padding: 0.35rem 0.9rem; }
+  .sp-picker { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+               padding-top: 0.4rem; }
+  .sp-picker button { font-family: var(--vx-font-mono); font-size: 0.95rem; color: #fff;
+                      background: rgba(255,255,255,0.06); border: 1px solid var(--vx-hairline);
+                      border-radius: var(--vx-r-pill); padding: 0.7rem 1.3rem;
+                      min-height: 44px; cursor: pointer;
+                      transition: border-color var(--vx-dur) var(--vx-ease); }
+  .sp-picker button:hover { border-color: var(--vx-mint); }
+  .sp-txmsg { margin: 0; font-family: var(--vx-font-mono); font-size: 0.95rem;
+              line-height: 1.5; color: var(--vx-fg-muted); }
+  .sp-txmsg.ok { color: var(--vx-accent-2); }
+  .sp-txmsg.bad { color: #FF7A47; }
+  .sp-txmsg a { color: inherit; text-decoration: underline; }
+
+  /* ---- sections ---- */
+  section { padding-block: var(--vx-section); }
+  .sec-head { display: flex; flex-direction: column; gap: var(--vx-space-2); max-width: 52rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: var(--vx-space-3); margin-top: var(--vx-space-5); }
+  .card { background: var(--vx-glass); border: 1px solid var(--vx-hairline);
+          border-radius: var(--vx-r-card); padding: var(--vx-space-4);
+          display: flex; flex-direction: column; gap: var(--vx-space-2);
+          transition: border-color var(--vx-dur) var(--vx-ease); }
+  .card:hover { border-color: rgba(255,255,255,0.22); }
+  .card code { font-family: var(--vx-font-mono); font-size: 1rem; color: var(--vx-mint); }
+  .card p { font-size: 1.2rem; }
+
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--vx-space-6); align-items: center; }
+  .panel { background: var(--vx-glass); border: 1px solid var(--vx-hairline);
+           border-radius: var(--vx-r-panel); padding: var(--vx-space-4); overflow-x: auto; }
+  .panel pre { margin: 0; font-family: var(--vx-font-mono); font-size: 1rem; line-height: 2;
+               color: var(--vx-fg); font-variant-numeric: tabular-nums; }
+  .c-key { color: rgba(255,255,255,0.5); } .c-ember { color: #FF7A47; } .c-mint { color: var(--vx-accent-2); }
+
+  .table-wrap { overflow-x: auto; margin-top: var(--vx-space-4); }
+  .fee-table { width: 100%; min-width: 30rem; border-collapse: collapse; }
+  .fee-table th, .fee-table td { text-align: left; padding: var(--vx-space-2) var(--vx-space-2);
+    border-bottom: 1px solid var(--vx-hairline); font-size: 1.2rem; }
+  .fee-table th { font-family: var(--vx-font-mono); font-size: 0.85rem; letter-spacing: 0.09em;
+    text-transform: uppercase; color: rgba(255,255,255,0.4); font-weight: 400; }
+  .fee-table td:first-child { font-family: var(--vx-font-mono); color: #fff; }
+  .fee-table .keep { color: var(--vx-mint); }
+
+  .limit-row { display: flex; align-items: baseline; gap: var(--vx-space-3);
+               padding-block: var(--vx-space-2); border-bottom: 1px solid var(--vx-hairline); }
+  .limit-cost { font-family: var(--vx-font-mono); font-size: 1.6rem; color: var(--vx-ember);
+                font-variant-numeric: tabular-nums; width: 3rem; flex-shrink: 0; }
+  .limit-ep { font-family: var(--vx-font-mono); font-size: 1.1rem; color: #fff; flex-grow: 1; }
+  .limit-note { font-size: 1.1rem; color: var(--vx-fg-muted); }
+
+  /* ---- closing ---- */
+  .close { position: relative; overflow: hidden; text-align: center;
+           padding-block: var(--vx-section-hero); }
+  .close::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: var(--vx-horizon); opacity: 0.9; }
+  .close-in { position: relative; z-index: 1; display: flex; flex-direction: column;
+              align-items: center; gap: var(--vx-space-3); }
+
+  footer { border-top: 1px solid var(--vx-hairline); padding-block: var(--vx-space-4); }
+  .foot-in { display: flex; align-items: center; justify-content: space-between;
+             gap: var(--vx-space-3); flex-wrap: wrap; }
+  .foot-links { display: flex; gap: var(--vx-space-3); flex-wrap: wrap; }
+  .foot-in a, .foot-in span { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+    letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-muted); }
+
+  /* ---- responsive ---- */
+  @media (max-width: 1000px) {
+    .split { grid-template-columns: 1fr; gap: var(--vx-space-4); }
+    .grid-3 { grid-template-columns: 1fr; }
+    .route-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .nav-links { display: none; }
+    .route-body { flex-direction: column; align-items: stretch; gap: var(--vx-space-3); }
+    .token { flex-direction: row; width: auto; justify-content: space-between; align-items: center; }
+    .leg-kind { display: none; }
+    /* Copy first, panel under it — and the ember follows the panel down.
+       minmax(0,1fr), not 1fr: a bare 1fr floors the track at the content's
+       min-content width, which the nowrap CTA pills blow past. */
+    .hero-in { grid-template-columns: minmax(0, 1fr); gap: var(--vx-space-5); }
+    .hero p.lede { max-width: none; }
+    .hero::after { width: 34rem; height: 34rem; right: -12rem; top: auto; bottom: -6rem;
+                   transform: none; }
+  }
+  @media (max-width: 720px) {
+    :root { font-size: 15px; }
+    h1 { font-size: 3.1rem; }
+    h2 { font-size: 2.1rem; }
+    .hero p.lede { font-size: 1.15rem; }
+    .shell { padding-inline: 1.4rem; }
+    .route { padding: 1.4rem; border-radius: 1.1rem; }
+    .route-body { gap: 1.4rem; }
+    .token-badge { width: 3rem; height: 3rem; font-size: 0.8rem; }
+    .leg-venue { width: 5.4rem; font-size: 0.85rem; }
+    .hero-cta .btn, .close .btn { width: 100%; }
+    .nav-in .btn { padding: 0.85rem 1.2rem; font-size: 0.8rem; }
+    .limit-row { flex-wrap: wrap; gap: 0.6rem; }
+    .sp-actions { flex-direction: column; align-items: stretch; }
+    .sp-slip { justify-content: space-between; }
+    .sp-go { width: 100%; min-width: 0; }
+    .sp-wallet { order: 3; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+    .leg-fill { transition: none; }
+  }
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://vulcx.xyz/#org",
+      "name": "Vulcx",
+      "url": "https://vulcx.xyz/",
+      "logo": "https://vulcx.xyz/assets/icon-512.png",
+      "description": "Vulcx is a DEX aggregator and swap-routing engine for Fogo Chain.",
+      "sameAs": [
+        "https://x.com/vulcx_xyz",
+        "https://t.me/vulcxsupport",
+        "https://github.com/vulcx"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://vulcx.xyz/#site",
+      "url": "https://vulcx.xyz/",
+      "name": "Vulcx",
+      "publisher": { "@id": "https://vulcx.xyz/#org" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Vulcx API",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "url": "https://vulcx.xyz/",
+      "sameAs": "https://docs.vulcx.xyz",
+      "publisher": { "@id": "https://vulcx.xyz/#org" },
+      "featureList": [
+        "Best-price routing across every pool on Fogo",
+        "Multi-hop routes up to five hops",
+        "Split routing across pools when splitting improves the price",
+        "Ready-to-sign transactions, or raw instructions"
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="shell nav-in">
+    <a class="brand" href="/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="vx-mark" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#C3FBA5"/>
+            <stop offset="1" stop-color="#FF3D01"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#vx-mark)" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+      </svg>
+      <span>VULCX</span>
+    </a>
+    <div class="nav-links">
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="#endpoints">Quote API</a>
+      <a href="#fees">Fees</a>
+      <a href="#self-host">Self-host</a>
+      <a href="https://github.com/vulcx">GitHub</a>
+    </div>
+    <a class="btn btn-primary" href="https://docs.vulcx.xyz">Start routing</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="shell hero-in">
+    <div class="hero-copy">
+      <span class="eyebrow">Swap routing for Fogo</span>
+      <h1>One pair in.<br>Every pool searched.</h1>
+      <p class="lede">Splitting beats a single path more often than you would think. When it does, Vulcx splits — and every leg comes back to you, named and weighted.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://docs.vulcx.xyz">Get a quote</a>
+        <a class="btn btn-ghost" href="https://www.npmjs.com/package/@vulcx/sdk">npm i @vulcx/sdk</a>
+      </div>
+      <div class="hero-proof">
+        <span><b>3</b> venues</span>
+        <span>up to <b>5</b> hops</span>
+        <span>live pool state</span>
+      </div>
+    </div>
+
+    <div id="swap-panel" class="route"></div>
+  </div>
+</header>
+
+<section id="endpoints">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="eyebrow">The API</span>
+      <h2>Three endpoints carry all the traffic.</h2>
+      <p>Use <code style="font-family: var(--vx-font-mono); color: var(--vx-mint)">/swap</code> when you want the fast path. Use <code style="font-family: var(--vx-font-mono); color: var(--vx-mint)">/instructions</code> when you need to wrap the swap inside something larger — creating token accounts, attaching a memo, composing it into a liquidation.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <code>GET /api/v1/quote</code>
+        <h3>Price discovery</h3>
+        <p>What will I get, and what will it cost. An in-memory read — nothing in this path touches RPC.</p>
+      </div>
+      <div class="card">
+        <code>POST /api/v1/swap</code>
+        <h3>A signed-ready transaction</h3>
+        <p>Built server-side against the exact route you were quoted, with min-out anchored to that price.</p>
+      </div>
+      <div class="card">
+        <code>POST /api/v1/instructions</code>
+        <h3>Raw instructions</h3>
+        <p>Compose the transaction yourself. <code>/cpi/route-accounts</code> returns the account list if you are calling from another program.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell split">
+    <div class="sec-head">
+      <span class="eyebrow">Firm quotes</span>
+      <h2>Price-or-fail, before a transaction exists.</h2>
+      <p>Every quote carries a <code style="font-family: var(--vx-font-mono); color: var(--vx-mint)">quoteId</code>. Hand it back and the engine replays that exact route rather than re-routing against whatever the book looks like a second later.</p>
+      <p>Add <code style="font-family: var(--vx-font-mono); color: var(--vx-mint)">"firm": true</code> inside the window and slippage collapses to a fixed margin. If the market moved past it you get a <code style="font-family: var(--vx-font-mono); color: var(--vx-ember)">409</code> — not a signed transaction that reverts on chain.</p>
+      <p>Quotes are Ed25519-signed. The verification key is public, so a quote can be checked by someone who does not trust the server that issued it.</p>
+    </div>
+    <div class="panel">
+<pre><span class="c-key">POST</span> /api/v1/swap
+{
+  <span class="c-key">"quoteId"</span>: <span class="c-mint">"q_8f31c…"</span>,
+  <span class="c-key">"firm"</span>: <span class="c-mint">true</span>
+}
+
+<span class="c-key">→</span> <span class="c-ember">409 Conflict</span>
+{
+  <span class="c-key">"error"</span>: <span class="c-ember">"quote_drifted"</span>,
+  <span class="c-key">"marginBps"</span>: <span class="c-ember">8</span>,
+  <span class="c-key">"observedBps"</span>: <span class="c-ember">14</span>
+}
+
+<span class="c-key">// nothing was signed. nothing reverted.</span></pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shell split">
+    <div class="panel">
+<pre><span class="c-key">// how fresh is the price you were quoted</span>
+
+<span class="c-key">poll-based</span>    state as of the last refresh
+              <span class="c-key">└─</span> stale by up to the interval
+
+<span class="c-key">Vulcx</span>         state as of the current slot
+              <span class="c-mint">└─ nothing in the quote path polls</span></pre>
+    </div>
+    <div class="sec-head">
+      <span class="eyebrow">Ingestion</span>
+      <h2>State that is current to the slot, not to the last refresh.</h2>
+      <p>The engine consumes account updates as the chain produces them and keeps pool state in memory. Nothing in the quote path polls, and nothing in it calls RPC — a quote reads state that is current to the slot rather than to whenever the last refresh happened.</p>
+      <p>The watched set covers every pool and the accounts behind it, tick arrays and vaults included, so a quote is never priced off a partial book. No state is silently missed.</p>
+    </div>
+  </div>
+</section>
+
+<section id="fees">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="eyebrow">Fees</span>
+      <h2>You keep every basis point you charge.</h2>
+      <p>Two independent rates on every swap. They add — yours is not a share of ours, and ours does not shrink when you raise yours. Their sum is capped at 100 bps, enforced both on-chain and in the API, so an over-cap request comes back as a <code style="font-family: var(--vx-font-mono); color: var(--vx-ember)">400</code> rather than as a transaction that fails after your user has signed it.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="fee-table">
+      <thead>
+        <tr><th>Rate</th><th>Who sets it</th><th>Who keeps it</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>platformFeeBps</td><td>Vulcx</td><td>Vulcx</td></tr>
+        <tr><td>integratorFeeBps</td><td>You, per request</td><td class="keep">You, in full</td></tr>
+      </tbody>
+      </table>
+    </div>
+    <p style="margin-top: var(--vx-space-3); font-size: 1.15rem;">Every quote, swap, instruction set and CPI account list reports both rates separately — because one blended number cannot tell you what you earned.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shell split">
+    <div class="sec-head">
+      <span class="eyebrow">Rate limits</span>
+      <h2>Debited by what a request costs, not how many you made.</h2>
+      <p>Your bucket is charged per the table on the right, so the same budget is many quotes, or a few transaction builds, or any mix. Start keyless — about 1 unit per second, burst 5, enough to hold a live price on screen. A key raises it to [YOUR KEYED LIMIT].</p>
+      <p>Deliberately flat within a tier. A ceiling derived from trailing volume cannot be capacity-planned against, and it throttles a new integration hardest on day one — exactly when its quote-to-swap ratio is at its worst.</p>
+    </div>
+    <div>
+      <div class="limit-row"><span class="limit-cost">1</span><span class="limit-ep">/quote · /price</span><span class="limit-note">an in-memory read</span></div>
+      <div class="limit-row"><span class="limit-cost">3</span><span class="limit-ep">/pools/* · /cpi/route-accounts</span><span class="limit-note">a corpus walk</span></div>
+      <div class="limit-row"><span class="limit-cost">5</span><span class="limit-ep">/swap · /instructions</span><span class="limit-note">routing plus construction</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="self-host">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="eyebrow">Self-hosting</span>
+      <h2>One binary. No CGO, no database in the request path.</h2>
+      <p>Supply an RPC endpoint with Yellowstone gRPC access; everything else is in the image. Self-hosting changes who runs the engine — it does not change the on-chain fee model, because the protocol fee is collected by the program, not by the API.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Fogo today</h3>
+        <p>The engine is Fogo-specific in exactly one place that matters: how pool state is ingested.</p>
+      </div>
+      <div class="card">
+        <h3>Solana planned</h3>
+        <p>The blocker is ingestion and per-DEX dispatch, not the routing. <code>CHAIN=solana</code> refuses to start on purpose.</p>
+      </div>
+      <div class="card">
+        <h3>Streaming</h3>
+        <p>Subscribe to pairs over WebSocket and get a push when the pools change — plus an <code>invalidate</code> when a firm quote drifts, so a UI can grey out a stale price.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <div class="shell close-in">
+    <h2>Give it a pair and an amount.</h2>
+    <p style="max-width: 40rem;">The rest — every pool on the chain, up to five hops, split where splitting wins — is the part you do not have to write.</p>
+    <a class="btn btn-primary" href="https://docs.vulcx.xyz" style="margin-top: var(--vx-space-2)">Start routing</a>
+  </div>
+</section>
+
+<footer>
+  <div class="shell foot-in">
+    <span>Vulcx · Swap routing for Fogo</span>
+    <div class="foot-links">
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="https://docs.vulcx.xyz/llms.txt">llms.txt</a>
+      <a href="https://github.com/vulcx" rel="me">GitHub</a>
+      <a href="https://x.com/vulcx_xyz" rel="me">X</a>
+      <a href="https://t.me/vulcxsupport" rel="me">Telegram</a>
+      <a href="https://fogo.io">Fogo</a>
+    </div>
+  </div>
+</footer>
+
+<script src="token-meta.js" defer></script>
+<script src="wallet.js" defer></script>
+<script src="swap-panel.js" defer></script>
+
+</body>
+</html>

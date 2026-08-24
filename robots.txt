@@ -1,0 +1,5 @@
+# https://vulcx.xyz/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://vulcx.xyz/sitemap.xml

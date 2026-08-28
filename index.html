@@ -10,7 +10,7 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#0B0B0F">
 
 <!-- Open Graph. og:image must be an absolute URL and a raster format: scrapers
      do not fetch relative paths and X does not render SVG. -->
@@ -33,7 +33,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="design/tokens.css">
 
 <style>
@@ -47,357 +47,390 @@
     font-size: var(--vx-text-body);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    counter-reset: sec;
   }
   a { color: var(--vx-fg); text-decoration: none; transition: color var(--vx-dur) var(--vx-ease); }
   a:hover { color: var(--vx-ember); }
 
-  /* A 400-weight serif carries the hierarchy. Nothing on this page is bold
-     except the sans micro-labels — size and the ink/muted split do the work. */
-  h1, h2, h3 { font-family: var(--vx-font-display); font-weight: 400;
+  h1, h2, h3 { font-family: var(--vx-font-display); font-weight: 600;
                letter-spacing: var(--vx-track-tight); margin: 0; text-wrap: balance;
                color: var(--vx-fg); }
-  h1 { font-size: var(--vx-text-h1); line-height: 1.14; }
-  h2 { font-size: var(--vx-text-h2); line-height: 1.12; }
-  h3 { font-size: var(--vx-text-h3); line-height: 1.25; }
+  h1 { font-size: var(--vx-text-h1); line-height: 0.94; font-stretch: var(--vx-wdth-display);
+       text-transform: uppercase; }
+  h2 { font-size: var(--vx-text-h2); line-height: 1.04; font-stretch: var(--vx-wdth-head); }
+  h3 { font-size: var(--vx-text-h3); line-height: 1.3; font-stretch: var(--vx-wdth-ui); }
   p  { margin: 0; color: var(--vx-fg-muted); text-wrap: pretty; }
 
   .shell { width: 100%; max-width: 104rem; margin: 0 auto; padding-inline: var(--vx-space-5); }
-  .eyebrow { font-family: var(--vx-font-ui); font-size: var(--vx-text-label); font-weight: 600;
-             letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-ember); }
 
-  /* Inline code. Previously each instance carried its own inline style; one
-     rule now, so the accent cannot drift between paragraphs. */
+  /* Sections are numbered by CSS counter — no markup carries an index, so
+     reordering the page cannot desync the numbering. Reads as a spec. */
+  .eyebrow { display: inline-flex; align-items: center; gap: 0.6rem;
+             font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+             letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-ember); }
+  section .sec-head .eyebrow::before { content: counter(sec, decimal-leading-zero);
+             color: var(--vx-fg-faint); }
+  section .sec-head .eyebrow::after { content: ""; width: 2.4rem; height: 1px;
+             background: var(--vx-ember); opacity: 0.5; }
+
   code { font-family: var(--vx-font-mono); font-size: 0.88em; color: var(--vx-fg);
-         background: rgba(34,34,34,0.06); border-radius: var(--vx-r-chip);
-         padding: 0.12em 0.36em; }
+         background: rgba(255,255,255,0.07); border-radius: var(--vx-r-chip);
+         padding: 0.12em 0.38em; }
 
   /* ---- nav ---- */
-  .nav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,0.86);
-         backdrop-filter: blur(12px); border-bottom: 1px solid var(--vx-hairline); }
+  .nav { position: sticky; top: 0; z-index: 20; background: rgba(11,11,15,0.88);
+         backdrop-filter: blur(14px); border-bottom: 1px solid var(--vx-hairline); }
   .nav-in { display: flex; align-items: center; justify-content: space-between; gap: var(--vx-space-4);
-            padding-block: var(--vx-space-3); }
-  .brand { display: flex; align-items: center; gap: 0.7rem; }
-  .brand span { font-family: var(--vx-font-ui); font-size: 1.5rem; font-weight: 600;
-                letter-spacing: 0.02em; color: var(--vx-fg); }
+            padding-block: var(--vx-space-2); }
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+  .brand span { font-family: var(--vx-font-mono); font-size: 1.2rem; font-weight: 700;
+                letter-spacing: 0.1em; color: var(--vx-fg); }
   .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); }
-  .nav-links a { font-size: 1.25rem; font-weight: 500; color: var(--vx-fg-muted); }
+  .nav-links a { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+                 letter-spacing: var(--vx-track-label); text-transform: uppercase;
+                 color: var(--vx-fg-muted); }
   .nav-links a:hover { color: var(--vx-fg); }
 
-  /* Sentence-case sans, square corners. The uppercase mono pill was the dark
-     system's voice; it fights a serif page. */
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
-         font-family: var(--vx-font-ui); font-size: 1.25rem; font-weight: 500;
-         letter-spacing: 0; text-transform: none;
-         border-radius: var(--vx-r-panel); padding: 1rem 1.9rem; min-height: 44px;
+         font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+         letter-spacing: var(--vx-track-label); text-transform: uppercase;
+         border-radius: var(--vx-r-chip); padding: 0.95rem 1.7rem; min-height: 44px;
          border: 1px solid transparent; cursor: pointer; white-space: nowrap;
          transition: background-color var(--vx-dur) var(--vx-ease), color var(--vx-dur) var(--vx-ease),
-                     border-color var(--vx-dur) var(--vx-ease); }
-  .btn-primary { background: var(--vx-fg); color: var(--vx-fg-invert); }
-  .btn-primary:hover { background: #000; color: var(--vx-fg-invert); }
+                     border-color var(--vx-dur) var(--vx-ease), box-shadow var(--vx-dur) var(--vx-ease); }
+  .btn-primary { background: var(--vx-ember); color: var(--vx-fg-invert); box-shadow: var(--vx-mint-glow); }
+  .btn-primary:hover { background: #FF5A28; }
   .btn-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
-  .btn-ghost:hover { border-color: var(--vx-fg); background: rgba(34,34,34,0.03); }
+  .btn-ghost:hover { border-color: var(--vx-ember); color: var(--vx-ember); }
 
   /* ---- hero ----
-     No light source to motivate any more: on a white ground the panel earns
-     attention by being the only elevated object, not the brightest one. */
-  .hero { position: relative; padding-block: var(--vx-section-hero) var(--vx-space-7); }
-  .hero-in { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-             gap: var(--vx-space-6); align-items: center; text-align: left; }
-  /* align-items must stay stretch: flex-start sizes children to their content,
-     and the nowrap CTA pills then push the column wider than the viewport. */
-  .hero-copy { display: flex; flex-direction: column; align-items: stretch;
-               gap: var(--vx-space-3); }
-  .hero h1 { font-size: clamp(3.6rem, 4.2vw + 1rem, 6.1rem); line-height: 1.08; }
-  .hero p.lede { font-size: 1.55rem; line-height: 1.55; max-width: 34rem; }
-  .hero-cta { display: flex; gap: var(--vx-space-2); flex-wrap: wrap;
-              justify-content: flex-start; margin-top: var(--vx-space-2); }
-  /* The missing middle of the type scale — bridges the display size and the
-     fine print, and names what the panel is about to demonstrate. */
-  .hero-proof { display: flex; align-items: center; gap: var(--vx-space-2);
-                flex-wrap: wrap; margin-top: var(--vx-space-2);
-                font-size: 1.15rem; color: var(--vx-fg-faint); }
-  .hero-proof b { color: var(--vx-fg); font-weight: 600; font-variant-numeric: tabular-nums; }
+     Copy on top, the running route full-width beneath it. The panel is no
+     longer a sidebar widget: at this width the split has room to read as a
+     diagram, which is the one thing a single-venue swap UI cannot draw. */
+  .hero { position: relative; padding-block: var(--vx-section-hero) var(--vx-space-6); }
+  /* Ember rail down the left edge. The page's one piece of ornament, and it
+     is anchored to the hero rather than floating. */
+  .hero::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+                  background: var(--vx-rail); }
+  .hero::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+                 background: var(--vx-horizon); }
+  .hero-in { position: relative; z-index: 1; display: flex; flex-direction: column;
+             gap: var(--vx-space-6); }
+  .hero-copy { display: flex; flex-direction: column; align-items: flex-start;
+               gap: var(--vx-space-3); max-width: 86rem; }
+  .hero h1 { font-size: clamp(3.4rem, 5.4vw + 0.5rem, 7.4rem); line-height: 0.9; }
+  .hero p.lede { font-size: 1.5rem; line-height: 1.55; max-width: 52rem; }
+  .hero-cta { display: flex; gap: var(--vx-space-2); flex-wrap: wrap; margin-top: var(--vx-space-2); }
+  .hero-proof { display: flex; align-items: center; gap: var(--vx-space-2); flex-wrap: wrap;
+                margin-top: var(--vx-space-1); font-family: var(--vx-font-mono);
+                font-size: 1rem; color: var(--vx-fg-faint); }
+  .hero-proof b { color: var(--vx-fg); font-weight: 500; font-variant-numeric: tabular-nums; }
   .hero-proof span { display: inline-flex; align-items: center; gap: 0.5rem; }
-  .hero-proof span + span::before { content: ""; width: 3px; height: 3px; border-radius: 50%;
-    background: var(--vx-hairline-firm); margin-right: 0.3rem; }
-  /* The panel is the hero object; it carries the only real elevation on the
-     page, so it reads as live rather than as one more bordered card. */
-  .hero-in .route { margin-top: 0; background: var(--vx-bg);
-    border-color: var(--vx-hairline); border-radius: var(--vx-r-card);
-    box-shadow: 0 1px 2px rgba(34,34,34,0.05), 0 1.8rem 4rem rgba(34,34,34,0.09); }
-  /* In a column this narrow the horizontal token → legs → token arrangement
-     starves the split bars, which are the one thing on the row carrying
-     information. Stack it and give the bars the full width. */
-  .hero-in .route-body { flex-direction: column; align-items: stretch;
-                         gap: var(--vx-space-3); }
-  .hero-in .token { flex-direction: row; width: auto; align-items: center;
-                    justify-content: space-between; }
-  .hero-in .token-badge { width: 3.2rem; height: 3.2rem; font-size: 0.85rem; }
-  .hero-in .leg-venue { width: 6rem; }
-  .hero-in .leg-kind { width: 7rem; }
+  .hero-proof span + span::before { content: "·"; color: var(--vx-fg-faint); margin-right: 0.3rem; }
 
-  /* ---- stat band ----
-     Every figure here is already asserted in prose further down the page;
-     this is the same claim set, stated once at full size. */
-  .stats { background: var(--vx-bg-raised); border-block: 1px solid var(--vx-hairline);
-           padding-block: var(--vx-space-6); }
-  .stats-in { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
-              gap: var(--vx-space-4); }
-  .stat { display: flex; flex-direction: column; gap: 0.4rem; }
-  .stat-n { font-family: var(--vx-font-display); font-size: 4.6rem; line-height: 1;
-            letter-spacing: var(--vx-track-tight); color: var(--vx-fg);
-            font-variant-numeric: tabular-nums; }
-  .stat-k { font-size: 1.15rem; color: var(--vx-fg-muted); }
+  /* ---- stat strip: one dense mono row, divided. Not four big numerals — a
+         router is read the way a tape is read. ---- */
+  .stats { border-block: 1px solid var(--vx-hairline); background: var(--vx-bg-inset); }
+  .stats-in { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .stat { display: flex; align-items: baseline; gap: 0.7rem; padding: var(--vx-space-3) var(--vx-space-4);
+          border-left: 1px solid var(--vx-hairline); }
+  .stat:first-child { border-left: 0; }
+  .stat-n { font-family: var(--vx-font-display); font-stretch: var(--vx-wdth-display);
+            font-size: 2.6rem; font-weight: 600; line-height: 1; color: var(--vx-fg);
+            letter-spacing: var(--vx-track-tight); font-variant-numeric: tabular-nums; }
+  .stat-k { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+            letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-faint); }
 
-  /* ---- route card (the signature) ---- */
-  .route { width: 100%; margin-top: var(--vx-space-6); background: var(--vx-glass);
-           border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-card);
+  /* ---- the route panel: a lit terminal window ---- */
+  .route { width: 100%; background: var(--vx-bg-raised);
+           border: 1px solid var(--vx-hairline-firm); border-radius: var(--vx-r-card);
            padding: var(--vx-space-4) var(--vx-space-5); display: flex; flex-direction: column;
            gap: var(--vx-space-3); text-align: left; }
+  .hero-in .route { box-shadow: 0 0 0 1px rgba(255,61,1,0.10),
+                                0 2.4rem 5rem rgba(0,0,0,0.65),
+                                0 0 5rem rgba(255,61,1,0.13); }
   .route-head { display: flex; align-items: center; justify-content: space-between;
-                gap: var(--vx-space-3); flex-wrap: wrap; }
-  .mono-mini { font-family: var(--vx-font-ui); font-size: 0.9rem; font-weight: 600;
-               letter-spacing: 0.1em; text-transform: uppercase; color: var(--vx-fg-faint); }
-  .live { display: inline-flex; align-items: center; gap: 0.7rem; }
-  .dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--vx-accent-2);
-         box-shadow: 0 0 0 0 rgba(10,119,57,0.5); animation: pulse 2.6s var(--vx-ease) infinite; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(10,119,57,0.45); }
-                     70% { box-shadow: 0 0 0 0.75rem rgba(10,119,57,0); }
-                     100% { box-shadow: 0 0 0 0 rgba(10,119,57,0); } }
+                gap: var(--vx-space-3); flex-wrap: wrap;
+                padding-bottom: var(--vx-space-2); border-bottom: 1px solid var(--vx-hairline); }
+  .mono-mini { font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+               letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-faint); }
+  .live { display: inline-flex; align-items: center; gap: 0.6rem; }
+  .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--vx-accent-2);
+         box-shadow: 0 0 0 0 rgba(0,226,138,0.55); animation: pulse 2.6s var(--vx-ease) infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,226,138,0.5); }
+                     70% { box-shadow: 0 0 0 0.7rem rgba(0,226,138,0); }
+                     100% { box-shadow: 0 0 0 0 rgba(0,226,138,0); } }
 
-  .route-body { display: flex; align-items: center; gap: var(--vx-space-4); }
-  .token { display: flex; flex-direction: column; align-items: center; gap: 0.7rem; flex-shrink: 0; width: 11rem; }
-  .token-badge { width: 5rem; height: 5rem; border-radius: 50%; display: flex; align-items: center;
-                 justify-content: center; font-family: var(--vx-font-mono); font-size: 1rem;
-                 background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline); color: var(--vx-fg); }
-  /* The output side is the answer, so it is the one inverted object in the card. */
-  .token-out .token-badge { background: var(--vx-fg); border-color: var(--vx-fg); color: var(--vx-fg-invert); }
+  /* ---- the split, drawn ----
+     Input token, a fan-out bus, one channel per venue, a fan-in bus, output.
+     The buses are the ::before/::after of .legs, so no extra markup is needed
+     and the diagram survives however many legs the router returns. */
+  .route-body { display: flex; align-items: stretch; gap: 0; }
+  .token { display: flex; flex-direction: column; align-items: center; justify-content: center;
+           gap: 0.6rem; flex-shrink: 0; width: 13rem; }
+  .token-badge { width: 4.2rem; height: 4.2rem; border-radius: 50%; display: flex;
+                 align-items: center; justify-content: center; font-family: var(--vx-font-mono);
+                 font-size: 0.95rem; background: var(--vx-bg-inset);
+                 border: 1px solid var(--vx-hairline-firm); color: var(--vx-fg); }
+  .token-out .token-badge { border-color: var(--vx-ember); color: var(--vx-ember);
+                            box-shadow: 0 0 1.6rem rgba(255,61,1,0.30); }
   .amount { font-family: var(--vx-font-mono); font-size: var(--vx-text-num);
             font-variant-numeric: tabular-nums; color: var(--vx-fg); }
-  .token-out .amount { color: var(--vx-fg); font-weight: 500; }
+  .token-out .amount { color: var(--vx-ember); font-weight: 500; }
 
-  .legs { flex-grow: 1; display: flex; flex-direction: column; gap: 0.9rem; }
-  .leg { display: flex; align-items: center; gap: var(--vx-space-2); }
-  .leg-venue { font-family: var(--vx-font-mono); font-size: 1rem; width: 7.5rem; flex-shrink: 0; }
-  .leg-track { flex-grow: 1; height: 0.85rem; border-radius: var(--vx-r-pill);
-               background: rgba(34,34,34,0.08); overflow: hidden; }
-  .leg-fill { display: block; height: 100%; border-radius: var(--vx-r-pill); width: 0;
+  .legs { flex-grow: 1; position: relative; display: flex; flex-direction: column;
+          justify-content: center; gap: 0.8rem; padding-inline: 3rem; min-width: 0; }
+  /* The fan-out and fan-in buses. A vertical hairline spanning the channel
+     stack, so three bars read as one route splitting and re-merging. */
+  .legs::before, .legs::after { content: ""; position: absolute; top: 12%; bottom: 12%;
+                                width: 1px; background: var(--vx-hairline-firm); }
+  /* The bus is the spine and the stubs are branches off it, so the stubs sit
+     a step dimmer. Same weight for both reads as a grid, not a graph. */
+  .legs::before { left: 0; } .legs::after { right: 0; }
+
+  .leg { display: flex; align-items: center; gap: var(--vx-space-2); position: relative; }
+  /* Stubs joining each channel to the buses. */
+  .leg::before, .leg::after { content: ""; position: absolute; top: 50%; width: 3rem; height: 1px;
+                              background: rgba(255,255,255,0.10); }
+  .leg::before { left: -3rem; } .leg::after { right: -3rem; }
+  .leg-venue { font-family: var(--vx-font-mono); font-size: 1rem; width: 8rem; flex-shrink: 0;
+               white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .leg-track { flex-grow: 1; height: 1.1rem; border-radius: 2px; background: var(--vx-bg-inset);
+               border: 1px solid var(--vx-hairline); overflow: hidden; position: relative; }
+  .leg-fill { display: block; height: 100%; width: 0; position: relative; overflow: hidden;
               transition: width 1.1s var(--vx-ease); }
+  /* Flow along the channel: a light sweep travelling in the direction of the
+     swap. Weight-proportional bars are static; the sweep is what says the
+     route is carrying something right now. */
+  .leg-fill::after { content: ""; position: absolute; inset: 0;
+                     background: linear-gradient(90deg, transparent 0%,
+                       rgba(255,255,255,0.42) 50%, transparent 100%);
+                     transform: translateX(-100%);
+                     animation: flow 2.4s var(--vx-ease) infinite; }
+  .leg:nth-child(2) .leg-fill::after { animation-delay: 0.35s; }
+  .leg:nth-child(3) .leg-fill::after { animation-delay: 0.7s; }
+  @keyframes flow { 0% { transform: translateX(-100%); } 60%, 100% { transform: translateX(220%); } }
   .leg-pct { font-family: var(--vx-font-mono); font-size: 1rem; color: var(--vx-fg); width: 4rem;
              text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums; }
-  .leg-kind { font-family: var(--vx-font-mono); font-size: 0.85rem; color: var(--vx-fg-faint);
-              width: 10.5rem; text-align: right; flex-shrink: 0; white-space: nowrap; }
+  .leg-kind { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+              color: var(--vx-fg-faint); width: 11rem; text-align: right; flex-shrink: 0;
+              white-space: nowrap; text-transform: uppercase; letter-spacing: 0.06em; }
 
   .rule { height: 1px; background: var(--vx-hairline); }
   .route-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--vx-space-3); }
-  .meta-k { display: block; font-family: var(--vx-font-ui); font-size: 0.9rem; font-weight: 600;
-            letter-spacing: 0.09em; text-transform: uppercase; color: var(--vx-fg-faint); }
-  .meta-v { display: block; margin-top: 0.4rem; font-family: var(--vx-font-mono);
-            font-size: 1.35rem; color: var(--vx-fg); font-variant-numeric: tabular-nums; }
+  .meta-k { display: block; font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+            letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-faint); }
+  .meta-v { display: block; margin-top: 0.3rem; font-family: var(--vx-font-mono);
+            font-size: 1.4rem; color: var(--vx-fg); font-variant-numeric: tabular-nums; }
 
   /* ---- live swap panel ---- */
   .sp { display: flex; flex-direction: column; gap: var(--vx-space-3); }
   .sp-head { display: flex; align-items: center; justify-content: space-between;
              gap: var(--vx-space-3); flex-wrap: wrap; }
-  .sp-freshwrap { height: 2px; background: rgba(34,34,34,0.09); border-radius: 2px; overflow: hidden; }
+  .sp-freshwrap { height: 2px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
   .sp-fresh { display: block; height: 100%; background: var(--vx-accent-2);
               transform-origin: left center; transform: scaleX(0); }
-  .sp.is-stale .sp-fresh { background: var(--vx-hairline-firm); }
+  .sp.is-stale .sp-fresh { background: var(--vx-fg-faint); }
   .sp.is-error .sp-fresh { background: var(--vx-ember); transform: scaleX(1); }
 
-  .sp-rows { display: flex; flex-direction: column; gap: 0.5rem; position: relative; }
+  .sp-rows { display: flex; flex-direction: column; gap: 0.4rem; position: relative; }
   .sp-row { display: flex; align-items: center; gap: var(--vx-space-2);
-            background: var(--vx-glass); border: 1px solid var(--vx-hairline);
+            background: var(--vx-bg-inset); border: 1px solid var(--vx-hairline);
             border-radius: var(--vx-r-panel); padding: var(--vx-space-3);
             transition: border-color var(--vx-dur) var(--vx-ease); }
-  .sp-row:focus-within { border-color: var(--vx-fg); }
-  .sp-lab { font-family: var(--vx-font-ui); font-size: 0.9rem; font-weight: 600;
-            letter-spacing: 0.09em; text-transform: uppercase; color: var(--vx-fg-faint);
-            width: 8rem; flex-shrink: 0; }
+  .sp-row:focus-within { border-color: var(--vx-ember); }
+  .sp-lab { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+            letter-spacing: var(--vx-track-label); text-transform: uppercase;
+            color: var(--vx-fg-faint); width: 8rem; flex-shrink: 0; }
   .sp-amt { flex-grow: 1; min-width: 0; background: none; border: 0; outline: none;
             font-family: var(--vx-font-mono); font-size: 2rem; font-variant-numeric: tabular-nums;
             color: var(--vx-fg); padding: 0; }
-  .sp-amt::placeholder { color: rgba(34,34,34,0.28); }
-  .sp-amt[readonly] { color: var(--vx-fg); }
+  .sp-amt::placeholder { color: var(--vx-fg-faint); }
+  .sp-amt[readonly] { color: var(--vx-ember); }
   .sp-pick { position: relative; flex-shrink: 0; }
-  .sp-token { display: flex; align-items: center; gap: 0.6rem; appearance: none;
-              background: var(--vx-bg);
-              border: 1px solid var(--vx-hairline-firm); border-radius: var(--vx-r-panel);
-              color: var(--vx-fg); font-family: var(--vx-font-ui); font-size: 1.2rem; font-weight: 500;
-              padding: 0.6rem 1.1rem; min-height: 44px; cursor: pointer;
+  .sp-token { display: flex; align-items: center; gap: 0.5rem; appearance: none;
+              background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline-firm);
+              border-radius: var(--vx-r-chip); color: var(--vx-fg);
+              font-family: var(--vx-font-mono); font-size: 1rem;
+              padding: 0.6rem 1rem; min-height: 44px; cursor: pointer;
               transition: border-color var(--vx-dur) var(--vx-ease); }
-  .sp-token:hover { border-color: var(--vx-fg); }
-  .sp-token svg { opacity: 0.45; }
-  .sp-token-logo { width: 1.7rem; height: 1.7rem; border-radius: 50%; display: block;
+  .sp-token:hover { border-color: var(--vx-ember); }
+  .sp-token svg { opacity: 0.5; }
+  .sp-token-logo { width: 1.6rem; height: 1.6rem; border-radius: 50%; display: block;
                    object-fit: cover; flex-shrink: 0; }
-  .sp-tokenlist { position: absolute; right: 0; top: calc(100% + 0.5rem); z-index: 5;
-                  min-width: 100%; display: flex; flex-direction: column; gap: 0.2rem;
-                  background: var(--vx-bg); border: 1px solid var(--vx-hairline);
-                  border-radius: var(--vx-r-panel); padding: 0.4rem;
-                  box-shadow: 0 1rem 2.5rem rgba(34,34,34,0.14); }
-  .sp-tokenlist button { display: flex; align-items: center; gap: 0.6rem; width: 100%;
+  .sp-tokenlist { position: absolute; right: 0; top: calc(100% + 0.4rem); z-index: 5;
+                  min-width: 100%; display: flex; flex-direction: column; gap: 0.15rem;
+                  background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline-firm);
+                  border-radius: var(--vx-r-panel); padding: 0.35rem;
+                  box-shadow: 0 1rem 2.5rem rgba(0,0,0,0.7); }
+  .sp-tokenlist button { display: flex; align-items: center; gap: 0.5rem; width: 100%;
                          background: none; border: 0; border-radius: var(--vx-r-chip);
-                         color: var(--vx-fg-muted); font-family: var(--vx-font-ui);
-                         font-size: 1.2rem; padding: 0.6rem 0.9rem; min-height: 40px;
+                         color: var(--vx-fg-muted); font-family: var(--vx-font-mono);
+                         font-size: 1rem; padding: 0.55rem 0.8rem; min-height: 40px;
                          cursor: pointer; text-align: left;
                          transition: background-color var(--vx-dur) var(--vx-ease),
                                      color var(--vx-dur) var(--vx-ease); }
-  .sp-tokenlist button:hover { background: var(--vx-bg-raised); color: var(--vx-fg); }
-  .sp-tokenlist button.on { color: var(--vx-fg); font-weight: 600; }
+  .sp-tokenlist button:hover { background: rgba(255,255,255,0.06); color: var(--vx-fg); }
+  .sp-tokenlist button.on { color: var(--vx-ember); }
   .sp-flip { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-             z-index: 2; width: 2.9rem; height: 2.9rem; border-radius: 50%;
-             background: var(--vx-bg); border: 1px solid var(--vx-hairline-firm);
+             z-index: 2; width: 2.6rem; height: 2.6rem; border-radius: 50%;
+             background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline-firm);
              color: var(--vx-fg-muted); display: flex; align-items: center;
              justify-content: center; cursor: pointer;
              transition: color var(--vx-dur) var(--vx-ease), border-color var(--vx-dur) var(--vx-ease); }
   .sp-flip:hover { color: var(--vx-ember); border-color: var(--vx-ember); }
-  .sp-warn { margin: 0; display: flex; align-items: center; gap: 0.7rem;
-             font-size: 1.1rem; line-height: 1.5;
-             border-radius: var(--vx-r-chip); padding: 0.85rem 1.1rem;
-             background: var(--vx-ember-soft); border: 1px solid rgba(217,57,0,0.32);
-             color: #A82C00; }
-  .sp-warn.sev-extreme { background: rgba(217,57,0,0.14); border-color: var(--vx-ember); color: #8F2500; }
-  .sp-msg { font-size: 1.15rem; color: var(--vx-fg-faint); padding-block: 0.9rem; }
+  .sp-warn { margin: 0; display: flex; align-items: center; gap: 0.6rem;
+             font-family: var(--vx-font-mono); font-size: 1rem; line-height: 1.5;
+             border-radius: var(--vx-r-chip); padding: 0.8rem 1rem;
+             background: rgba(255,184,0,0.10); border: 1px solid rgba(255,184,0,0.34);
+             color: var(--vx-warn); }
+  .sp-warn.sev-extreme { background: rgba(255,61,1,0.14); border-color: var(--vx-ember); color: #FF8A5C; }
+  .sp-msg { font-family: var(--vx-font-mono); font-size: 1rem; color: var(--vx-fg-faint);
+            padding-block: 0.8rem; }
   .sp.is-error .sp-msg { color: var(--vx-ember); }
-  #swap-panel .legs { min-height: 6.2rem; justify-content: center; }
+  #swap-panel .legs { min-height: 7rem; }
   #swap-panel .leg-fill { transition: width var(--vx-dur) var(--vx-ease); }
-
-  @media (max-width: 720px) {
-    .sp-row { flex-wrap: wrap; }
-    .sp-lab { width: 100%; }
-    .sp-amt { font-size: 1.6rem; }
-    .sp-flip { position: static; transform: none; align-self: center; }
-    .sp-rows { align-items: stretch; }
-  }
 
   a.leg-kind { color: var(--vx-fg-faint); text-decoration: none;
                transition: color var(--vx-dur) var(--vx-ease); }
-  a.leg-kind:hover { color: var(--vx-fg); text-decoration: underline; }
+  a.leg-kind:hover { color: var(--vx-ember); text-decoration: underline; }
 
   .sp-actions { display: flex; align-items: center; justify-content: space-between;
                 gap: var(--vx-space-3); flex-wrap: wrap; }
-  .sp-slip { display: flex; align-items: center; gap: 0.5rem; }
-  .sp-slip .mono-mini { margin-right: 0.4rem; }
-  .sp-slip button { font-family: var(--vx-font-ui); font-size: 1.05rem; font-weight: 500;
-                    background: var(--vx-bg); color: var(--vx-fg-muted);
+  .sp-slip { display: flex; align-items: center; gap: 0.4rem; }
+  .sp-slip .mono-mini { margin-right: 0.3rem; }
+  .sp-slip button { font-family: var(--vx-font-mono); font-size: 0.95rem;
+                    background: var(--vx-bg-inset); color: var(--vx-fg-muted);
                     border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-chip);
-                    padding: 0.55rem 1rem; min-height: 36px; cursor: pointer;
+                    padding: 0.5rem 0.9rem; min-height: 36px; cursor: pointer;
                     transition: color var(--vx-dur) var(--vx-ease),
                                 border-color var(--vx-dur) var(--vx-ease); }
   .sp-slip button:hover { color: var(--vx-fg); border-color: var(--vx-hairline-firm); }
-  .sp-slip button.on { color: var(--vx-fg-invert); background: var(--vx-fg);
-                       border-color: var(--vx-fg); }
+  .sp-slip button.on { color: var(--vx-fg-invert); background: var(--vx-ember);
+                       border-color: var(--vx-ember); }
   .sp-go { min-width: 15rem; }
-  /* Opacity is the wrong tool on a light ground: fading an ink fill toward
-     white leaves white label text on light grey. State the disabled colours. */
+  /* Explicit disabled colours, never opacity — see DESIGN_SYSTEM.md §2. */
   .btn-primary.sp-go:disabled,
-  .btn-primary.sp-go:disabled:hover { background: var(--vx-bg-raised); color: var(--vx-fg-faint);
-                                      border-color: var(--vx-hairline); cursor: not-allowed; }
-  .sp-wallet { background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline);
-               color: var(--vx-fg-muted); border-radius: var(--vx-r-pill); padding: 0.35rem 0.9rem; }
-  .sp-picker { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
-               padding-top: 0.4rem; }
-  .sp-picker button { font-family: var(--vx-font-ui); font-size: 1.15rem; font-weight: 500;
-                      color: var(--vx-fg);
-                      background: var(--vx-bg); border: 1px solid var(--vx-hairline-firm);
-                      border-radius: var(--vx-r-panel); padding: 0.7rem 1.3rem;
+  .btn-primary.sp-go:disabled:hover { background: var(--vx-bg-inset); color: var(--vx-fg-faint);
+                                      border-color: var(--vx-hairline); box-shadow: none;
+                                      cursor: not-allowed; }
+  .sp-wallet { background: rgba(255,61,1,0.10); border: 1px solid rgba(255,61,1,0.34);
+               color: var(--vx-mint-text); border-radius: var(--vx-r-pill); padding: 0.3rem 0.8rem; }
+  .sp-picker { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.3rem; }
+  .sp-picker button { font-family: var(--vx-font-mono); font-size: 0.95rem; color: var(--vx-fg);
+                      background: var(--vx-bg-inset); border: 1px solid var(--vx-hairline-firm);
+                      border-radius: var(--vx-r-chip); padding: 0.65rem 1.2rem;
                       min-height: 44px; cursor: pointer;
                       transition: border-color var(--vx-dur) var(--vx-ease); }
-  .sp-picker button:hover { border-color: var(--vx-fg); }
-  .sp-txmsg { margin: 0; font-size: 1.1rem; line-height: 1.5; color: var(--vx-fg-muted); }
+  .sp-picker button:hover { border-color: var(--vx-ember); }
+  .sp-txmsg { margin: 0; font-family: var(--vx-font-mono); font-size: 1rem; line-height: 1.5;
+              color: var(--vx-fg-muted); }
   .sp-txmsg.ok { color: var(--vx-accent-2); }
-  .sp-txmsg.bad { color: #A82C00; }
+  .sp-txmsg.bad { color: #FF8A5C; }
   .sp-txmsg a { color: inherit; text-decoration: underline; }
 
   /* ---- sections ---- */
-  section { padding-block: var(--vx-section); }
-  .band { background: var(--vx-bg-raised); border-block: 1px solid var(--vx-hairline); }
-  .sec-head { display: flex; flex-direction: column; gap: var(--vx-space-2); max-width: 52rem; }
+  section { counter-increment: sec; padding-block: var(--vx-section); position: relative; }
+  section + section { border-top: 1px solid var(--vx-hairline); }
+  .stats { counter-increment: none; padding-block: 0; }
+  .stats + section { border-top: 0; }
+  .sec-head { display: flex; flex-direction: column; gap: var(--vx-space-2); max-width: 54rem; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: var(--vx-space-3); margin-top: var(--vx-space-5); }
-  .card { background: var(--vx-bg); border: 1px solid var(--vx-hairline);
+            gap: var(--vx-space-2); margin-top: var(--vx-space-5); }
+  .card { background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline);
           border-radius: var(--vx-r-card); padding: var(--vx-space-4);
           display: flex; flex-direction: column; gap: var(--vx-space-2);
           transition: border-color var(--vx-dur) var(--vx-ease); }
   .card:hover { border-color: var(--vx-hairline-firm); }
-  /* The endpoint label is the card's one accent — unboxed, so it reads as a
-     heading rather than as inline code inside a sentence. */
-  .card > code { font-family: var(--vx-font-mono); font-size: 1.15rem; color: var(--vx-ember);
+  .card > code { font-family: var(--vx-font-mono); font-size: 1.05rem; color: var(--vx-ember);
                  background: none; padding: 0; }
-  .card p { font-size: 1.25rem; }
+  .card p { font-size: 1.2rem; }
 
-  .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--vx-space-6); align-items: center; }
-  .panel { background: var(--vx-glass); border: 1px solid var(--vx-hairline);
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: var(--vx-space-5); align-items: center; }
+  /* Code wells are recessed, not raised: output the machine produced sits
+     below the surface the interface sits on. */
+  .panel { background: var(--vx-bg-inset); border: 1px solid var(--vx-hairline);
            border-radius: var(--vx-r-panel); padding: var(--vx-space-4); overflow-x: auto; }
-  .panel pre { margin: 0; font-family: var(--vx-font-mono); font-size: 1.05rem; line-height: 1.9;
+  .panel pre { margin: 0; font-family: var(--vx-font-mono); font-size: 1.05rem; line-height: 1.85;
                color: var(--vx-fg); font-variant-numeric: tabular-nums; }
   .c-key { color: var(--vx-fg-faint); } .c-ember { color: var(--vx-ember); } .c-mint { color: var(--vx-accent-2); }
 
   .table-wrap { overflow-x: auto; margin-top: var(--vx-space-4); }
   .fee-table { width: 100%; min-width: 30rem; border-collapse: collapse; }
-  .fee-table th, .fee-table td { text-align: left; padding: var(--vx-space-2) var(--vx-space-2);
-    border-bottom: 1px solid var(--vx-hairline); font-size: 1.25rem; color: var(--vx-fg-muted); }
-  .fee-table th { font-family: var(--vx-font-ui); font-size: 0.9rem; font-weight: 600;
-    letter-spacing: 0.09em; text-transform: uppercase; color: var(--vx-fg-faint); }
+  .fee-table th, .fee-table td { text-align: left; padding: var(--vx-space-2);
+    border-bottom: 1px solid var(--vx-hairline); font-size: 1.2rem; color: var(--vx-fg-muted); }
+  .fee-table th { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+    letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-faint);
+    font-weight: 500; }
   .fee-table td:first-child { font-family: var(--vx-font-mono); color: var(--vx-fg); }
-  .fee-table .keep { color: var(--vx-fg); font-weight: 600; }
+  .fee-table .keep { color: var(--vx-ember); }
 
   .limit-row { display: flex; align-items: baseline; gap: var(--vx-space-3);
                padding-block: var(--vx-space-2); border-bottom: 1px solid var(--vx-hairline); }
-  .limit-cost { font-family: var(--vx-font-display); font-size: 2.4rem; color: var(--vx-ember);
-                font-variant-numeric: tabular-nums; width: 3rem; flex-shrink: 0; line-height: 1; }
-  .limit-ep { font-family: var(--vx-font-mono); font-size: 1.15rem; color: var(--vx-fg); flex-grow: 1; }
-  .limit-note { font-size: 1.15rem; color: var(--vx-fg-muted); }
+  .limit-cost { font-family: var(--vx-font-display); font-stretch: var(--vx-wdth-display);
+                font-size: 2rem; font-weight: 600; color: var(--vx-ember); line-height: 1;
+                font-variant-numeric: tabular-nums; width: 3rem; flex-shrink: 0; }
+  .limit-ep { font-family: var(--vx-font-mono); font-size: 1.1rem; color: var(--vx-fg); flex-grow: 1; }
+  .limit-note { font-size: 1.1rem; color: var(--vx-fg-muted); }
 
-  /* ---- closing ----
-     The one inverted band on the page. Flat ink, no horizon gradient — the
-     contrast is the effect. */
-  .close { background: var(--vx-bg-invert); text-align: center;
-           padding-block: var(--vx-section-hero); }
-  .close h2 { color: var(--vx-fg-invert); }
-  .close p { color: rgba(255,255,255,0.62); }
-  .close .btn-primary { background: var(--vx-fg-invert); color: var(--vx-fg); }
-  .close .btn-primary:hover { background: rgba(255,255,255,0.88); color: var(--vx-fg); }
-  .close-in { display: flex; flex-direction: column;
+  /* ---- closing: the ember horizon, back where it belongs ---- */
+  .close { position: relative; overflow: hidden; text-align: center;
+           padding-block: var(--vx-section-hero); border-top: 1px solid var(--vx-hairline); }
+  .close::before { content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(110% 78% at 50% 132%,
+      #FF3D01 0%, rgba(255,61,1,0.55) 26%, rgba(11,11,15,0) 68%); }
+  .close-in { position: relative; z-index: 1; display: flex; flex-direction: column;
               align-items: center; gap: var(--vx-space-3); }
 
   footer { border-top: 1px solid var(--vx-hairline); padding-block: var(--vx-space-4); }
   .foot-in { display: flex; align-items: center; justify-content: space-between;
              gap: var(--vx-space-3); flex-wrap: wrap; }
-  .foot-in a, .foot-in span { font-size: 1.15rem; color: var(--vx-fg-muted); }
-  .foot-in a:hover { color: var(--vx-fg); }
+  .foot-in a, .foot-in span { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+    letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-muted); }
+  .foot-in a:hover { color: var(--vx-ember); }
   .foot-links { display: flex; gap: var(--vx-space-3); flex-wrap: wrap; }
 
   /* ---- responsive ---- */
+  @media (max-width: 1100px) {
+    .leg-kind { display: none; }
+    .token { width: 10rem; }
+  }
   @media (max-width: 1000px) {
     .split { grid-template-columns: 1fr; gap: var(--vx-space-4); }
     .grid-3 { grid-template-columns: 1fr; }
     .route-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .stats-in { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--vx-space-5); }
+    .stats-in { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stat:nth-child(3) { border-left: 0; }
+    .stat:nth-child(n+3) { border-top: 1px solid var(--vx-hairline); }
     .nav-links { display: none; }
+    /* Below this width the fan-out/fan-in buses have nowhere to go: the
+       channels stack full-width and the diagram degrades to the bar list
+       it was before. Drop the connectors rather than draw them wrong. */
     .route-body { flex-direction: column; align-items: stretch; gap: var(--vx-space-3); }
-    .token { flex-direction: row; width: auto; justify-content: space-between; align-items: center; }
-    .leg-kind { display: none; }
-    /* Copy first, panel under it.
-       minmax(0,1fr), not 1fr: a bare 1fr floors the track at the content's
-       min-content width, which the nowrap CTA buttons blow past. */
-    .hero-in { grid-template-columns: minmax(0, 1fr); gap: var(--vx-space-5); }
-    .hero p.lede { max-width: none; }
+    .token { flex-direction: row; width: auto; justify-content: space-between; }
+    .legs { padding-inline: 0; }
+    .legs::before, .legs::after, .leg::before, .leg::after { display: none; }
   }
   @media (max-width: 720px) {
     :root { font-size: 15px; }
-    h1 { font-size: 3.2rem; }
-    h2 { font-size: 2.3rem; }
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2.1rem; }
     .hero p.lede { font-size: 1.2rem; }
-    .shell { padding-inline: 1.4rem; }
-    .stat-n { font-size: 3.2rem; }
-    .route { padding: 1.4rem; }
-    .route-body { gap: 1.4rem; }
+    .shell { padding-inline: 1.3rem; }
+    .stats-in { grid-template-columns: 1fr; }
+    .stat { border-left: 0; border-top: 1px solid var(--vx-hairline); }
+    .stat:first-child { border-top: 0; }
+    .route { padding: 1.3rem; }
     .token-badge { width: 3rem; height: 3rem; font-size: 0.8rem; }
-    .leg-venue { width: 5.4rem; font-size: 0.85rem; }
+    .leg-venue { width: 5.6rem; font-size: 0.85rem; }
     .hero-cta .btn, .close .btn { width: 100%; }
-    .nav-in .btn { padding: 0.85rem 1.2rem; font-size: 1rem; }
-    .limit-row { flex-wrap: wrap; gap: 0.6rem; }
+    .nav-in .btn { padding: 0.8rem 1.1rem; }
+    .limit-row { flex-wrap: wrap; gap: 0.5rem; }
+    .sp-row { flex-wrap: wrap; }
+    .sp-lab { width: 100%; }
+    .sp-amt { font-size: 1.6rem; }
+    .sp-flip { position: static; transform: none; align-self: center; }
+    .sp-rows { align-items: stretch; }
     .sp-actions { flex-direction: column; align-items: stretch; }
     .sp-slip { justify-content: space-between; }
     .sp-go { width: 100%; min-width: 0; }
@@ -405,7 +438,8 @@
   }
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; }
-    .leg-fill { transition: none; }
+    .leg-fill, .leg-fill::after { transition: none; animation: none; }
+    .leg-fill::after { display: none; }
   }
 </style>
 
@@ -458,7 +492,7 @@
   <div class="shell nav-in">
     <a class="brand" href="/">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path fill="#D93900" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+        <path fill="#FF3D01" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
       </svg>
       <span>VULCX</span>
     </a>
@@ -476,9 +510,9 @@
 <header class="hero">
   <div class="shell hero-in">
     <div class="hero-copy">
-      <span class="eyebrow">Swap routing for Fogo</span>
-      <h1>One pair in.<br>Every pool searched.</h1>
-      <p class="lede">Splitting beats a single path more often than you would think. When it does, Vulcx splits — and every leg comes back to you, named and weighted.</p>
+      <span class="eyebrow">Swap routing API · Fogo mainnet</span>
+      <h1>Every pool on Fogo.<br>One call.</h1>
+      <p class="lede">Give Vulcx a pair and an amount. It searches every pool on the chain — up to five hops, splitting across venues when splitting wins — and hands back a transaction ready to sign. Every leg comes back to you, named and weighted.</p>
       <div class="hero-cta">
         <a class="btn btn-primary" href="https://docs.vulcx.xyz">Get a quote</a>
         <a class="btn btn-ghost" href="https://www.npmjs.com/package/@vulcx/sdk">npm i @vulcx/sdk</a>
@@ -530,6 +564,28 @@
   </div>
 </section>
 
+<section id="fees">
+  <div class="shell">
+    <div class="sec-head">
+      <span class="eyebrow">Fees</span>
+      <h2>You keep every basis point you charge.</h2>
+      <p>Two independent rates on every swap. They add — yours is not a share of ours, and ours does not shrink when you raise yours. Their sum is capped at 100 bps, enforced both on-chain and in the API, so an over-cap request comes back as a <code>400</code> rather than as a transaction that fails after your user has signed it.</p>
+    </div>
+    <div class="table-wrap">
+      <table class="fee-table">
+      <thead>
+        <tr><th>Rate</th><th>Who sets it</th><th>Who keeps it</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>platformFeeBps</td><td>Vulcx</td><td>Vulcx</td></tr>
+        <tr><td>integratorFeeBps</td><td>You, per request</td><td class="keep">You, in full</td></tr>
+      </tbody>
+      </table>
+    </div>
+    <p style="margin-top: var(--vx-space-3); font-size: 1.15rem;">Every quote, swap, instruction set and CPI account list reports both rates separately — because one blended number cannot tell you what you earned.</p>
+  </div>
+</section>
+
 <section>
   <div class="shell split">
     <div class="sec-head">
@@ -578,35 +634,14 @@
   </div>
 </section>
 
-<section id="fees">
-  <div class="shell">
-    <div class="sec-head">
-      <span class="eyebrow">Fees</span>
-      <h2>You keep every basis point you charge.</h2>
-      <p>Two independent rates on every swap. They add — yours is not a share of ours, and ours does not shrink when you raise yours. Their sum is capped at 100 bps, enforced both on-chain and in the API, so an over-cap request comes back as a <code>400</code> rather than as a transaction that fails after your user has signed it.</p>
-    </div>
-    <div class="table-wrap">
-      <table class="fee-table">
-      <thead>
-        <tr><th>Rate</th><th>Who sets it</th><th>Who keeps it</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>platformFeeBps</td><td>Vulcx</td><td>Vulcx</td></tr>
-        <tr><td>integratorFeeBps</td><td>You, per request</td><td class="keep">You, in full</td></tr>
-      </tbody>
-      </table>
-    </div>
-    <p style="margin-top: var(--vx-space-3); font-size: 1.15rem;">Every quote, swap, instruction set and CPI account list reports both rates separately — because one blended number cannot tell you what you earned.</p>
-  </div>
-</section>
 
 <section>
   <div class="shell split">
     <div class="sec-head">
       <span class="eyebrow">Rate limits</span>
       <h2>Debited by what a request costs, not how many you made.</h2>
-      <p>Your bucket is charged per the table on the right, so the same budget is many quotes, or a few transaction builds, or any mix. Start keyless — about 1 unit per second, burst 5, enough to hold a live price on screen. A key raises it to [YOUR KEYED LIMIT].</p>
-      <p>Deliberately flat within a tier. A ceiling derived from trailing volume cannot be capacity-planned against, and it throttles a new integration hardest on day one — exactly when its quote-to-swap ratio is at its worst.</p>
+      <p>Your bucket is charged per the table on the right, so the same budget is many quotes, or a few transaction builds, or any mix. Start keyless — 1 unit per second, burst 5, enough to hold a live price on screen. A key raises that to 100 units per second, burst 200.</p>
+      <p>That ceiling is the same on every self-serve plan — paying us more does not buy a bigger bucket. A limit derived from trailing volume cannot be capacity-planned against, and it throttles a new integration hardest on day one, exactly when its quote-to-swap ratio is at its worst.</p>
     </div>
     <div>
       <div class="limit-row"><span class="limit-cost">1</span><span class="limit-ep">/quote · /price</span><span class="limit-note">an in-memory read</span></div>
@@ -616,7 +651,7 @@
   </div>
 </section>
 
-<section id="self-host" class="band">
+<section id="self-host">
   <div class="shell">
     <div class="sec-head">
       <span class="eyebrow">Self-hosting</span>

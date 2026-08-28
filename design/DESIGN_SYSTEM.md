@@ -2,12 +2,19 @@
 
 Extracted from computed styles — not from screenshots, not from vibes.
 
-**2026-08-29 — the system was inverted.** The page moved from the dark
-Fogo-derived ground to a light editorial system modelled on **x402.org**.
-Sections 1a–1c below are the *previous* system's references; they are kept for
-provenance and because the craft rules (fluid root, tabular numerals, one
-easing) survived the change. Section 1d is the reference now in force, and
-section 2 describes what is actually in `tokens.css` today.
+**Three systems have shipped from this file.** Section 1 audits every
+reference behind them. Section 2 is a post-mortem on the light editorial pass,
+kept because the failure is instructive. **Section 3 is the system in force.**
+
+| | System | Ground | Display | Status |
+|---|---|---|---|---|
+| 1 | Fogo-derived | `#080420` indigo | Clash Display 600 | retired |
+| 2 | Light editorial (x402) | `#FFFFFF` | Instrument Serif 400 | **reverted same day** |
+| 3 | Dark terminal | `#0B0B0F` near-black | Archivo 600 condensed | **in force** |
+
+Constant across all three: the fluid `vw` root, `tabular-nums` on every number,
+one easing curve, and the token *names* — so `swap-panel.js` never had to
+change when the system did.
 
 ---
 
@@ -100,82 +107,124 @@ brand lineage while the rest of the system inverts.
 
 ---
 
-## 2. The Vulcx system (in force)
+## 2. The light editorial pass — post-mortem
 
-Ink on white, one warm accent, a serif that does the talking. Source of truth is
-`design/tokens.css`; this section explains the intent behind it.
+Shipped and reverted on 2026-08-29. It is documented rather than deleted
+because the diagnosis generalises.
 
-**Role remap from the dark system.** Token *names* were kept so `swap-panel.js`
-(which reads `--vx-accent-1..4`) and the page CSS keep resolving. Two names now
-mean something different:
+**What it was:** `#222222` ink on white, `#F1F1F1` bands, Instrument Serif 400
+at 56px, Inter for UI, ember darkened to `#D93900` as the single accent.
 
-| Token | Was | Is | Why |
-|---|---|---|---|
-| `--vx-mint` | `#C3FBA5` — the strong fill / positive | `#222222` | On a light ground the "strong fill" role is ink. Every `--vx-mint` rule (primary button, selected slippage chip, output-token badge, focus borders) resolves correctly with no rule changes. |
-| `--vx-ember` | `#FF3D01` — warn + brand heat | `#D93900` | The same hue, darkened to hold contrast on white. Now the page's *only* chromatic accent: eyebrows, endpoint labels, rate-limit costs, errors. |
-| `--vx-horizon` | radial ember gradient | `#222222` | The closing section is a flat inverted band, not a glow. |
+**Why it failed:**
 
-The route/chart accents were replaced outright — the old neon set (`#00FF9D`,
-`#EE00FF`, `#FFD000`) is invisible on white:
+- **No mass.** Every surface was white, separated by 13%-opacity hairlines. The
+  three API cards were white-on-white with a thin outline and barely registered.
+  Light editorial only works when *something* on the page is heavy; the only
+  dark object was the closing band, four screens down.
+- **The face argued the wrong case.** A 400-weight serif reads "neutral
+  standard, foundation, whitepaper" — correct for x402, which *is* a neutral
+  standard, and wrong for a router competing on execution quality.
+- **It demoted the one real asset.** The live panel shows a split route
+  updating against mainnet. On a dark ground that reads as a running system; on
+  white it reads as a contact form.
 
-`--vx-accent-1..4` = `#3452FF` · `#0A7739` · `#7A00DF` · `#B25A00`
+**What was worth keeping**, and did carry forward: the stat row, code-as-proof,
+flat surfaces over glass, and the `<code>` consolidation.
+
+**The wider lesson:** x402's *structure* was the borrowable part. Its palette
+and type were load-bearing for a different argument than ours.
+
+---
+
+## 3. The Vulcx system (in force)
+
+Near-black, ember, mono-forward, dense. A router is judged on numbers, so the
+page is built to carry them. Source of truth is `design/tokens.css`.
+
+**This is not a return to system 1.** That indigo (`#080420`) was soft and
+inherited from Fogo; this ground is harder and the page is far denser.
+
+**Role remap.** Token names are unchanged; two carry different values per
+system:
+
+| Token | System 1 | System 2 | System 3 | Role |
+|---|---|---|---|---|
+| `--vx-mint` | `#C3FBA5` | `#222222` | `#FF3D01` | the "strong fill" — whatever the execute colour is |
+| `--vx-ember` | `#FF3D01` | `#D93900` | `#FF3D01` | accent + brand heat |
+
+In this system those two coincide, because on near-black the execute colour
+*is* the ember. They are kept as separate names because they diverge again in
+any light system — as system 2 demonstrated.
+
+`--vx-accent-1..4` (`#3D8BFF` · `#00E28A` · `#C77DFF` · `#FFB800`) deliberately
+**excludes the ember**: a route leg tinted like the primary CTA competes with
+it. Warnings are amber for the same reason — an ember warning on this page
+looks like a call to action.
 
 ### Type
 
-| Role | Family | rem | @1512px | Weight | Tracking |
+| Role | Family | Width | rem | @1512px | Weight |
 |---|---|---|---|---|---|
-| Hero | Instrument Serif | clamp → 6.1rem | ≤72px | 400 | -0.008em |
-| H1 | Instrument Serif | 4.7rem | 56px | 400 | -0.008em |
-| H2 | Instrument Serif | 3.4rem | 40px | 400 | -0.008em |
-| H3 | Instrument Serif | 1.85rem | 22px | 400 | -0.008em |
-| Body | Inter | 1.4rem | 17px | 400 | 0 |
-| Label | Inter | 0.95rem | 11px | **600** | 0.1em, uppercase |
-| Numeric / code | IBM Plex Mono | 1.3rem | 15px | 400–500 | tabular-nums |
+| Hero | Archivo | 82% | clamp → 7.4rem | ≤88px | 600, uppercase |
+| H2 | Archivo | 88% | 3.0rem | 36px | 600, sentence case |
+| H3 | Archivo | 100% | 1.55rem | 18px | 600 |
+| Body | Archivo | 100% | 1.3rem | 15px | 400 |
+| Label / nav / buttons | JetBrains Mono | — | 0.9rem | 11px | 500, uppercase, `0.12em` |
+| Numeric / code | JetBrains Mono | — | 1.25rem | 15px | 400–500, tabular |
 
-Two things to keep straight:
+Archivo carries a `wdth` axis, so the condensed display face and the UI face
+are one family. Mono is the *interface* voice here, not just the code voice —
+nav, buttons, labels and every number are mono. That is the register the
+audience reads in.
 
-- **Nothing is bold except the micro-labels.** A 400-weight serif at 56px
-  already outranks everything; adding weight makes it look like a different,
-  worse typeface. Hierarchy comes from size and the ink/muted split.
-- **Mono retreated.** In the dark system, uppercase mono was the entire
-  nav/CTA/label voice. Here mono is only for things the machine said — code,
-  endpoints, amounts, token symbols. The label voice moved to tracked-out
-  semibold Inter (`.vx-label`). Buttons and nav are sentence-case sans.
+### The split diagram
 
-The fluid root (`clamp(0.75rem, 0.787vw, 1rem)`, ≈11.9px @1512) is unchanged —
-the whole page still scales as one unit, and the spacing rhythm is tuned to it.
+The signature, and the reason this direction was chosen. `.route-body` lays out
+input token → fan-out bus → one channel per venue → fan-in bus → output token.
+The buses are `.legs::before/::after` and the branch stubs are
+`.leg::before/::after`, so **no extra markup is required and the diagram
+survives however many legs the router returns**. The bus sits at
+`--vx-hairline-firm`, the stubs a step dimmer — equal weight reads as a grid
+rather than a graph.
 
-### Spacing rhythm
+Bars are weight-proportional and therefore static; a light sweep
+(`.leg-fill::after`, staggered per channel) travels each channel in the
+direction of the swap, which is what says the route is carrying something *now*.
+It is removed entirely under `prefers-reduced-motion`.
 
-`96px` between sections, `112px` around the hero and the closing band.
-Gap scale unchanged: 8 / 12 / 16 / 24 / 32 / 48 / 64.
+Below 1000px the buses have nowhere to go, so the connectors are dropped and
+the diagram degrades to the bar list it came from. Drawing them wrong is worse
+than not drawing them.
 
-### Radii
+### Section numbering
 
-Squared off. Card / panel / button `6px` · Chip `4px` · Pill `999px` — and the
-pill is now **only** for dots, progress tracks, and status chips. Rounded
-everything reads as consumer fintech, which is what the serif is arguing
-against.
+`section { counter-increment: sec }` with the index rendered by
+`.sec-head .eyebrow::before`. No markup carries a number, so **reordering the
+page cannot desync the numbering** — which matters, because the fee section was
+moved from sixth to second.
 
-### Motion
+### Spacing, radii, motion, elevation
 
-Same easing, shorter: `cubic-bezier(0.22, 1, 0.36, 1)` at `0.22s`. Editorial
-pages settle fast. Hover changes `background-color`, `color`, `border-color`
-only — never transform-scale a CTA.
+Sections `6.4rem` (~76px), hero `7.5rem`. Tighter than either previous system:
+the editorial pass left ~190px between sections of three-sentence copy and read
+as thin.
 
-### Elevation
+Radii are near-square (card/panel `0.35rem`, chip `0.25rem`); the pill is for
+dots, tracks and status chips only. Motion is `0.18s` on the shared easing —
+this register should feel like a tool.
 
-Borders, not shadows. One hairline (`rgba(34,34,34,0.13)`) separates every
-surface; a firmer one (`0.26`) marks anything interactive. **Exactly one object
-on the page carries real elevation** — the live swap panel in the hero — so it
-reads as running rather than as one more bordered card. Glows are gone;
-`--vx-mint-glow` and `--vx-ember-glow` resolve to `transparent` so any surviving
-`box-shadow: var(--vx-*-glow)` is a no-op rather than a mistake.
+Elevation is one object: the live panel in the hero, which carries an ember
+ring and bloom. Everything else is a flat fill plus a hairline. Code wells use
+`--vx-bg-inset` (*below* the interface surface) while cards use
+`--vx-bg-raised` — output the machine produced sits under the surface you
+operate.
 
-### Two rules that outlive any restyle
+### Rules that outlive any restyle
 
 - `font-variant-numeric: tabular-nums` on every number, always. Digits must not
   reflow while a quote refreshes.
-- **Never fade an ink fill with `opacity` to signal disabled.** On a light
-  ground it blends toward white and leaves white label text on light grey. State
-  the disabled colours explicitly (see `.btn-primary.sp-go:disabled`).
+- **Never signal disabled with `opacity` on a filled button.** On a light ground
+  it blends toward white and leaves white label text on light grey; on a dark
+  one it mutes the label past legibility. State the disabled colours explicitly
+  (see `.btn-primary.sp-go:disabled`).
+- Ink is `#E8E8EA`, never `#FFF`. Pure white on near-black vibrates.

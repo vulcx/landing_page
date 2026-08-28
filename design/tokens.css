@@ -1,96 +1,115 @@
-/* Vulcx design tokens — light editorial.
-   Rewritten 2026-08-29 from x402.org (Linux Foundation / Salient child theme):
-   near-monochrome ink on white, a single warm accent, a serif display face at
-   weight 400, and flat surfaces — no glass, no gradients, no glows.
+/* Vulcx design tokens — dark terminal.
+   Rewritten 2026-08-29. Third system: the light editorial pass (x402.org) is
+   reverted. It failed for a specific reason worth recording — every surface
+   was white separated by 13%-opacity hairlines, so the page had no mass and
+   no focal point, and a 400-weight serif reads "neutral standard" when this
+   product competes on execution quality.
 
-   Token NAMES are unchanged from the previous dark system so swap-panel.js
-   (which reads --vx-accent-1..4) and the page CSS keep resolving. The roles
-   were remapped for a light ground:
-     --vx-mint  was "the strong fill / positive"  → now ink (#222222)
-     --vx-ember was "warn + brand heat"           → now the one accent (#D93900)
-   Source of truth for landing_page and (later) widget theming. */
+   What survived from that pass: the stat row, code-as-proof, and the habit of
+   flat surfaces over glass. What came back: a dark ground and the ember.
+
+   This is NOT the original #080420 Fogo system. That indigo was soft and
+   brand-inherited; this ground is near-black and harder, and the ember is the
+   only chromatic thing above the fold. Density is the point — a router is
+   judged on numbers, so the page is built to carry them.
+
+   Token NAMES are unchanged across all three systems so swap-panel.js (which
+   reads --vx-accent-1..4) and the page CSS keep resolving. Role notes below. */
 
 :root {
   /* ---- Fluid root. Everything below is rem, so the page scales as one unit.
-         0.787vw ≈ 11.9px @ 1512. Unchanged — the spacing rhythm is tuned to it. ---- */
+         0.787vw ≈ 11.9px @ 1512. Unchanged across all three systems. ---- */
   font-size: clamp(0.75rem, 0.787vw, 1rem);
 
   /* ---- Ground ---- */
-  --vx-bg:            #FFFFFF;
-  --vx-bg-raised:     #F1F1F1;   /* the band colour x402 alternates with white */
-  --vx-bg-invert:     #222222;   /* full-bleed contrast band (closing section) */
-  --vx-glass:         #F7F7F6;   /* was translucent; a flat tint now does the work */
-  --vx-hairline:      rgba(34, 34, 34, 0.13);
-  --vx-hairline-firm: rgba(34, 34, 34, 0.26);
+  --vx-bg:            #0B0B0F;   /* near-black, faintly cool */
+  --vx-bg-raised:     #131317;   /* cards, the lit panel */
+  --vx-bg-inset:      #08080B;   /* code wells, input rows — recessed, not raised */
+  --vx-bg-invert:     #E8E8EA;
+  --vx-glass:         #131317;   /* flat fill; the name is historical */
+  --vx-hairline:      rgba(255, 255, 255, 0.08);
+  --vx-hairline-firm: rgba(255, 255, 255, 0.16);
 
-  /* ---- Accent (the only chromatic voice outside charts) ---- */
-  --vx-ember:         #D93900;   /* Fogo ember, darkened to sit on white */
-  --vx-ember-soft:    rgba(217, 57, 0, 0.08);
-  --vx-ember-glow:    0 0 0 0 transparent;   /* this system has no glows */
+  /* ---- Ember. Back to full saturation: #FF3D01 needed darkening to hold on
+         white, and does not here. It is the only accent above the fold. ---- */
+  --vx-ember:         #FF3D01;
+  --vx-ember-soft:    rgba(255, 61, 1, 0.12);
+  --vx-ember-glow:    0 0 3rem rgba(255, 61, 1, 0.30);
 
-  /* ---- Strong fill. Was mint; ink is the light-ground equivalent role. ---- */
-  --vx-mint:          #222222;
-  --vx-mint-text:     #222222;
-  --vx-mint-glow:     0 0 0 0 transparent;
+  /* ---- Strong fill. On this ground the "execute" colour is the ember, so
+         --vx-mint (the fill role) and --vx-ember coincide. Kept separate
+         because they diverge again in any light system. ---- */
+  --vx-mint:          #FF3D01;
+  --vx-mint-text:     #FF7A47;
+  --vx-mint-glow:     0 0 2.4rem rgba(255, 61, 1, 0.34);
 
-  /* ---- Ink ---- */
-  --vx-fg:            #222222;
-  --vx-fg-muted:      rgba(34, 34, 34, 0.60);
-  --vx-fg-faint:      rgba(34, 34, 34, 0.42);
-  --vx-fg-invert:     #FFFFFF;
+  /* ---- Ink. Off-white, not #FFF: pure white on near-black vibrates. ---- */
+  --vx-fg:            #E8E8EA;
+  --vx-fg-muted:      rgba(232, 232, 234, 0.56);
+  --vx-fg-faint:      rgba(232, 232, 234, 0.34);
+  --vx-fg-invert:     #0B0B0F;
 
   /* ---- Route / chart accents (use in this order).
-         Picked for contrast on white — the old neon set was invisible here. ---- */
-  --vx-accent-1:      #3452FF;
-  --vx-accent-2:      #0A7739;
-  --vx-accent-3:      #7A00DF;
-  --vx-accent-4:      #B25A00;
+         Deliberately excludes the ember: a leg tinted like the CTA competes
+         with it. These are the four hues that stay legible on #131317. ---- */
+  --vx-accent-1:      #3D8BFF;
+  --vx-accent-2:      #00E28A;
+  --vx-accent-3:      #C77DFF;
+  --vx-accent-4:      #FFB800;
 
-  /* ---- Semantic ---- */
-  --vx-success:       #0A7739;
-  --vx-warn:          #B25A00;
-  --vx-danger:        #D93900;
+  /* ---- Semantic. Warnings are amber, not ember — an ember warning on this
+         page looks like a call to action. ---- */
+  --vx-success:       #00E28A;
+  --vx-warn:          #FFB800;
+  --vx-danger:        #FF3D01;
 
-  /* ---- Signature: the inverted closing band. Flat, not a gradient. ---- */
-  --vx-horizon:       #222222;
+  /* ---- Signature: the ember rail down the left edge of the hero, and the
+         bloom behind the live panel. Both motivated by the panel being the
+         only thing on the page that is actually running. ---- */
+  --vx-rail:          linear-gradient(180deg, #FF3D01 0%, rgba(255,61,1,0) 82%);
+  --vx-horizon:       radial-gradient(60% 60% at 62% 42%,
+                        rgba(255,61,1,0.16) 0%, rgba(255,61,1,0) 70%);
 
   /* ---- Type ----
-         Instrument Serif 400 for display, Inter for everything spoken,
-         IBM Plex Mono for anything the machine said. */
-  --vx-font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --vx-font-ui:      "Inter", system-ui, -apple-system, sans-serif;
-  --vx-font-mono:    "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+         Archivo carries a width axis, so the display face can be condensed
+         without a second family. JetBrains Mono for anything the machine
+         said — which on this page is most of the interface. */
+  --vx-font-display: "Archivo", "Helvetica Neue", system-ui, sans-serif;
+  --vx-font-ui:      "Archivo", system-ui, -apple-system, sans-serif;
+  --vx-font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", monospace;
 
-  --vx-text-display: 6.1rem;   /* ~72px */
-  --vx-text-h1:      4.7rem;   /* ~56px — x402's h1 exactly */
-  --vx-text-h2:      3.4rem;   /* ~40px — x402's h2 exactly */
-  --vx-text-h3:      1.85rem;  /* ~22px */
-  --vx-text-body:    1.4rem;   /* ~17px */
-  --vx-text-label:   0.95rem;  /* ~11px */
-  --vx-text-num:     1.3rem;   /* ~15px */
+  --vx-wdth-display: 82%;  /* condensed, for the hero */
+  --vx-wdth-head:    88%;  /* section heads sit between display and UI */
+  --vx-wdth-ui:      100%;
 
-  /* A 400-weight serif does not want the hard negative tracking a geometric
-     sans display face did. Almost none, and only on the largest sizes. */
-  --vx-track-tight:  -0.008em;
-  --vx-track-label:   0.1em;
+  --vx-text-display: 6.4rem;   /* ~76px */
+  --vx-text-h1:      4.6rem;   /* ~55px */
+  --vx-text-h2:      3.0rem;   /* ~36px */
+  --vx-text-h3:      1.55rem;  /* ~18px */
+  --vx-text-body:    1.3rem;   /* ~15px — denser than the editorial pass */
+  --vx-text-label:   0.9rem;   /* ~11px */
+  --vx-text-num:     1.25rem;  /* ~15px */
 
-  /* ---- Space (unchanged rhythm) ---- */
-  --vx-space-1: 0.67rem;  --vx-space-2: 1rem;    --vx-space-3: 1.35rem;
-  --vx-space-4: 2rem;     --vx-space-5: 2.7rem;  --vx-space-6: 4rem;
-  --vx-space-7: 5.4rem;
-  --vx-section:  8rem;
-  --vx-section-hero: 9.4rem;
+  --vx-track-tight:  -0.022em;
+  --vx-track-label:   0.12em;
 
-  /* ---- Radii. Squared off — rounded-everything reads as consumer fintech,
-         which is the opposite of what the serif is doing. ---- */
-  --vx-r-pill:  999px;   /* dots, tracks, status chips only */
-  --vx-r-card:  0.5rem;
-  --vx-r-panel: 0.5rem;
-  --vx-r-chip:  0.3rem;
+  /* ---- Space. Tighter than either previous system: the editorial pass left
+         190px between sections of short copy and the page read as thin. ---- */
+  --vx-space-1: 0.55rem;  --vx-space-2: 0.9rem;  --vx-space-3: 1.25rem;
+  --vx-space-4: 1.8rem;   --vx-space-5: 2.4rem;  --vx-space-6: 3.4rem;
+  --vx-space-7: 4.6rem;
+  --vx-section:  6.4rem;
+  --vx-section-hero: 7.5rem;
 
-  /* ---- Motion. Shorter than the dark system: editorial pages settle fast. ---- */
+  /* ---- Radii. Terminal, so nearly square. ---- */
+  --vx-r-pill:  999px;    /* dots, tracks, status chips only */
+  --vx-r-card:  0.35rem;
+  --vx-r-panel: 0.35rem;
+  --vx-r-chip:  0.25rem;
+
+  /* ---- Motion. Fast — this register should feel like a tool, not a page. ---- */
   --vx-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --vx-dur:  0.22s;
+  --vx-dur:  0.18s;
 }
 
 /* Every number on the page. Quotes must not reflow while refreshing. */
@@ -101,12 +120,12 @@
   font-weight: 500;
 }
 
-/* Uppercase micro-label. Inter, not mono — mono retreats to code and numbers
-   in this system, so the label voice moved to a tracked-out semibold sans. */
+/* Uppercase micro-label — mono again. In the editorial system this moved to a
+   tracked-out sans; here mono is the interface voice and it moves back. */
 .vx-label {
-  font-family: var(--vx-font-ui);
+  font-family: var(--vx-font-mono);
   font-size: var(--vx-text-label);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: var(--vx-track-label);
   text-transform: uppercase;
 }

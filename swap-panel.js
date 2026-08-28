@@ -693,7 +693,7 @@
           '<span class="sp-wallet mono-mini" id="sp-wallet" hidden></span>' +
           '<span class="live"><span class="dot"></span>' +
             '<span class="mono-mini" id="sp-firm" style="color:var(--vx-accent-2)" hidden>Firm window open</span>' +
-            '<span class="mono-mini" id="sp-sig" style="color:rgba(255,255,255,0.45)" hidden></span>' +
+            '<span class="mono-mini" id="sp-sig" style="color:var(--vx-fg-faint)" hidden></span>' +
           '</span>' +
         '</div>' +
         '<div class="sp-freshwrap"><span class="sp-fresh" id="sp-fresh"></span></div>' +

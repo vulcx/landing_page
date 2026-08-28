@@ -7,73 +7,73 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap">
   <style>
-    body { margin: 0; background: #080420; }
-    a { color: #C3FBA5; text-decoration: none; }
-    a:hover { color: #FF3D01; }
+    body { margin: 0; background: #FFFFFF; }
+    a { color: #222222; text-decoration: none; }
+    a:hover { color: #D93900; }
     * { box-sizing: border-box; }
   </style>
 </helmet>
 
-<div style="width: 1280px; height: 900px; position: relative; overflow: hidden; background: #080420; font-family: 'Space Grotesk', system-ui, sans-serif; color: #D5EBD5;">
+<div style="width: 1280px; height: 900px; position: relative; overflow: hidden; background: #FFFFFF; font-family: 'Inter', system-ui, sans-serif; color: #222222;">
 
-  <div style="position: absolute; inset: 0; background: radial-gradient(109.5% 75% at 50% 118%, #FF3D01 0%, #FF3D01 20%, #080420 66%, #080420 100%); opacity: 0.85;"></div>
+  <div style="position: relative; display: flex; flex-direction: column; height: 100%;">
 
-  <div style="position: relative; display: flex; flex-direction: column; height: 100%; padding: 28px 64px 0;">
-
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 22px 64px; border-bottom: 1px solid rgba(34,34,34,0.13);">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF3D01" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-        <span style="font-family: 'Martian Mono', monospace; font-size: 15px; font-weight: 500; letter-spacing: 0.06em; color: #FFFFFF;">VULCX</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path fill="#D93900" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/></svg>
+        <span style="font-size: 19px; font-weight: 600; letter-spacing: 0.02em; color: #222222;">VULCX</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 34px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.63);">
+      <div style="display: flex; align-items: center; gap: 30px; font-size: 15px; font-weight: 500; color: rgba(34,34,34,0.60);">
         <span>Docs</span><span>Quote API</span><span>Fees</span><span>Self-host</span><span>GitHub</span>
       </div>
-      <div style="border: 1px solid #C3FBA5; border-radius: 999px; padding: 9px 20px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: #C3FBA5;">Read the docs</div>
+      <div style="background: #222222; color: #FFFFFF; border-radius: 6px; padding: 11px 22px; font-size: 15px; font-weight: 500;">Read the docs</div>
     </div>
 
-    <div style="display: flex; gap: 56px; align-items: center; flex-grow: 1; padding-bottom: 40px;">
+    <div style="display: flex; gap: 56px; align-items: center; flex-grow: 1; padding: 0 64px;">
 
-      <div style="display: flex; flex-direction: column; gap: 26px; width: 520px;">
-        <div style="display: flex; align-items: center; gap: 10px; align-self: flex-start; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 999px; padding: 7px 14px;">
-          <span style="width: 6px; height: 6px; border-radius: 50%; background: #00FF9D;"></span>
-          <span style="font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; color: #D5EBD5;">Live on Fogo mainnet</span>
-        </div>
+      <div style="display: flex; flex-direction: column; gap: 22px; width: 500px;">
+        <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D93900;">Live on Fogo mainnet</span>
 
-        <h1 style="margin: 0; font-size: 76px; line-height: 0.94; font-weight: 600; letter-spacing: -0.03em; color: #FFFFFF; text-wrap: balance;">Best execution<br>on every pool<br>in Fogo.</h1>
+        <h1 style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 78px; line-height: 1.04; font-weight: 400; letter-spacing: -0.008em; color: #222222; text-wrap: balance;">Best execution<br>on every pool<br>in Fogo.</h1>
 
-        <p style="margin: 0; font-size: 18px; line-height: 1.55; color: rgba(255,255,255,0.63); max-width: 440px;">Give us a pair and an amount. We search Valiant, Fluxbeam and Moonit — up to five hops, splitting when splitting wins — and hand back a transaction you can sign.</p>
+        <p style="margin: 0; font-size: 18px; line-height: 1.6; color: rgba(34,34,34,0.60); max-width: 440px;">Give us a pair and an amount. We search Valiant, Fluxbeam and Moonit — up to five hops, splitting when splitting wins — and hand back a transaction you can sign.</p>
 
-        <div style="display: flex; gap: 12px; align-items: center;">
-          <div style="background: #C3FBA5; color: #080420; border-radius: 999px; padding: 15px 28px; font-family: 'Martian Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;">Get a quote</div>
-          <div style="border: 1px solid rgba(255,255,255,0.18); color: #D5EBD5; border-radius: 999px; padding: 15px 28px; font-family: 'Martian Mono', monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;">npm i @vulcx/sdk</div>
+        <div style="display: flex; gap: 12px; align-items: center; margin-top: 4px;">
+          <div style="background: #222222; color: #FFFFFF; border-radius: 6px; padding: 14px 26px; font-size: 16px; font-weight: 500;">Get a quote</div>
+          <div style="border: 1px solid rgba(34,34,34,0.26); color: #222222; border-radius: 6px; padding: 14px 26px; font-size: 16px; font-weight: 500;">npm i @vulcx/sdk</div>
         </div>
       </div>
 
-      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 14px;">
-        <div style="background: rgba(8,4,32,0.72); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; overflow: hidden; box-shadow: 0 0 48px rgba(255,61,1,0.20);">
-          <div style="display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);">
-            <span style="width: 9px; height: 9px; border-radius: 50%; background: #FF3D01;"></span>
-            <span style="width: 9px; height: 9px; border-radius: 50%; background: #FFD000;"></span>
-            <span style="width: 9px; height: 9px; border-radius: 50%; background: #00FF9D;"></span>
-            <span style="margin-left: 8px; font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.06em; color: rgba(255,255,255,0.45);">GET /api/v1/quote</span>
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 28px;">
+        <!-- The response is the hero object, so it carries the only real
+             elevation on the artboard. The terminal chrome the dark version
+             wore is gone: on a white ground it read as decoration. -->
+        <div style="background: #F7F7F6; border: 1px solid rgba(34,34,34,0.13); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(34,34,34,0.05), 0 22px 48px rgba(34,34,34,0.09);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 13px 18px; background: #FFFFFF; border-bottom: 1px solid rgba(34,34,34,0.13);">
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #D93900;">GET /api/v1/quote</span>
+            <span style="display: inline-flex; align-items: center; gap: 7px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(34,34,34,0.42);">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #0A7739;"></span>200 OK
+            </span>
           </div>
-          <div style="padding: 18px 20px; font-family: 'Martian Mono', monospace; font-size: 11.5px; line-height: 2.0; font-variant-numeric: tabular-nums;">
+          <div style="padding: 20px 22px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; line-height: 1.95; font-variant-numeric: tabular-nums;">
             <sc-for list="{{lines}}" as="ln" hint-placeholder-count="9">
-              <div style="display: flex; gap: 14px;">
-                <span style="color: rgba(255,255,255,0.22); width: 16px; text-align: right; flex-shrink: 0;">{{ln.n}}</span>
+              <div style="display: flex; gap: 16px;">
+                <span style="color: rgba(34,34,34,0.26); width: 16px; text-align: right; flex-shrink: 0;">{{ln.n}}</span>
                 <span style="color: {{ln.c}}; white-space: pre;">{{ln.t}}</span>
               </div>
             </sc-for>
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;">
+        <!-- Bare figures on the ground, not bordered tiles: the same move the
+             shipped page makes under the hero. -->
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
           <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 5px;">
-              <span style="font-family: 'Martian Mono', monospace; font-size: 20px; font-weight: 500; color: #FFFFFF; font-variant-numeric: tabular-nums;">{{s.v}}</span>
-              <span style="font-family: 'Martian Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.45); line-height: 1.5;">{{s.k}}</span>
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 44px; line-height: 1; letter-spacing: -0.008em; color: #222222; font-variant-numeric: tabular-nums;">{{s.v}}</span>
+              <span style="font-size: 14px; color: rgba(34,34,34,0.60); line-height: 1.5;">{{s.k}}</span>
             </div>
           </sc-for>
         </div>
@@ -87,13 +87,15 @@
 <script data-dc-script data-props='{}'>
 class Component extends DCLogic {
   renderVals() {
-    const g = '#00FF9D', m = 'rgba(255,255,255,0.55)', w = '#D5EBD5', o = '#FF7A47';
+    // Light-ground syntax palette. The neon set the dark artboard used
+    // (#00FF9D, #FF7A47) is unreadable on #F7F7F6.
+    const g = '#0A7739', m = 'rgba(34,34,34,0.45)', w = '#222222', o = '#D93900';
     const src = [
       ['{', m],
       ['  "outAmount": "184.204871",', w],
       ['  "priceImpactPct": "0.031",', w],
       ['  "routePlan": [', m],
-      ['    { "venue": "Valiant",   "pct": 62 },', o],
+      ['    { "venue": "Valiant",  "pct": 62 },', o],
       ['    { "venue": "Fluxbeam", "pct": 38 }', o],
       ['  ],', m],
       ['  "platformFeeBps": 5, "integratorFeeBps": 20,', w],
@@ -103,9 +105,9 @@ class Component extends DCLogic {
     return {
       lines: src.map((r, i) => ({ n: i + 1, t: r[0], c: r[1] })),
       stats: [
-        { v: '5', k: 'Max hops' },
-        { v: '100 bps', k: 'Combined fee cap' },
-        { v: 'gRPC', k: 'State, not polling' },
+        { v: '5', k: 'Hops of depth' },
+        { v: '100', k: 'Bps combined fee cap' },
+        { v: '0', k: 'RPC calls in the quote path' },
       ],
     };
   }

@@ -7,83 +7,89 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap">
   <style>
-    body { margin: 0; background: #080420; }
-    a { color: #C3FBA5; text-decoration: none; }
-    a:hover { color: #FF3D01; }
+    body { margin: 0; background: #FFFFFF; }
+    a { color: #222222; text-decoration: none; }
+    a:hover { color: #D93900; }
     * { box-sizing: border-box; }
   </style>
 </helmet>
 
-<div style="width: 1280px; height: 900px; position: relative; overflow: hidden; background: #080420; font-family: 'Space Grotesk', system-ui, sans-serif; color: #D5EBD5;">
+<div style="width: 1280px; height: 900px; position: relative; overflow: hidden; background: #FFFFFF; font-family: 'Inter', system-ui, sans-serif; color: #222222;">
 
-  <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); background-size: 64px 64px;"></div>
-  <div style="position: absolute; width: 720px; height: 720px; right: -180px; top: -220px; border-radius: 50%; background: radial-gradient(circle, rgba(255,61,1,0.28) 0%, rgba(255,61,1,0) 62%);"></div>
+  <!-- The grid overlay and the ember radial are both dark-system devices:
+       they existed to give an unlit ground something to catch. On white the
+       band below does that job with a flat tone change. -->
+  <div style="position: relative; display: flex; flex-direction: column; height: 100%;">
 
-  <div style="position: relative; display: flex; flex-direction: column; height: 100%; padding: 28px 64px 56px;">
-
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 22px 64px; border-bottom: 1px solid rgba(34,34,34,0.13);">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FF3D01" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-        <span style="font-family: 'Martian Mono', monospace; font-size: 15px; font-weight: 500; letter-spacing: 0.06em; color: #FFFFFF;">VULCX</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path fill="#D93900" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/></svg>
+        <span style="font-size: 19px; font-weight: 600; letter-spacing: 0.02em; color: #222222;">VULCX</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 34px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.63);">
+      <div style="display: flex; align-items: center; gap: 30px; font-size: 15px; font-weight: 500; color: rgba(34,34,34,0.60);">
         <span>Docs</span><span>Quote API</span><span>Fees</span><span>Self-host</span><span>GitHub</span>
       </div>
-      <div style="background: #C3FBA5; color: #080420; border-radius: 999px; padding: 9px 20px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 500;">Start routing</div>
+      <div style="background: #222222; color: #FFFFFF; border-radius: 6px; padding: 11px 22px; font-size: 15px; font-weight: 500;">Start routing</div>
     </div>
 
-    <div style="display: flex; flex-direction: column; align-items: center; gap: 18px; padding-top: 54px;">
-      <span style="font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #FF3D01;">Swap routing for Fogo</span>
-      <h1 style="margin: 0; font-size: 78px; line-height: 0.95; font-weight: 600; letter-spacing: -0.03em; color: #FFFFFF; text-align: center; text-wrap: balance;">One pair in.<br>Every pool searched.</h1>
-      <p style="margin: 0; font-size: 17px; line-height: 1.55; color: rgba(255,255,255,0.63); max-width: 560px; text-align: center;">Splitting beats a single path more often than you would think. When it does, we split — and every leg is reported back to you.</p>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 56px 64px 46px;">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D93900;">Swap routing for Fogo</span>
+      <h1 style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 82px; line-height: 1.04; font-weight: 400; letter-spacing: -0.008em; color: #222222; text-align: center; text-wrap: balance;">One pair in.<br>Every pool searched.</h1>
+      <p style="margin: 0; font-size: 18px; line-height: 1.6; color: rgba(34,34,34,0.60); max-width: 560px; text-align: center;">Splitting beats a single path more often than you would think. When it does, we split — and every leg is reported back to you.</p>
     </div>
 
-    <div style="flex-grow: 1; display: flex; align-items: center; justify-content: center; padding-top: 26px;">
-      <div style="width: 1000px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.10); border-radius: 20px; padding: 30px 36px; display: flex; flex-direction: column; gap: 22px;">
+    <!-- The mechanism sits on the raised band, the way the shipped page seats
+         its stat row: one flat tone change, no gradient, no glow. -->
+    <div style="flex-grow: 1; background: #F1F1F1; border-top: 1px solid rgba(34,34,34,0.13); display: flex; align-items: center; justify-content: center; padding: 0 64px;">
+      <div style="width: 1000px; background: #FFFFFF; border: 1px solid rgba(34,34,34,0.13); border-radius: 8px; padding: 30px 36px; display: flex; flex-direction: column; gap: 22px; box-shadow: 0 1px 2px rgba(34,34,34,0.05), 0 22px 48px rgba(34,34,34,0.09);">
 
         <div style="display: flex; align-items: center; justify-content: space-between;">
-          <span style="font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45);">Route plan · quote q_8f31c</span>
+          <span style="display: inline-flex; align-items: baseline; gap: 8px;">
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(34,34,34,0.42);">Route plan</span>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(34,34,34,0.42);">q_8f31c</span>
+          </span>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="width: 6px; height: 6px; border-radius: 50%; background: #00FF9D;"></span>
-            <span style="font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #00FF9D;">Firm · current to slot</span>
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: #0A7739;"></span>
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #0A7739;">Firm · current to slot</span>
           </div>
         </div>
 
         <div style="display: flex; align-items: center; gap: 24px;">
 
           <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; width: 120px;">
-            <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; font-family: 'Martian Mono', monospace; font-size: 11px; color: #FFFFFF;">SOL</div>
-            <span style="font-family: 'Martian Mono', monospace; font-size: 15px; color: #FFFFFF; font-variant-numeric: tabular-nums;">1.000</span>
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #F1F1F1; border: 1px solid rgba(34,34,34,0.13); display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #222222;">SOL</div>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; color: #222222; font-variant-numeric: tabular-nums;">1.000</span>
           </div>
 
           <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 10px;">
             <sc-for list="{{legs}}" as="leg" hint-placeholder-count="3">
               <div style="display: flex; align-items: center; gap: 14px;">
-                <span style="font-family: 'Martian Mono', monospace; font-size: 12px; color: {{leg.c}}; width: 84px; flex-shrink: 0;">{{leg.venue}}</span>
-                <div style="flex-grow: 1; height: 10px; border-radius: 999px; background: rgba(255,255,255,0.06); overflow: hidden;">
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: {{leg.c}}; width: 84px; flex-shrink: 0;">{{leg.venue}}</span>
+                <div style="flex-grow: 1; height: 10px; border-radius: 999px; background: rgba(34,34,34,0.08); overflow: hidden;">
                   <div style="height: 100%; border-radius: 999px; width: {{leg.w}}; background: {{leg.c}};"></div>
                 </div>
-                <span style="font-family: 'Martian Mono', monospace; font-size: 12px; color: #FFFFFF; width: 46px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums;">{{leg.pct}}</span>
-                <span style="font-family: 'Martian Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.35); width: 74px; text-align: right; flex-shrink: 0;">{{leg.kind}}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #222222; width: 46px; text-align: right; flex-shrink: 0; font-variant-numeric: tabular-nums;">{{leg.pct}}</span>
+                <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: rgba(34,34,34,0.42); width: 104px; text-align: right; flex-shrink: 0; white-space: nowrap;">{{leg.kind}}</span>
               </div>
             </sc-for>
           </div>
 
+          <!-- The output is the answer, so it is the one inverted object here. -->
           <div style="display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; width: 140px;">
-            <div style="width: 56px; height: 56px; border-radius: 50%; background: rgba(195,251,165,0.14); border: 1px solid #C3FBA5; display: flex; align-items: center; justify-content: center; font-family: 'Martian Mono', monospace; font-size: 11px; color: #C3FBA5;">USD</div>
-            <span style="font-family: 'Martian Mono', monospace; font-size: 15px; color: #C3FBA5; font-variant-numeric: tabular-nums;">184.204871</span>
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: #222222; border: 1px solid #222222; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #FFFFFF;">USD</div>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 500; color: #222222; font-variant-numeric: tabular-nums;">184.204871</span>
           </div>
         </div>
 
-        <div style="height: 1px; background: rgba(255,255,255,0.08);"></div>
+        <div style="height: 1px; background: rgba(34,34,34,0.13);"></div>
 
         <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;">
           <sc-for list="{{meta}}" as="m" hint-placeholder-count="4">
             <div style="display: flex; flex-direction: column; gap: 6px;">
-              <span style="font-family: 'Martian Mono', monospace; font-size: 9px; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.4);">{{m.k}}</span>
-              <span style="font-family: 'Martian Mono', monospace; font-size: 16px; color: #FFFFFF; font-variant-numeric: tabular-nums;">{{m.v}}</span>
+              <span style="font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(34,34,34,0.42);">{{m.k}}</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: #222222; font-variant-numeric: tabular-nums;">{{m.v}}</span>
             </div>
           </sc-for>
         </div>
@@ -98,10 +104,12 @@
 class Component extends DCLogic {
   renderVals() {
     return {
+      // The route accents from tokens.css. The old neon set (#00FF9D, #EE00FF)
+      // vanishes on a white card.
       legs: [
-        { venue: 'Valiant',   pct: '62%', w: '62%', c: '#00AAFF', kind: 'CLMM' },
-        { venue: 'Fluxbeam', pct: '27%', w: '27%', c: '#00FF9D', kind: 'Const. product' },
-        { venue: 'Moonit',   pct: '11%', w: '11%', c: '#EE00FF', kind: 'Bonding curve' },
+        { venue: 'Valiant',  pct: '62%', w: '62%', c: '#3452FF', kind: 'CLMM' },
+        { venue: 'Fluxbeam', pct: '27%', w: '27%', c: '#0A7739', kind: 'Const. product' },
+        { venue: 'Moonit',   pct: '11%', w: '11%', c: '#7A00DF', kind: 'Bonding curve' },
       ],
       meta: [
         { k: 'Price impact', v: '0.031%' },

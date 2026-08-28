@@ -7,50 +7,56 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap">
   <style>
-    body { margin: 0; background: #080420; }
-    a { color: #080420; text-decoration: none; }
-    a:hover { color: #FF3D01; }
+    body { margin: 0; background: #FFFFFF; }
+    a { color: #222222; text-decoration: none; }
+    a:hover { color: #D93900; }
     * { box-sizing: border-box; }
   </style>
 </helmet>
 
-<div style="width: 1280px; height: 900px; position: relative; overflow: hidden; background: #C3FBA5; font-family: 'Space Grotesk', system-ui, sans-serif; color: #080420;">
+<!-- The brutalist axis survives the restyle: hard 2px rules, a full-bleed
+     figure grid, one cell inverted. What changed is that the contrast now
+     comes from ink on white rather than from inverting the brand palette,
+     so this direction no longer competes with Fogo's own site. -->
+<div style="width: 1280px; height: 900px; position: relative; overflow: hidden; background: #FFFFFF; font-family: 'Inter', system-ui, sans-serif; color: #222222;">
 
   <div style="display: flex; flex-direction: column; height: 100%;">
 
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 26px 56px; border-bottom: 2px solid #080420;">
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 24px 56px; border-bottom: 2px solid #222222;">
       <div style="display: flex; align-items: center; gap: 10px;">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#080420" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
-        <span style="font-family: 'Martian Mono', monospace; font-size: 15px; font-weight: 500; letter-spacing: 0.06em;">VULCX</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path fill="#D93900" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/></svg>
+        <span style="font-size: 19px; font-weight: 600; letter-spacing: 0.02em;">VULCX</span>
       </div>
-      <div style="display: flex; align-items: center; gap: 32px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase;">
+      <div style="display: flex; align-items: center; gap: 30px; font-size: 15px; font-weight: 500; color: rgba(34,34,34,0.60);">
         <span>Docs</span><span>Quote API</span><span>Fees</span><span>Self-host</span>
       </div>
-      <div style="background: #080420; color: #C3FBA5; border-radius: 4px; padding: 10px 22px; font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 500;">Start routing</div>
+      <div style="background: #222222; color: #FFFFFF; border-radius: 6px; padding: 11px 22px; font-size: 15px; font-weight: 500;">Start routing</div>
     </div>
 
-    <div style="padding: 60px 56px 40px; display: flex; flex-direction: column; gap: 22px;">
-      <span style="font-family: 'Martian Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #FF3D01;">Swap routing for Fogo</span>
-      <h1 style="margin: 0; font-size: 116px; line-height: 0.86; font-weight: 700; letter-spacing: -0.045em; text-transform: uppercase; max-width: 1000px;">You keep<br>every basis point<br>you charge.</h1>
-      <p style="margin: 0; font-size: 19px; line-height: 1.5; max-width: 620px; color: rgba(8,4,32,0.72);">Our protocol fee and your integrator fee are independent rates. They add. Ours does not shrink when you raise yours, and every response reports both separately — because one blended number cannot tell you what you earned.</p>
+    <div style="padding: 62px 56px 40px; display: flex; flex-direction: column; gap: 24px;">
+      <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #D93900;">Fees</span>
+      <!-- Instrument Serif ships one weight. The size does the shouting the
+           700-weight uppercase setting used to do. -->
+      <h1 style="margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: 96px; line-height: 0.98; font-weight: 400; letter-spacing: -0.012em; max-width: 1020px;">You keep<br>every basis point<br>you charge.</h1>
+      <p style="margin: 0; font-size: 19px; line-height: 1.55; max-width: 640px; color: rgba(34,34,34,0.60);">Our protocol fee and your integrator fee are independent rates. They add. Ours does not shrink when you raise yours, and every response reports both separately — because one blended number cannot tell you what you earned.</p>
     </div>
 
     <div style="flex-grow: 1;"></div>
 
-    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid #080420;">
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid #222222;">
       <sc-for list="{{figs}}" as="f" hint-placeholder-count="4">
-        <div style="display: flex; flex-direction: column; gap: 10px; padding: 34px 28px; border-right: 2px solid #080420; background: {{f.bg}}; color: {{f.fg}};">
-          <span style="font-family: 'Space Grotesk', sans-serif; font-size: 62px; line-height: 0.9; font-weight: 700; letter-spacing: -0.035em; font-variant-numeric: tabular-nums;">{{f.v}}</span>
-          <span style="font-family: 'Martian Mono', monospace; font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; line-height: 1.7; opacity: 0.72;">{{f.k}}</span>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 34px 28px; border-right: 2px solid #222222; background: {{f.bg}}; color: {{f.fg}};">
+          <span style="font-family: 'Instrument Serif', Georgia, serif; font-size: 68px; line-height: 0.92; font-weight: 400; letter-spacing: -0.012em; font-variant-numeric: tabular-nums;">{{f.v}}</span>
+          <span style="font-size: 13px; line-height: 1.55; opacity: 0.68;">{{f.k}}</span>
         </div>
       </sc-for>
     </div>
 
-    <div style="background: #080420; color: #D5EBD5; padding: 22px 56px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
-      <span style="font-family: 'Martian Mono', monospace; font-size: 12px; letter-spacing: 0.05em; font-variant-numeric: tabular-nums;">100 cost units / second. Same limit for every caller.</span>
-      <span style="font-family: 'Martian Mono', monospace; font-size: 12px; letter-spacing: 0.05em; color: #C3FBA5;">npm i @vulcx/sdk</span>
+    <div style="background: #222222; color: rgba(255,255,255,0.75); padding: 22px 56px; display: flex; align-items: center; justify-content: space-between; gap: 24px;">
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">Rate limits are flat within a tier — no ceiling derived from your trailing volume.</span>
+      <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #FFFFFF;">npm i @vulcx/sdk</span>
     </div>
 
   </div>
@@ -62,10 +68,10 @@ class Component extends DCLogic {
   renderVals() {
     return {
       figs: [
-        { v: '3',       k: 'Liquidity sources: Valiant, Fluxbeam, Moonit', bg: '#C3FBA5', fg: '#080420' },
-        { v: '5',       k: 'Hops deep, split across pools when splitting wins', bg: '#C3FBA5', fg: '#080420' },
-        { v: '100', k: 'Basis points — the cap on both fees combined', bg: '#FF3D01', fg: '#FFFFFF' },
-        { v: '0',       k: 'RPC calls in the quote path', bg: '#C3FBA5', fg: '#080420' },
+        { v: '3',   k: 'Liquidity sources: Valiant, Fluxbeam, Moonit',      bg: '#FFFFFF', fg: '#222222' },
+        { v: '5',   k: 'Hops deep, split across pools when splitting wins', bg: '#FFFFFF', fg: '#222222' },
+        { v: '100', k: 'Basis points — the cap on both fees combined',      bg: '#D93900', fg: '#FFFFFF' },
+        { v: '0',   k: 'RPC calls in the quote path',                       bg: '#FFFFFF', fg: '#222222' },
       ],
     };
   }

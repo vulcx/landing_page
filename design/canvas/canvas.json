@@ -1,14 +1,15 @@
 {
   "artboards": [
-    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1280, "h": 900, "title": "Option A — Ember Terminal" },
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 1280, "h": 900, "title": "Option A — The Response" },
     { "file": "RouteCanvas.dc.html", "x": 1400, "y": 0, "w": 1280, "h": 900, "title": "Option B — Route Canvas" },
     { "file": "NumbersFirst.dc.html", "x": 2800, "y": 0, "w": 1280, "h": 900, "title": "Option C — Numbers First" }
   ],
   "annotations": [
-    { "id": "brief", "x": 0, "y": -190, "w": 420, "text": "Three directions for the Vulcx hero, all on the extracted tokens.\n\nClash Display is Fontshare, not Google Fonts — these artboards render Space Grotesk as its stand-in. Self-host Clash in the real build." },
-    { "id": "axis-a", "x": 0, "y": 940, "w": 380, "text": "AXIS: developer credibility.\nThe response IS the hero. Fogo's ember horizon, mono-forward.\n\nTradeoff: reads as an API product, not a protocol — weak if you also want end-user traffic." },
-    { "id": "axis-b", "x": 1400, "y": 940, "w": 380, "text": "AXIS: show the mechanism.\nThe split route is the hero — the one thing a single-DEX swap UI cannot show.\n\nTradeoff: the visual needs real route data to stay honest, so it is the most work to build and keep true." },
-    { "id": "axis-c", "x": 2800, "y": 940, "w": 380, "text": "AXIS: proof by numbers, MetaMask-style contrast.\nInverts the palette — mint ground, ember as a single block. Leads with the fee argument.\n\nTradeoff: loudest and least Fogo-native; the inversion competes with the chain's own site." }
+    { "id": "brief", "x": 0, "y": -190, "w": 420, "text": "Three directions for the Vulcx hero, all on the light editorial system (design/tokens.css, restyled 2026-08-29 after x402.org).\n\nEvery face here is Google Fonts — Instrument Serif 400 for display, Inter for UI, IBM Plex Mono for machine output — so these artboards render as the real build does. No stand-ins.\n\nOne accent: ember #D93900. Ink #222222 on white, #F1F1F1 for bands. No glass, no gradients, no glows." },
+    { "id": "axis-a", "x": 0, "y": 940, "w": 380, "text": "AXIS: developer credibility.\nThe response IS the hero — it carries the only real elevation on the board.\n\nTradeoff: reads as an API product, not a protocol — weak if you also want end-user traffic." },
+    { "id": "axis-b", "x": 1400, "y": 940, "w": 380, "text": "AXIS: show the mechanism.\nThe split route is the hero — the one thing a single-DEX swap UI cannot show. Seated on the #F1F1F1 band, as the shipped page seats its stat row.\n\nTradeoff: the visual needs real route data to stay honest, so it is the most work to build and keep true." },
+    { "id": "axis-c", "x": 2800, "y": 940, "w": 380, "text": "AXIS: proof by numbers, brutalist contrast.\nHard 2px rules and a full-bleed figure grid, one cell inverted to ember. Leads with the fee argument.\n\nSince the restyle the contrast comes from ink on white rather than from inverting the brand palette, so this no longer competes with Fogo's own site — which was its original tradeoff.\n\nRemaining tradeoff: still the loudest of the three, and the least Fogo-native." },
+    { "id": "note-shipped", "x": 1400, "y": -190, "w": 420, "text": "What actually shipped: B's serif hero and centred lede, A's stat row (moved to a #F1F1F1 band under the fold), and C's '0 RPC calls / 100 bps' figures. C's brutalist rules did not ship.\n\nSee design/DESIGN_SYSTEM.md §2 for the system in force." }
   ],
   "launch": { "view": "canvas" }
 }

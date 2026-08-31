@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Status — Vulcx</title>
+<meta name="description" content="Live status for the Vulcx routing API on Fogo: health endpoint and a real quote, checked from your browser.">
+<link rel="canonical" href="https://vulcx.xyz/status/">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vulcx">
+<meta property="og:url" content="https://vulcx.xyz/status/">
+<meta property="og:title" content="Status — Vulcx">
+<meta property="og:description" content="Live status for the Vulcx routing API on Fogo.">
+<meta property="og:image" content="https://vulcx.xyz/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@vulcx_xyz">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/design/tokens.css">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body { margin: 0;
+    background: var(--vx-bg);
+    color: var(--vx-fg);
+    font-family: var(--vx-font-ui);
+    font-size: var(--vx-text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; min-height: 100vh; }
+
+  a { color: var(--vx-fg); text-decoration: none;
+      transition: color var(--vx-dur) var(--vx-ease); }
+  a:hover { color: var(--vx-ember); }
+
+  h1, h2 { font-family: var(--vx-font-display); font-weight: 600;
+           letter-spacing: var(--vx-track-tight); margin: 0; color: var(--vx-fg); }
+  h1 { font-size: var(--vx-text-h1); line-height: 0.94;
+       font-stretch: var(--vx-wdth-display); text-transform: uppercase; }
+  h2 { font-size: var(--vx-text-h3); font-stretch: var(--vx-wdth-head);
+       letter-spacing: var(--vx-track-label); text-transform: uppercase;
+       font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+       color: var(--vx-fg-muted); }
+
+  .shell { width: 100%; max-width: 104rem; margin: 0 auto;
+           padding-inline: var(--vx-space-5); }
+
+  /* ---- nav / footer: copied from index.html so the two pages sit flush ---- */
+  .nav-in { display: flex; align-items: center; justify-content: space-between;
+            gap: var(--vx-space-4); padding-block: var(--vx-space-2); }
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+  .brand span { font-family: var(--vx-font-mono); font-size: 1.2rem; font-weight: 700;
+                letter-spacing: 0.1em; color: var(--vx-fg); }
+  .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); }
+  .nav-links a { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+                 letter-spacing: var(--vx-track-label); text-transform: uppercase;
+                 color: var(--vx-fg-muted); }
+  .nav-links a:hover { color: var(--vx-fg); }
+  .nav-links a[aria-current="page"] { color: var(--vx-fg); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+         font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+         letter-spacing: var(--vx-track-label); text-transform: uppercase;
+         border-radius: var(--vx-r-chip); padding: 0.95rem 1.7rem; min-height: 44px;
+         border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+         transition: background-color var(--vx-dur) var(--vx-ease),
+                     border-color var(--vx-dur) var(--vx-ease); }
+  .btn-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
+  .btn-ghost:hover { border-color: var(--vx-ember); color: var(--vx-ember); }
+
+  footer { border-top: 1px solid var(--vx-hairline);
+           padding-block: var(--vx-space-4); margin-top: auto; }
+  .foot-in { display: flex; align-items: center; justify-content: space-between;
+             gap: var(--vx-space-3); flex-wrap: wrap; }
+  .foot-in a, .foot-in span { font-family: var(--vx-font-mono);
+    font-size: var(--vx-text-label); letter-spacing: var(--vx-track-label);
+    text-transform: uppercase; color: var(--vx-fg-muted); }
+  .foot-in a:hover { color: var(--vx-ember); }
+  .foot-links { display: flex; gap: var(--vx-space-3); flex-wrap: wrap; }
+
+  /* ---- page ---- */
+  main { padding-block: var(--vx-space-7) var(--vx-section); }
+
+  .head { display: flex; align-items: baseline; justify-content: space-between;
+          gap: var(--vx-space-4); flex-wrap: wrap; margin-bottom: var(--vx-space-2); }
+
+  /* Overall verdict. Reads as one sentence, not a badge — a router is judged
+     on whether it answered, so say that in words. */
+  .verdict { font-family: var(--vx-font-mono); font-size: var(--vx-text-h3);
+             font-weight: 500; display: flex; align-items: center; gap: 0.8rem;
+             margin-block: var(--vx-space-4) var(--vx-space-2); }
+  .verdict .dot { width: 0.75rem; height: 0.75rem; flex: none; }
+
+  .checked { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+             letter-spacing: var(--vx-track-label); text-transform: uppercase;
+             color: var(--vx-fg-faint); }
+
+  .dot { width: 0.6rem; height: 0.6rem; border-radius: var(--vx-r-pill);
+         background: var(--vx-fg-faint); flex: none; display: inline-block; }
+  .is-up      .dot { background: var(--vx-success); box-shadow: 0 0 0.9rem rgba(0,226,138,0.55); }
+  .is-slow    .dot { background: var(--vx-warn);    box-shadow: 0 0 0.9rem rgba(255,184,0,0.5); }
+  .is-down    .dot { background: var(--vx-danger);  box-shadow: 0 0 0.9rem rgba(255,61,1,0.55); }
+  .is-pending .dot { background: var(--vx-fg-faint); }
+
+  .checks { border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-card);
+            background: var(--vx-bg-raised); margin-top: var(--vx-space-4);
+            overflow: hidden; }
+
+  .check { display: grid;
+           grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) 9rem 6rem;
+           gap: var(--vx-space-3); align-items: center;
+           padding: var(--vx-space-3) var(--vx-space-4);
+           border-top: 1px solid var(--vx-hairline); }
+  .check:first-child { border-top: 0; }
+
+  .c-name { font-weight: 600; }
+  .c-ep   { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+            color: var(--vx-fg-faint); overflow-wrap: anywhere; }
+  .c-state{ font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+            letter-spacing: var(--vx-track-label); text-transform: uppercase;
+            display: flex; align-items: center; gap: 0.6rem; color: var(--vx-fg-muted); }
+  .c-ms   { font-family: var(--vx-font-mono); font-variant-numeric: tabular-nums;
+            font-size: var(--vx-text-num); text-align: right; color: var(--vx-fg); }
+  .is-down .c-ms, .is-pending .c-ms { color: var(--vx-fg-faint); }
+
+  /* Extra line under a check — the quote's actual output, the error text. */
+  .c-note { grid-column: 1 / -1; font-family: var(--vx-font-mono);
+            font-size: var(--vx-text-label); color: var(--vx-fg-faint);
+            margin-top: 0.4rem; overflow-wrap: anywhere; }
+  .c-note:empty { display: none; }
+
+  .caveat { margin-top: var(--vx-space-3); max-width: 58rem;
+            font-size: var(--vx-text-label); font-family: var(--vx-font-mono);
+            line-height: 1.7; color: var(--vx-fg-faint); }
+
+  .incidents { margin-top: var(--vx-section); }
+  .inc-list { list-style: none; padding: 0; margin: var(--vx-space-3) 0 0; }
+  .inc { border-top: 1px solid var(--vx-hairline); padding-block: var(--vx-space-3); }
+  .inc:first-child { border-top: 0; }
+  .inc-head { display: flex; align-items: baseline; gap: var(--vx-space-3);
+              flex-wrap: wrap; }
+  .inc-date { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+              color: var(--vx-fg-faint); font-variant-numeric: tabular-nums; }
+  .inc-title { font-weight: 600; }
+  .inc-tag { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+             letter-spacing: var(--vx-track-label); text-transform: uppercase;
+             border: 1px solid var(--vx-hairline-firm); border-radius: var(--vx-r-chip);
+             padding: 0.1rem 0.5rem; color: var(--vx-fg-muted); }
+  .inc-body { color: var(--vx-fg-muted); margin: 0.4rem 0 0; max-width: 62rem; }
+  .inc-none { color: var(--vx-fg-faint); font-family: var(--vx-font-mono);
+              font-size: var(--vx-text-label); }
+
+  @media (max-width: 760px) {
+    h1 { font-size: 3rem; }
+    .shell { padding-inline: 1.3rem; }
+    .nav-links { display: none; }
+    .check { grid-template-columns: 1fr auto; row-gap: 0.35rem; }
+    .c-ep { grid-column: 1 / -1; order: 3; }
+    .c-ms { order: 2; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="shell nav-in">
+    <a class="brand" href="/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path fill="#FF3D01" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+      </svg>
+      <span>VULCX</span>
+    </a>
+    <div class="nav-links">
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="/#endpoints">Quote API</a>
+      <a href="/#fees">Fees</a>
+      <a href="/#self-host">Self-host</a>
+      <a href="/status/" aria-current="page">Status</a>
+      <a href="https://github.com/vulcx">GitHub</a>
+    </div>
+    <a class="btn btn-ghost" href="https://t.me/vulcxsupport">Report an issue</a>
+  </div>
+</nav>
+
+<main class="shell">
+  <div class="head">
+    <h1>Status</h1>
+    <span class="checked" id="checked">Checking…</span>
+  </div>
+
+  <p class="verdict is-pending" id="verdict">
+    <span class="dot"></span><span id="verdict-text">Running checks…</span>
+  </p>
+
+  <h2>Checks</h2>
+  <div class="checks" id="checks"></div>
+
+  <p class="caveat">
+    These checks run in your browser, against the live production endpoints — not from a
+    monitoring network. So they measure the path between <em>you</em> and Vulcx, and if the
+    host serving this page is down, the page will not load to tell you so. For anything that
+    matters, verify with <code>curl https://api.vulcx.xyz/health</code>.
+  </p>
+
+  <section class="incidents">
+    <h2>Incidents</h2>
+    <ul class="inc-list" id="incidents">
+      <li class="inc"><span class="inc-none">Loading…</span></li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <div class="shell foot-in">
+    <span>Vulcx · Swap routing for Fogo</span>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="https://docs.vulcx.xyz/llms.txt">llms.txt</a>
+      <a href="https://github.com/vulcx" rel="me">GitHub</a>
+      <a href="https://x.com/vulcx_xyz" rel="me">X</a>
+      <a href="https://t.me/vulcxsupport" rel="me">Telegram</a>
+      <a href="https://fogo.io">Fogo</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var API = 'https://api.vulcx.xyz';
+  var TIMEOUT_MS = 8000;
+  var SLOW_MS    = 1500;   // above this we say "degraded", not "down"
+  var PERIOD_MS  = 30000;
+
+  // FOGO -> USDC, 1.0 in. Same pair the docs quickstart uses, so a failure here
+  // means the documented first call is failing too.
+  var IN_MINT  = 'So11111111111111111111111111111111111111112';
+  var OUT_MINT = 'uSd2czE61Evaf76RNbq4KPpXnkiL3irdzgLFUMe3NoG';
+  var IN_AMOUNT = 1000000000;
+
+  var CHECKS = [
+    {
+      id: 'api',
+      name: 'API',
+      endpoint: 'GET /health',
+      // Reads the body: proves the process answers, not just that TCP opened.
+      run: function (signal) {
+        return fetch(API + '/health', { signal: signal, cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .then(function (j) {
+            if (j && j.status !== 'ok') throw new Error('status: ' + j.status);
+            return '';
+          });
+      }
+    },
+    {
+      id: 'routing',
+      name: 'Routing',
+      endpoint: 'GET /api/v1/quote',
+      // The real test. /health can pass while pool state is stale and no route
+      // is found, so quote for a live pair and require an outAmount back.
+      run: function (signal) {
+        var url = API + '/api/v1/quote'
+          + '?inputMint='  + IN_MINT
+          + '&outputMint=' + OUT_MINT
+          + '&amount='     + IN_AMOUNT
+          + '&swapMode=ExactIn';
+        return fetch(url, { signal: signal, cache: 'no-store' })
+          .then(function (r) {
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            return r.json();
+          })
+          .then(function (j) {
+            if (!j || j.success !== true) throw new Error('quote rejected');
+            var d = j.data;
+            if (!d || d.amountOut == null) throw new Error('no route returned');
+
+            var hops = d.hopCount;
+            var venues = (d.routes || [])
+              .map(function (leg) { return venueName(leg.poolType); })
+              .filter(function (v, i, a) { return v && a.indexOf(v) === i; });
+
+            return '1 FOGO → ' + fmtUsdc(d.amountOut) + ' USDC'
+                 + (hops ? ' · ' + hops + (hops === 1 ? ' hop' : ' hops') : '')
+                 + (venues.length ? ' · ' + venues.join(', ') : '');
+          });
+      }
+    }
+
+    // When self-hosting ships, add the license server back here. Use no-cors:
+    // that host is not obliged to send CORS headers, and a missing header would
+    // otherwise read as a permanent outage. An opaque response still proves the
+    // TLS handshake and request completed, so report reachability, not health.
+    //
+    // {
+    //   id: 'license',
+    //   name: 'License server',
+    //   endpoint: 'GET /health · self-host activation',
+    //   run: function (signal) {
+    //     return fetch('https://license.vulcx.xyz/health', {
+    //       signal: signal, mode: 'no-cors', cache: 'no-store'
+    //     }).then(function () { return 'reachable (opaque check)'; });
+    //   }
+    // }
+  ];
+
+  // The API reports pool types by their internal name; the venue brand differs.
+  // Same map swap-panel.js carries — keep the two in step.
+  var VENUE_NAME = { Vortex: 'Valiant' };
+  function venueName(poolType) {
+    if (!poolType) return '';
+    return VENUE_NAME[poolType] || poolType;
+  }
+
+  // amountOut is a string of base units; USDC on Fogo is 6dp.
+  function fmtUsdc(raw) {
+    var n = Number(raw) / 1e6;
+    if (!isFinite(n)) return String(raw);
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 6 });
+  }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+
+  var host = document.getElementById('checks');
+  var rows = {};
+
+  CHECKS.forEach(function (c) {
+    var row = el('div', 'check is-pending');
+    var state = el('span', 'c-state');
+    state.appendChild(el('span', 'dot'));
+    var label = el('span', null, 'checking');
+    state.appendChild(label);
+
+    var ms = el('span', 'c-ms', '—');
+    var note = el('span', 'c-note');
+
+    row.appendChild(el('span', 'c-name', c.name));
+    row.appendChild(el('span', 'c-ep', c.endpoint));
+    row.appendChild(state);
+    row.appendChild(ms);
+    row.appendChild(note);
+    host.appendChild(row);
+
+    rows[c.id] = { row: row, label: label, ms: ms, note: note };
+  });
+
+  function withTimeout(fn) {
+    var ctrl = new AbortController();
+    var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
+    var t0 = performance.now();
+    return fn(ctrl.signal).then(
+      function (note) {
+        clearTimeout(timer);
+        return { ok: true, ms: Math.round(performance.now() - t0), note: note || '' };
+      },
+      function (err) {
+        clearTimeout(timer);
+        var msg = err && err.name === 'AbortError'
+          ? 'timed out after ' + (TIMEOUT_MS / 1000) + 's'
+          : (err && err.message) || 'request failed';
+        return { ok: false, ms: Math.round(performance.now() - t0), note: msg };
+      }
+    );
+  }
+
+  function runAll() {
+    return Promise.all(CHECKS.map(function (c) {
+      return withTimeout(c.run).then(function (res) {
+        var r = rows[c.id];
+        var cls = !res.ok ? 'is-down' : (res.ms > SLOW_MS ? 'is-slow' : 'is-up');
+        r.row.className = 'check ' + cls;
+        r.label.textContent = !res.ok ? 'down' : (res.ms > SLOW_MS ? 'degraded' : 'operational');
+        r.ms.textContent = res.ok ? res.ms + ' ms' : '—';
+        r.note.textContent = res.note;
+        return { ok: res.ok, slow: res.ok && res.ms > SLOW_MS };
+      });
+    })).then(function (results) {
+      var down = results.filter(function (r) { return !r.ok; }).length;
+      var slow = results.filter(function (r) { return r.slow; }).length;
+
+      var v = document.getElementById('verdict');
+      var vt = document.getElementById('verdict-text');
+      if (down === results.length) {
+        v.className = 'verdict is-down';
+        vt.textContent = 'Nothing is answering from here.';
+      } else if (down > 0) {
+        v.className = 'verdict is-down';
+        vt.textContent = down + ' of ' + results.length + ' checks failing.';
+      } else if (slow > 0) {
+        v.className = 'verdict is-slow';
+        vt.textContent = 'All systems answering, ' + slow + ' slower than usual.';
+      } else {
+        v.className = 'verdict is-up';
+        vt.textContent = 'All systems operational.';
+      }
+
+      document.getElementById('checked').textContent =
+        'Checked ' + new Date().toLocaleTimeString();
+    });
+  }
+
+  function renderIncidents(list) {
+    var ul = document.getElementById('incidents');
+    ul.textContent = '';
+
+    if (!list || !list.length) {
+      var li = el('li', 'inc');
+      li.appendChild(el('span', 'inc-none', 'No incidents recorded.'));
+      ul.appendChild(li);
+      return;
+    }
+
+    list.slice()
+      .sort(function (a, b) { return String(b.date).localeCompare(String(a.date)); })
+      .slice(0, 10)
+      .forEach(function (inc) {
+        var li = el('li', 'inc');
+        var head = el('div', 'inc-head');
+        head.appendChild(el('span', 'inc-date', inc.date || ''));
+        head.appendChild(el('span', 'inc-title', inc.title || 'Incident'));
+        if (inc.status) head.appendChild(el('span', 'inc-tag', inc.status));
+        li.appendChild(head);
+        if (inc.body) li.appendChild(el('p', 'inc-body', inc.body));
+        ul.appendChild(li);
+      });
+  }
+
+  fetch('incidents.json', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : []; })
+    .then(renderIncidents)
+    .catch(function () { renderIncidents([]); });
+
+  runAll();
+  setInterval(runAll, PERIOD_MS);
+
+  // A tab left open for hours otherwise shows a stale "Checked 09:12".
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) runAll();
+  });
+})();
+</script>
+
+</body>
+</html>

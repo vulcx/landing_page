@@ -19,13 +19,19 @@ rather than request count. Full reference: https://docs.vulcx.xyz
 
 ## Liquidity sources
 
-Vortex (concentrated liquidity), Fluxbeam (constant product and bonding curve),
+Valiant (concentrated liquidity), Fluxbeam (constant product and bonding curve),
 and Moonit (bonding curve).
+
+## Status
+
+Live checks against the production endpoints: https://vulcx.xyz/status/
+(API health and a real quote, run from the visitor's browser).
 
 ## Links
 
 - Documentation: https://docs.vulcx.xyz
 - Machine-readable docs index: https://docs.vulcx.xyz/llms.txt
+- Status: https://vulcx.xyz/status/
 - Source: https://github.com/vulcx
 - X: https://x.com/vulcx_xyz
 - Telegram: https://t.me/vulcxsupport

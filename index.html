@@ -73,6 +73,13 @@
   section .sec-head .eyebrow::after { content: ""; width: 2.4rem; height: 1px;
              background: var(--vx-ember); opacity: 0.5; }
 
+  /* Status chip on a section eyebrow — "not shipped yet" belongs in the
+     metadata line, not buried in the prose. Neutral on purpose: the ember is
+     the CTA colour and the amber is for faults; this is neither. */
+  .eyebrow .tag { border: 1px solid var(--vx-hairline-firm);
+             border-radius: var(--vx-r-chip); padding: 0.15rem 0.5rem;
+             color: var(--vx-fg-muted); }
+
   code { font-family: var(--vx-font-mono); font-size: 0.88em; color: var(--vx-fg);
          background: rgba(255,255,255,0.07); border-radius: var(--vx-r-chip);
          padding: 0.12em 0.38em; }
@@ -501,6 +508,7 @@
       <a href="#endpoints">Quote API</a>
       <a href="#fees">Fees</a>
       <a href="#self-host">Self-host</a>
+      <a href="/status/">Status</a>
       <a href="https://github.com/vulcx">GitHub</a>
     </div>
     <a class="btn btn-primary" href="https://docs.vulcx.xyz">Start routing</a>
@@ -654,13 +662,14 @@
 <section id="self-host">
   <div class="shell">
     <div class="sec-head">
-      <span class="eyebrow">Self-hosting</span>
+      <span class="eyebrow">Self-hosting <span class="tag">Not released yet</span></span>
       <h2>One binary. No CGO, no database in the request path.</h2>
-      <p>Supply an RPC endpoint with Yellowstone gRPC access; everything else is in the image. Self-hosting changes who runs the engine — it does not change the on-chain fee model, because the protocol fee is collected by the program, not by the API.</p>
+      <p>There is nothing to download today. When it opens: you supply an RPC endpoint with Yellowstone gRPC access, everything else is in the image. Self-hosting will change who runs the engine, not the on-chain fee model, because the protocol fee is collected by the program rather than by the API.</p>
+      <p><a href="https://t.me/vulcxsupport">Ask on Telegram</a> to be told when it opens.</p>
     </div>
     <div class="grid-3">
       <div class="card">
-        <h3>Fogo today</h3>
+        <h3>Fogo first</h3>
         <p>The engine is Fogo-specific in exactly one place that matters: how pool state is ingested.</p>
       </div>
       <div class="card">
@@ -689,6 +698,7 @@
     <div class="foot-links">
       <a href="https://docs.vulcx.xyz">Docs</a>
       <a href="https://docs.vulcx.xyz/llms.txt">llms.txt</a>
+      <a href="/status/">Status</a>
       <a href="https://github.com/vulcx" rel="me">GitHub</a>
       <a href="https://x.com/vulcx_xyz" rel="me">X</a>
       <a href="https://t.me/vulcxsupport" rel="me">Telegram</a>

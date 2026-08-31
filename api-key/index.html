@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Get an API key — Vulcx</title>
+<meta name="description" content="Request a free Vulcx API key. You do not need one to start — quote, swap, instructions and price all answer anonymous requests.">
+<link rel="canonical" href="https://vulcx.xyz/api-key/">
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Vulcx">
+<meta property="og:url" content="https://vulcx.xyz/api-key/">
+<meta property="og:title" content="Get an API key — Vulcx">
+<meta property="og:description" content="Free during beta. You do not need a key to start.">
+<meta property="og:image" content="https://vulcx.xyz/assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@vulcx_xyz">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/design/tokens.css">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body { margin: 0;
+    background: var(--vx-bg);
+    color: var(--vx-fg);
+    font-family: var(--vx-font-ui);
+    font-size: var(--vx-text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; min-height: 100vh; }
+
+  a { color: var(--vx-fg); text-decoration: none;
+      transition: color var(--vx-dur) var(--vx-ease); }
+  a:hover { color: var(--vx-ember); }
+
+  h1 { font-family: var(--vx-font-display); font-weight: 600;
+       letter-spacing: var(--vx-track-tight); margin: 0;
+       font-size: var(--vx-text-h1); line-height: 0.94;
+       font-stretch: var(--vx-wdth-display); text-transform: uppercase; }
+
+  .shell { width: 100%; max-width: 104rem; margin: 0 auto;
+           padding-inline: var(--vx-space-5); }
+
+  /* nav / footer copied from index.html so the pages sit flush */
+  .nav-in { display: flex; align-items: center; justify-content: space-between;
+            gap: var(--vx-space-4); padding-block: var(--vx-space-2); }
+  .brand { display: flex; align-items: center; gap: 0.6rem; }
+  .brand span { font-family: var(--vx-font-mono); font-size: 1.2rem; font-weight: 700;
+                letter-spacing: 0.1em; color: var(--vx-fg); }
+  .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); }
+  .nav-links a { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+                 letter-spacing: var(--vx-track-label); text-transform: uppercase;
+                 color: var(--vx-fg-muted); }
+  .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--vx-fg); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+         font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+         letter-spacing: var(--vx-track-label); text-transform: uppercase;
+         border-radius: var(--vx-r-chip); padding: 0.95rem 1.7rem; min-height: 44px;
+         border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+         transition: background-color var(--vx-dur) var(--vx-ease),
+                     border-color var(--vx-dur) var(--vx-ease); }
+  .btn-primary { background: var(--vx-ember); color: var(--vx-fg-invert); box-shadow: var(--vx-mint-glow); }
+  .btn-primary:hover { background: #FF5A28; }
+  .btn-primary[disabled] { opacity: 0.55; cursor: default; box-shadow: none; }
+  .btn-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
+  .btn-ghost:hover { border-color: var(--vx-ember); color: var(--vx-ember); }
+
+  footer { border-top: 1px solid var(--vx-hairline);
+           padding-block: var(--vx-space-4); margin-top: auto; }
+  .foot-in { display: flex; align-items: center; justify-content: space-between;
+             gap: var(--vx-space-3); flex-wrap: wrap; }
+  .foot-in a, .foot-in span { font-family: var(--vx-font-mono);
+    font-size: var(--vx-text-label); letter-spacing: var(--vx-track-label);
+    text-transform: uppercase; color: var(--vx-fg-muted); }
+  .foot-in a:hover { color: var(--vx-ember); }
+  .foot-links { display: flex; gap: var(--vx-space-3); flex-wrap: wrap; }
+
+  /* ---- page ---- */
+  main { padding-block: var(--vx-space-7) var(--vx-section); }
+  .cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: var(--vx-space-7); align-items: start; margin-top: var(--vx-space-5); }
+
+  .lede { max-width: 46rem; margin-top: var(--vx-space-3); color: var(--vx-fg-muted); }
+
+  /* The "you don't need this" panel is deliberately the first thing beside
+     the form. A key wall before the first call loses more integrations than
+     any pricing page does. */
+  .no-key { border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-card);
+            background: var(--vx-bg-raised); padding: var(--vx-space-4); }
+  .no-key h2 { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+               letter-spacing: var(--vx-track-label); text-transform: uppercase;
+               color: var(--vx-fg-muted); margin: 0 0 var(--vx-space-2); font-weight: 500; }
+  pre { margin: 0; padding: var(--vx-space-3); overflow-x: auto;
+        background: var(--vx-bg-inset); border-radius: var(--vx-r-chip);
+        font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+        line-height: 1.7; color: var(--vx-fg-muted); }
+  pre .k { color: var(--vx-accent-2); }
+  .no-key p { font-size: var(--vx-text-label); font-family: var(--vx-font-mono);
+              color: var(--vx-fg-faint); line-height: 1.7; margin: var(--vx-space-3) 0 0; }
+
+  form { display: flex; flex-direction: column; gap: var(--vx-space-3); }
+  .field { display: flex; flex-direction: column; gap: 0.5rem; }
+  label { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+          letter-spacing: var(--vx-track-label); text-transform: uppercase;
+          color: var(--vx-fg-muted); }
+  label .opt { text-transform: none; letter-spacing: 0; color: var(--vx-fg-faint); }
+
+  input[type="text"], input[type="email"], input[type="url"], select {
+    width: 100%; padding: 0.85rem 1rem; min-height: 44px;
+    background: var(--vx-bg-inset); color: var(--vx-fg);
+    border: 1px solid var(--vx-hairline-firm); border-radius: var(--vx-r-chip);
+    font-family: var(--vx-font-mono); font-size: var(--vx-text-body);
+    transition: border-color var(--vx-dur) var(--vx-ease); }
+  input:focus, select:focus { outline: none; border-color: var(--vx-ember); }
+  input::placeholder { color: var(--vx-fg-faint); }
+  select { appearance: none; cursor: pointer;
+           background-image: linear-gradient(45deg, transparent 50%, var(--vx-fg-muted) 50%),
+                             linear-gradient(135deg, var(--vx-fg-muted) 50%, transparent 50%);
+           background-position: calc(100% - 1.2rem) 55%, calc(100% - 0.85rem) 55%;
+           background-size: 0.4rem 0.4rem, 0.4rem 0.4rem; background-repeat: no-repeat; }
+  select option { background: var(--vx-bg-raised); color: var(--vx-fg); }
+
+  .check { display: flex; align-items: flex-start; gap: 0.7rem; cursor: pointer; }
+  .check input { margin-top: 0.35rem; accent-color: var(--vx-ember); width: 1rem; height: 1rem; }
+  .check span { font-size: var(--vx-text-label); font-family: var(--vx-font-mono);
+                color: var(--vx-fg-muted); line-height: 1.6; text-transform: none;
+                letter-spacing: 0; }
+
+  /* Honeypot: off-screen rather than display:none, which some bots skip. */
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px;
+        overflow: hidden; }
+
+  .msg { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+         line-height: 1.7; padding: var(--vx-space-3);
+         border-radius: var(--vx-r-chip); border: 1px solid var(--vx-hairline-firm); }
+  .msg.err { border-color: var(--vx-danger); color: var(--vx-fg); }
+  .msg.ok  { border-color: var(--vx-success); color: var(--vx-fg); }
+  .msg[hidden] { display: none; }
+
+  .done { border: 1px solid var(--vx-success); border-radius: var(--vx-r-card);
+          background: var(--vx-bg-raised); padding: var(--vx-space-4); }
+  .done h2 { font-family: var(--vx-font-display); font-size: var(--vx-text-h3);
+             margin: 0 0 var(--vx-space-2); }
+  .done p { color: var(--vx-fg-muted); margin: 0 0 var(--vx-space-3); }
+
+  @media (max-width: 860px) {
+    h1 { font-size: 3rem; }
+    .shell { padding-inline: 1.3rem; }
+    .nav-links { display: none; }
+    .cols { grid-template-columns: 1fr; gap: var(--vx-space-5); }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="shell nav-in">
+    <a class="brand" href="/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path fill="#FF3D01" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+      </svg>
+      <span>VULCX</span>
+    </a>
+    <div class="nav-links">
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="/#endpoints">Quote API</a>
+      <a href="/#fees">Fees</a>
+      <a href="/api-key/" aria-current="page">API key</a>
+      <a href="/status/">Status</a>
+      <a href="https://github.com/vulcx">GitHub</a>
+    </div>
+    <a class="btn btn-ghost" href="https://docs.vulcx.xyz">Read the docs</a>
+  </div>
+</nav>
+
+<main class="shell">
+  <h1>Get an API key</h1>
+  <p class="lede">Free during beta. Keys are issued by hand while we are small, so tell us
+    enough to know what you are building — you will hear back within a day.</p>
+
+  <div class="cols">
+    <div>
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required autocomplete="email"
+                 placeholder="you@yourproduct.com">
+        </div>
+
+        <div class="field">
+          <label for="productName">Product</label>
+          <input id="productName" name="productName" type="text" required maxlength="120"
+                 placeholder="What it's called">
+        </div>
+
+        <div class="field">
+          <label for="productUrl">Product URL <span class="opt">— optional</span></label>
+          <input id="productUrl" name="productUrl" type="url" maxlength="300"
+                 placeholder="https://">
+        </div>
+
+        <div class="field">
+          <label for="buildType">What are you building?</label>
+          <select id="buildType" name="buildType" required>
+            <option value="">Choose one…</option>
+            <option value="wallet">A wallet with a swap surface</option>
+            <option value="terminal_bot">A trading terminal or bot</option>
+            <option value="data">A data or analytics product with a trade button</option>
+            <option value="protocol">A protocol that needs routing internally</option>
+            <option value="small_dapp">A dApp, launchpad, or NFT tooling</option>
+            <option value="personal">A personal project, or just trying it out</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="volumeBand">Expected monthly swap volume <span class="opt">— optional</span></label>
+          <select id="volumeBand" name="volumeBand">
+            <option value="">Prefer not to say</option>
+            <option value="under-10k">Under $10k</option>
+            <option value="10k-100k">$10k – $100k</option>
+            <option value="100k-1m">$100k – $1M</option>
+            <option value="over-1m">Over $1M</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="contact">Telegram or X <span class="opt">— optional</span></label>
+          <input id="contact" name="contact" type="text" maxlength="120" placeholder="@handle">
+        </div>
+
+        <label class="check">
+          <input id="needsStream" name="needsStream" type="checkbox">
+          <span>I need the WebSocket quote stream. It is the one endpoint that always
+                requires a key — everything else works without one.</span>
+        </label>
+
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="msg err" id="error" role="alert" hidden></div>
+
+        <button class="btn btn-primary" id="submit" type="submit">Request a key</button>
+      </form>
+
+      <div class="done" id="done" hidden>
+        <h2>Request received.</h2>
+        <p id="doneNote">We will email the key within a day. In the meantime the API
+          already works without one — the call on the right runs right now.</p>
+        <a class="btn btn-ghost" href="https://docs.vulcx.xyz/get-started/introduction">Start reading</a>
+      </div>
+    </div>
+
+    <aside class="no-key">
+      <h2>You don't need a key to start</h2>
+      <pre><span class="k">curl</span> "https://api.vulcx.xyz/api/v1/quote\
+?inputMint=So11111111111111111111111111111111111111112\
+&amp;outputMint=uSd2czE61Evaf76RNbq4KPpXnkiL3irdzgLFUMe3NoG\
+&amp;amount=1000000000\
+&amp;swapMode=ExactIn"</pre>
+      <p>Quote, swap, instructions and price all answer anonymous requests at 1 cost
+         unit per second. A key raises that to 100, and is required for the WebSocket
+         stream. Nothing else changes.</p>
+      <p>Prefer to just ask? <a href="https://t.me/vulcxsupport">Telegram</a> still works.</p>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="shell foot-in">
+    <span>Vulcx · Swap routing for Fogo</span>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="/status/">Status</a>
+      <a href="https://github.com/vulcx" rel="me">GitHub</a>
+      <a href="https://x.com/vulcx_xyz" rel="me">X</a>
+      <a href="https://t.me/vulcxsupport" rel="me">Telegram</a>
+      <a href="https://fogo.io">Fogo</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+
+  var ENDPOINT = 'https://license.vulcx.xyz/key-requests';
+
+  var form   = document.getElementById('form');
+  var errBox = document.getElementById('error');
+  var done   = document.getElementById('done');
+  var submit = document.getElementById('submit');
+
+  function fail(msg) {
+    errBox.textContent = msg;
+    errBox.hidden = false;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    errBox.hidden = true;
+
+    var payload = {
+      email:       document.getElementById('email').value.trim(),
+      productName: document.getElementById('productName').value.trim(),
+      productUrl:  document.getElementById('productUrl').value.trim(),
+      buildType:   document.getElementById('buildType').value,
+      volumeBand:  document.getElementById('volumeBand').value,
+      contact:     document.getElementById('contact').value.trim(),
+      needsStream: document.getElementById('needsStream').checked,
+      website:     document.getElementById('website').value
+    };
+
+    // Check here too so an obvious miss costs no round trip; the server
+    // validates the same things regardless.
+    if (!payload.email || payload.email.indexOf('@') < 1) {
+      return fail('A valid email is required — it is where the key goes.');
+    }
+    if (!payload.productName) { return fail('Tell us what the product is called.'); }
+    if (!payload.buildType)   { return fail('Pick what you are building.'); }
+
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (r) {
+        return r.json().catch(function () { return {}; }).then(function (body) {
+          if (r.ok) { return body; }
+          throw new Error(body.error || ('Request failed (' + r.status + ')'));
+        });
+      })
+      .then(function () {
+        form.hidden = true;
+        done.hidden = false;
+        done.scrollIntoView({ block: 'nearest' });
+      })
+      .catch(function (err) {
+        submit.disabled = false;
+        submit.textContent = 'Request a key';
+        fail(err.message + ' — or just ask on Telegram: t.me/vulcxsupport');
+      });
+  });
+})();
+</script>
+
+</body>
+</html>

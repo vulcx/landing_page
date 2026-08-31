@@ -15,7 +15,9 @@ Base URL: https://api.vulcx.xyz
 - `GET /api/v1/stream` — WebSocket quote stream (this one requires a key)
 
 Rate limits are one published budget for every caller, debited by request cost
-rather than request count. Full reference: https://docs.vulcx.xyz
+rather than request count. A key is optional on REST — anonymous callers get a
+small per-IP budget — and required only for the WebSocket stream. Request one
+free at https://vulcx.xyz/api-key/. Full reference: https://docs.vulcx.xyz
 
 ## Liquidity sources
 
@@ -32,6 +34,7 @@ Live checks against the production endpoints: https://vulcx.xyz/status/
 - Documentation: https://docs.vulcx.xyz
 - Machine-readable docs index: https://docs.vulcx.xyz/llms.txt
 - Status: https://vulcx.xyz/status/
+- Request an API key: https://vulcx.xyz/api-key/
 - Source: https://github.com/vulcx
 - X: https://x.com/vulcx_xyz
 - Telegram: https://t.me/vulcxsupport

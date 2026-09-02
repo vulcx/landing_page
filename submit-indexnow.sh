@@ -9,8 +9,8 @@
 #
 # Ownership is proved by hosting <key>.txt containing the key at the root of
 # the same host as the URLs being submitted, which is why the key file is
-# committed to both this repo and vulcx-docs. The key is not a secret; being
-# publicly fetchable is the entire mechanism.
+# committed here. The key is not a secret; being publicly fetchable is the
+# entire mechanism.
 #
 # Run after publishing new pages:
 #     ./submit-indexnow.sh
@@ -73,8 +73,15 @@ print(json.dumps({
     esac
 }
 
-submit "vulcx.xyz"      "https://vulcx.xyz/sitemap.xml"
-submit "docs.vulcx.xyz" "https://docs.vulcx.xyz/sitemap.xml"
+submit "vulcx.xyz" "https://vulcx.xyz/sitemap.xml"
+
+# docs.vulcx.xyz is deliberately absent. IndexNow requires the key file on the
+# same host as the URLs submitted, and Mintlify serves root files from an
+# allowlist rather than from the repo — llms.txt and Assistant.md resolve,
+# README.md and style.css do not, and neither does a key file. Verified
+# against the deployed commit, not assumed. The docs pages are still found
+# through the sitemap, which robots.txt declares and which is submitted to
+# Bing and Google directly.
 
 echo
 echo "==> Done. Bing typically crawls within hours; check Bing Webmaster Tools"

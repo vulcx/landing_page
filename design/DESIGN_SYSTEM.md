@@ -2,18 +2,20 @@
 
 Extracted from computed styles — not from screenshots, not from vibes.
 
-**Three systems have shipped from this file.** Section 1 audits every
+**Four systems have shipped from this file.** Section 1 audits every
 reference behind them. Section 2 is a post-mortem on the light editorial pass,
-kept because the failure is instructive. **Section 3 is the system in force.**
+kept because the failure is instructive. Section 3 documents the dark terminal.
+**Section 4 is the system in force.**
 
 | | System | Ground | Display | Status |
 |---|---|---|---|---|
 | 1 | Fogo-derived | `#080420` indigo | Clash Display 600 | retired |
 | 2 | Light editorial (x402) | `#FFFFFF` | Instrument Serif 400 | **reverted same day** |
-| 3 | Dark terminal | `#0B0B0F` near-black | Archivo 600 condensed | **in force** |
+| 3 | Dark terminal | `#0B0B0F` near-black | Archivo 600 condensed | retired |
+| 4 | Warm paper, dark anchor | `#F6F4EF` paper | Familjen Grotesk 600 | **in force** |
 
-Constant across all three: the fluid `vw` root, `tabular-nums` on every number,
-one easing curve, and the token *names* — so `swap-panel.js` never had to
+Constant across all four: the fluid `vw` root, `tabular-nums` on every number,
+one easing curve, and the token *names* — so `swap-panel.js` has never had to
 change when the system did.
 
 ---
@@ -228,3 +230,72 @@ operate.
   one it mutes the label past legibility. State the disabled colours explicitly
   (see `.btn-primary.sp-go:disabled`).
 - Ink is `#E8E8EA`, never `#FFF`. Pure white on near-black vibrates.
+
+
+---
+
+## 4. System in force — warm paper, dark anchor
+
+Adopted 2026-09-02, replacing the dark terminal.
+
+### Why 3 was replaced
+
+It was competent and completely anonymous. Near-black, one hot accent,
+condensed-uppercase display, mono micro-labels, numbered sections, hairline
+cards — the default developer-infrastructure look of the era, shared with
+Linear, Vercel, Railway, Resend and most of the category.
+
+The specific fault was typographic. **Archivo was display *and* body *and*
+section head**, differing only by size, width axis and case: one voice at
+three volumes. A design takes its character from the tension between two
+voices, and there was only ever one. JetBrains Mono carried what personality
+the page had, and it is the most-used mono in the category.
+
+### Why this is not a return to system 2
+
+System 2 failed because a pure-white page with 13%-opacity hairlines had no
+mass and no focal point. The fix is not "go dark again" — it is to give a
+light page **one heavy object**.
+
+That object is the live quote panel, which is a **scoped dark island**: the
+surface and ink tokens are redefined inside `#swap-panel`, so every `.sp-*`
+rule written against those names keeps working on a dark ground without a
+single rule being rewritten. It is also why `swap-panel.js` needed no edit —
+it writes `var(--vx-accent-N)` into inline styles, which resolve inside that
+scope.
+
+The mass and the focal point are the same element, and it is the element that
+proves the product works.
+
+### The three voices
+
+| Role | Family | Job |
+|---|---|---|
+| display | Familjen Grotesk 600 | headlines, set **sentence case**, never condensed-uppercase |
+| ui | Inter 400/500 | long copy — neutral on purpose, must not fight the display |
+| mono | IBM Plex Mono 400/500 | data, labels, anything the machine said |
+
+The separation is the point. Do not set a headline in Inter or body copy in
+Familjen to "unify" them; that unification is exactly what made system 3
+anonymous.
+
+### Colour roles that moved
+
+- **Primary buttons are ink** (`--vx-mint` = `#17161A`), not ember. On paper a
+  solid dark block reads more expensive than a saturated one.
+- **Ember deepened** `#FF3D01` → `#E23A00`. The brighter value was tuned
+  against near-black and vibrates on warm paper. Inside the dark panel the
+  scope restores `#FF5A28`.
+- **Glows became shadows.** `--vx-ember-glow` is `none` at document level: a
+  glow implies a light source and paper has none. The panel keeps its glow.
+- **`--vx-accent-1..4` are tuned for `#17161A`, not for paper**, because they
+  only ever render inside the panel. Anything on the paper ground that needs a
+  semantic colour uses `--vx-success` / `--vx-warn` / `--vx-danger`, which the
+  panel scope overrides — so one rule reads correctly on both grounds. See
+  `.c-mint`.
+
+### What to check before changing a value
+
+`swap-panel.js` reads nothing at runtime, but it *writes* `var(--vx-accent-N)`
+and `var(--vx-fg-faint)` into inline styles. Renaming either breaks the route
+legs silently — the bars render with no colour and nothing errors.

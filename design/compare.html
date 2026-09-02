@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vulcx — hero directions D/E/F</title>
+<meta name="robots" content="noindex, nofollow">
+
+<!-- Three directions, identical copy, so the comparison is about style only.
+     Deliberately avoids two systems this project has already rejected:
+       · #080420 indigo + Clash Display        (retired)
+       · pure white + Instrument Serif 400      (reverted same day — the page
+         had no mass and no focal point, and a 400 serif read as "neutral
+         standard" for a product that competes on execution quality)
+     Each direction below answers the mass problem in a different way. -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:#0a0a0a;color:#fff;font-family:Inter,system-ui,sans-serif}
+
+  .label{position:sticky;top:0;z-index:10;background:#0a0a0a;color:#8a8a8a;
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;padding:14px 32px;border-bottom:1px solid #222}
+  .label b{color:#fff;font-weight:500}
+  .label span{color:#5a5a5a;text-transform:none;letter-spacing:0}
+
+  .frame{width:100%}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 56px}
+  .num{font-variant-numeric:tabular-nums}
+
+  /* ═══════════ D — Warm paper, dark anchor ═══════════
+     Light, but the live panel is a solid dark block. That block is the mass
+     the earlier light pass never had, and it doubles as the focal point. */
+  .D{background:#F6F4EF;color:#171614;padding:78px 0 0}
+  .D .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:#8a8578;margin:0 0 22px}
+  .D h1{font-family:'Familjen Grotesk',sans-serif;font-weight:600;font-size:68px;
+    line-height:1.02;letter-spacing:-.028em;margin:0 0 22px;max-width:15ch}
+  .D p{font-size:17px;line-height:1.62;color:#57544c;max-width:52ch;margin:0 0 30px}
+  .D .row{display:flex;gap:12px;align-items:center;margin-bottom:66px}
+  .D .btn{font-family:Inter;font-size:14px;font-weight:600;padding:13px 22px;
+    border-radius:9px;border:1px solid transparent;text-decoration:none}
+  .D .p1{background:#171614;color:#F6F4EF}
+  .D .p2{border-color:#d9d5cb;color:#171614;font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:13px}
+  .D .panel{background:#17161A;border-radius:16px 16px 0 0;padding:30px 34px;color:#EDEBE6}
+  .D .ph{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6f6c66;margin-bottom:22px}
+  .D .quote{display:flex;align-items:baseline;gap:16px;font-family:'IBM Plex Mono',monospace}
+  .D .qa{font-size:38px;font-weight:500}
+  .D .qb{font-size:14px;color:#8f8b83}
+  .D .legs{display:flex;gap:26px;margin-top:24px;padding-top:20px;border-top:1px solid #2a2a2e;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8f8b83}
+  .D .legs b{color:#EDEBE6;font-weight:500}
+
+  /* ═══════════ E — Soft slate, lowercase display ═══════════
+     Keeps a dark ground but moves off near-black to a cooler slate, and drops
+     the condensed-uppercase hero, which is the most-copied move of the era. */
+  .E{background:#12141A;color:#E8E9ED;padding:78px 0 0}
+  .E .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:#7C8BA1;margin:0 0 22px}
+  .E h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:70px;
+    line-height:1.0;letter-spacing:-.03em;margin:0 0 22px;max-width:15ch}
+  .E p{font-size:17px;line-height:1.62;color:#98A0AE;max-width:52ch;margin:0 0 30px}
+  .E .row{display:flex;gap:12px;align-items:center;margin-bottom:66px}
+  .E .btn{font-size:14px;font-weight:600;padding:13px 22px;border-radius:9px;
+    border:1px solid transparent;text-decoration:none}
+  .E .p1{background:#5B8DEF;color:#0B0D12}
+  .E .p2{border-color:#2A2F3A;color:#E8E9ED;font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:13px}
+  .E .panel{background:#171A21;border:1px solid #232833;border-radius:14px 14px 0 0;padding:30px 34px}
+  .E .ph{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#6E7887;margin-bottom:22px}
+  .E .quote{display:flex;align-items:baseline;gap:16px;font-family:'IBM Plex Mono',monospace}
+  .E .qa{font-size:38px;font-weight:500}
+  .E .qb{font-size:14px;color:#7C8BA1}
+  .E .legs{display:flex;gap:26px;margin-top:24px;padding-top:20px;border-top:1px solid #232833;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:#7C8BA1}
+  .E .legs b{color:#E8E9ED;font-weight:500}
+
+  /* ═══════════ F — Two-tone split ═══════════
+     Dark band for the claim, light below for everything you actually read.
+     Mass and legibility both, and the seam gives the page a spine. */
+  .F .top{background:#101014;color:#fff;padding:76px 0 62px}
+  .F .bot{background:#fff;color:#101014;padding:34px 0 0}
+  .F .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:#807C74;margin:0 0 22px}
+  .F h1{font-family:'Familjen Grotesk',sans-serif;font-weight:700;font-size:64px;
+    line-height:1.04;letter-spacing:-.03em;margin:0 0 20px;max-width:16ch}
+  .F .top p{font-size:17px;line-height:1.62;color:#A5A29B;max-width:52ch;margin:0 0 28px}
+  .F .row{display:flex;gap:12px;align-items:center}
+  .F .btn{font-size:14px;font-weight:600;padding:13px 22px;border-radius:8px;
+    border:1px solid transparent;text-decoration:none}
+  .F .p1{background:#E8FF5A;color:#101014}
+  .F .p2{border-color:#2C2C31;color:#fff;font-family:'IBM Plex Mono',monospace;font-weight:400;font-size:13px}
+  .F .panel{background:#fff;border:1px solid #E6E4E0;border-radius:14px;
+    padding:26px 30px;margin-top:-52px;box-shadow:0 18px 46px rgba(16,16,20,.14)}
+  .F .ph{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8C8880;margin-bottom:20px}
+  .F .quote{display:flex;align-items:baseline;gap:16px;font-family:'IBM Plex Mono',monospace}
+  .F .qa{font-size:36px;font-weight:500;color:#101014}
+  .F .qb{font-size:14px;color:#8C8880}
+  .F .legs{display:flex;gap:26px;margin-top:22px;padding-top:18px;border-top:1px solid #EDEBE7;
+    font-family:'IBM Plex Mono',monospace;font-size:12px;color:#8C8880}
+  .F .legs b{color:#101014;font-weight:500}
+  .F .stats{display:flex;gap:0;margin-top:30px;border-top:1px solid #EDEBE7}
+  .F .stat{flex:1;padding:20px 0;border-right:1px solid #EDEBE7}
+  .F .stat:last-child{border-right:0}
+  .F .stat b{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:500}
+  .F .stat span{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:#8C8880;margin-left:8px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ D ══════════════════════════ -->
+<div class="label"><b>D — Warm paper, dark anchor</b> &nbsp;·&nbsp;
+  <span>Familjen Grotesk 600 · IBM Plex Mono · ground #F6F4EF · the panel is the mass</span></div>
+<div class="frame D">
+  <div class="wrap">
+    <p class="eyebrow">Swap routing API · Fogo mainnet</p>
+    <h1>Every pool on Fogo, in one call.</h1>
+    <p>Give Vulcx a pair and an amount. It searches every pool on the chain — up to five hops,
+       splitting across venues when splitting wins — and hands back a transaction ready to sign.</p>
+    <div class="row">
+      <a class="btn p1" href="#">Get a quote</a>
+      <a class="btn p2" href="#">npm i @vulcx/sdk</a>
+    </div>
+    <div class="panel">
+      <div class="ph"><span>Live quote · api.vulcx.xyz</span><span>slot <span class="num">719171028</span></span></div>
+      <div class="quote"><span class="qa num">1 FOGO → 0.007051 USDC</span><span class="qb">exact in</span></div>
+      <div class="legs"><span>1 <b>hop</b></span><span><b>Valiant</b> 100%</span><span>impact <b class="num">0.00%</b></span><span>firm for <b class="num">400ms</b></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ E ══════════════════════════ -->
+<div class="label"><b>E — Soft slate, lowercase display</b> &nbsp;·&nbsp;
+  <span>Bricolage Grotesque 500 · ground #12141A · accent moved off hot orange</span></div>
+<div class="frame E">
+  <div class="wrap">
+    <p class="eyebrow">Swap routing API · Fogo mainnet</p>
+    <h1>Every pool on Fogo, in one call.</h1>
+    <p>Give Vulcx a pair and an amount. It searches every pool on the chain — up to five hops,
+       splitting across venues when splitting wins — and hands back a transaction ready to sign.</p>
+    <div class="row">
+      <a class="btn p1" href="#">Get a quote</a>
+      <a class="btn p2" href="#">npm i @vulcx/sdk</a>
+    </div>
+    <div class="panel">
+      <div class="ph"><span>Live quote · api.vulcx.xyz</span><span>slot <span class="num">719171028</span></span></div>
+      <div class="quote"><span class="qa num">1 FOGO → 0.007051 USDC</span><span class="qb">exact in</span></div>
+      <div class="legs"><span>1 <b>hop</b></span><span><b>Valiant</b> 100%</span><span>impact <b class="num">0.00%</b></span><span>firm for <b class="num">400ms</b></span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ F ══════════════════════════ -->
+<div class="label"><b>F — Two-tone split</b> &nbsp;·&nbsp;
+  <span>Familjen Grotesk 700 · dark band for the claim, white for what you read · panel straddles the seam</span></div>
+<div class="frame F">
+  <div class="top">
+    <div class="wrap">
+      <p class="eyebrow">Swap routing API · Fogo mainnet</p>
+      <h1>Every pool on Fogo, in one call.</h1>
+      <p>Give Vulcx a pair and an amount. It searches every pool on the chain — up to five hops,
+         splitting across venues when splitting wins — and hands back a transaction ready to sign.</p>
+      <div class="row">
+        <a class="btn p1" href="#">Get a quote</a>
+        <a class="btn p2" href="#">npm i @vulcx/sdk</a>
+      </div>
+    </div>
+  </div>
+  <div class="bot">
+    <div class="wrap">
+      <div class="panel">
+        <div class="ph"><span>Live quote · api.vulcx.xyz</span><span>slot <span class="num">719171028</span></span></div>
+        <div class="quote"><span class="qa num">1 FOGO → 0.007051 USDC</span><span class="qb">exact in</span></div>
+        <div class="legs"><span>1 <b>hop</b></span><span><b>Valiant</b> 100%</span><span>impact <b class="num">0.00%</b></span><span>firm for <b class="num">400ms</b></span></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b class="num">3</b><span>venues</span></div>
+        <div class="stat"><b class="num">5</b><span>hops</span></div>
+        <div class="stat"><b class="num">0</b><span>rpc calls to quote</span></div>
+        <div class="stat"><b class="num">100</b><span>bps fee cap</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

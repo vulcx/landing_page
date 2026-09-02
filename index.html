@@ -33,7 +33,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="design/tokens.css">
 
 <style>
@@ -55,8 +55,9 @@
   h1, h2, h3 { font-family: var(--vx-font-display); font-weight: 600;
                letter-spacing: var(--vx-track-tight); margin: 0; text-wrap: balance;
                color: var(--vx-fg); }
-  h1 { font-size: var(--vx-text-h1); line-height: 0.94; font-stretch: var(--vx-wdth-display);
-       text-transform: uppercase; }
+  /* Sentence case, not the condensed-uppercase of the previous system —
+     that setting is the single most-copied display move of the era. */
+  h1 { font-size: var(--vx-text-h1); line-height: 0.98; font-stretch: var(--vx-wdth-display); }
   h2 { font-size: var(--vx-text-h2); line-height: 1.04; font-stretch: var(--vx-wdth-head); }
   h3 { font-size: var(--vx-text-h3); line-height: 1.3; font-stretch: var(--vx-wdth-ui); }
   p  { margin: 0; color: var(--vx-fg-muted); text-wrap: pretty; }
@@ -81,11 +82,11 @@
              color: var(--vx-fg-muted); }
 
   code { font-family: var(--vx-font-mono); font-size: 0.88em; color: var(--vx-fg);
-         background: rgba(255,255,255,0.07); border-radius: var(--vx-r-chip);
+         background: rgba(23,22,26,0.06); border-radius: var(--vx-r-chip);
          padding: 0.12em 0.38em; }
 
   /* ---- nav ---- */
-  .nav { position: sticky; top: 0; z-index: 20; background: rgba(11,11,15,0.88);
+  .nav { position: sticky; top: 0; z-index: 20; background: rgba(246,244,239,0.86);
          backdrop-filter: blur(14px); border-bottom: 1px solid var(--vx-hairline); }
   .nav-in { display: flex; align-items: center; justify-content: space-between; gap: var(--vx-space-4);
             padding-block: var(--vx-space-2); }
@@ -105,8 +106,8 @@
          border: 1px solid transparent; cursor: pointer; white-space: nowrap;
          transition: background-color var(--vx-dur) var(--vx-ease), color var(--vx-dur) var(--vx-ease),
                      border-color var(--vx-dur) var(--vx-ease), box-shadow var(--vx-dur) var(--vx-ease); }
-  .btn-primary { background: var(--vx-ember); color: var(--vx-fg-invert); box-shadow: var(--vx-mint-glow); }
-  .btn-primary:hover { background: #FF5A28; }
+  .btn-primary { background: var(--vx-mint); color: var(--vx-fg-invert); box-shadow: var(--vx-mint-glow); }
+  .btn-primary:hover { background: #2A2830; }
   .btn-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
   .btn-ghost:hover { border-color: var(--vx-ember); color: var(--vx-ember); }
 
@@ -153,9 +154,10 @@
            border: 1px solid var(--vx-hairline-firm); border-radius: var(--vx-r-card);
            padding: var(--vx-space-4) var(--vx-space-5); display: flex; flex-direction: column;
            gap: var(--vx-space-3); text-align: left; }
-  .hero-in .route { box-shadow: 0 0 0 1px rgba(255,61,1,0.10),
-                                0 2.4rem 5rem rgba(0,0,0,0.65),
-                                0 0 5rem rgba(255,61,1,0.13); }
+  /* The panel is the page's one heavy object, so it gets a real shadow
+     rather than a glow — glows read as light sources, and paper has none. */
+  .hero-in .route { box-shadow: 0 0 0 1px rgba(23,22,26,0.10),
+                                0 2.4rem 5rem rgba(23,22,26,0.18); }
   .route-head { display: flex; align-items: center; justify-content: space-between;
                 gap: var(--vx-space-3); flex-wrap: wrap;
                 padding-bottom: var(--vx-space-2); border-bottom: 1px solid var(--vx-hairline); }
@@ -163,10 +165,10 @@
                letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-faint); }
   .live { display: inline-flex; align-items: center; gap: 0.6rem; }
   .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--vx-accent-2);
-         box-shadow: 0 0 0 0 rgba(0,226,138,0.55); animation: pulse 2.6s var(--vx-ease) infinite; }
-  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,226,138,0.5); }
-                     70% { box-shadow: 0 0 0 0.7rem rgba(0,226,138,0); }
-                     100% { box-shadow: 0 0 0 0 rgba(0,226,138,0); } }
+         box-shadow: 0 0 0 0 rgba(52,211,153,0.55); animation: pulse 2.6s var(--vx-ease) infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(52,211,153,0.5); }
+                     70% { box-shadow: 0 0 0 0.7rem rgba(52,211,153,0); }
+                     100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); } }
 
   /* ---- the split, drawn ----
      Input token, a fan-out bus, one channel per venue, a fan-in bus, output.
@@ -180,7 +182,7 @@
                  font-size: 0.95rem; background: var(--vx-bg-inset);
                  border: 1px solid var(--vx-hairline-firm); color: var(--vx-fg); }
   .token-out .token-badge { border-color: var(--vx-ember); color: var(--vx-ember);
-                            box-shadow: 0 0 1.6rem rgba(255,61,1,0.30); }
+                            box-shadow: 0 0 1.6rem rgba(255,90,40,0.30); }
   .amount { font-family: var(--vx-font-mono); font-size: var(--vx-text-num);
             font-variant-numeric: tabular-nums; color: var(--vx-fg); }
   .token-out .amount { color: var(--vx-ember); font-weight: 500; }
@@ -269,7 +271,7 @@
                   min-width: 100%; display: flex; flex-direction: column; gap: 0.15rem;
                   background: var(--vx-bg-raised); border: 1px solid var(--vx-hairline-firm);
                   border-radius: var(--vx-r-panel); padding: 0.35rem;
-                  box-shadow: 0 1rem 2.5rem rgba(0,0,0,0.7); }
+                  box-shadow: 0 1rem 2.5rem rgba(23,22,26,0.22); }
   .sp-tokenlist button { display: flex; align-items: center; gap: 0.5rem; width: 100%;
                          background: none; border: 0; border-radius: var(--vx-r-chip);
                          color: var(--vx-fg-muted); font-family: var(--vx-font-mono);
@@ -289,9 +291,9 @@
   .sp-warn { margin: 0; display: flex; align-items: center; gap: 0.6rem;
              font-family: var(--vx-font-mono); font-size: 1rem; line-height: 1.5;
              border-radius: var(--vx-r-chip); padding: 0.8rem 1rem;
-             background: rgba(255,184,0,0.10); border: 1px solid rgba(255,184,0,0.34);
+             background: rgba(245,181,68,0.12); border: 1px solid rgba(245,181,68,0.38);
              color: var(--vx-warn); }
-  .sp-warn.sev-extreme { background: rgba(255,61,1,0.14); border-color: var(--vx-ember); color: #FF8A5C; }
+  .sp-warn.sev-extreme { background: rgba(255,90,40,0.16); border-color: var(--vx-ember); color: var(--vx-mint-text); }
   .sp-msg { font-family: var(--vx-font-mono); font-size: 1rem; color: var(--vx-fg-faint);
             padding-block: 0.8rem; }
   .sp.is-error .sp-msg { color: var(--vx-ember); }
@@ -321,7 +323,7 @@
   .btn-primary.sp-go:disabled:hover { background: var(--vx-bg-inset); color: var(--vx-fg-faint);
                                       border-color: var(--vx-hairline); box-shadow: none;
                                       cursor: not-allowed; }
-  .sp-wallet { background: rgba(255,61,1,0.10); border: 1px solid rgba(255,61,1,0.34);
+  .sp-wallet { background: var(--vx-ember-soft); border: 1px solid rgba(255,90,40,0.34);
                color: var(--vx-mint-text); border-radius: var(--vx-r-pill); padding: 0.3rem 0.8rem; }
   .sp-picker { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.3rem; }
   .sp-picker button { font-family: var(--vx-font-mono); font-size: 0.95rem; color: var(--vx-fg);
@@ -333,7 +335,7 @@
   .sp-txmsg { margin: 0; font-family: var(--vx-font-mono); font-size: 1rem; line-height: 1.5;
               color: var(--vx-fg-muted); }
   .sp-txmsg.ok { color: var(--vx-accent-2); }
-  .sp-txmsg.bad { color: #FF8A5C; }
+  .sp-txmsg.bad { color: var(--vx-mint-text); }
   .sp-txmsg a { color: inherit; text-decoration: underline; }
 
   /* ---- sections ---- */
@@ -360,7 +362,11 @@
            border-radius: var(--vx-r-panel); padding: var(--vx-space-4); overflow-x: auto; }
   .panel pre { margin: 0; font-family: var(--vx-font-mono); font-size: 1.05rem; line-height: 1.85;
                color: var(--vx-fg); font-variant-numeric: tabular-nums; }
-  .c-key { color: var(--vx-fg-faint); } .c-ember { color: var(--vx-ember); } .c-mint { color: var(--vx-accent-2); }
+  /* Semantic, not literal: --vx-success is dark green on paper and mint
+     inside the panel, so one rule reads correctly on both grounds. The
+     accent-N ramp is tuned for the dark panel only and would wash out
+     in a code well on paper. */
+  .c-key { color: var(--vx-fg-faint); } .c-ember { color: var(--vx-ember); } .c-mint { color: var(--vx-success); }
 
   .table-wrap { overflow-x: auto; margin-top: var(--vx-space-4); }
   .fee-table { width: 100%; min-width: 30rem; border-collapse: collapse; }
@@ -385,7 +391,7 @@
            padding-block: var(--vx-section-hero); border-top: 1px solid var(--vx-hairline); }
   .close::before { content: ""; position: absolute; inset: 0; pointer-events: none;
     background: radial-gradient(110% 78% at 50% 132%,
-      #FF3D01 0%, rgba(255,61,1,0.55) 26%, rgba(11,11,15,0) 68%); }
+      rgba(226,58,0,0.16) 0%, rgba(226,58,0,0.07) 26%, rgba(246,244,239,0) 68%); }
   .close-in { position: relative; z-index: 1; display: flex; flex-direction: column;
               align-items: center; gap: var(--vx-space-3); }
 
@@ -499,7 +505,7 @@
   <div class="shell nav-in">
     <a class="brand" href="/">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path fill="#FF3D01" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+        <path fill="#E23A00" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
       </svg>
       <span>VULCX</span>
     </a>

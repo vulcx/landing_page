@@ -23,7 +23,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/design/tokens.css">
 
 <style>
@@ -44,8 +44,8 @@
 
   h1, h2 { font-family: var(--vx-font-display); font-weight: 600;
            letter-spacing: var(--vx-track-tight); margin: 0; color: var(--vx-fg); }
-  h1 { font-size: var(--vx-text-h1); line-height: 0.94;
-       font-stretch: var(--vx-wdth-display); text-transform: uppercase; }
+  h1 { font-size: var(--vx-text-h1); line-height: 0.98;
+       font-stretch: var(--vx-wdth-display); }
   h2 { font-size: var(--vx-text-h3); font-stretch: var(--vx-wdth-head);
        letter-spacing: var(--vx-track-label); text-transform: uppercase;
        font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
@@ -106,9 +106,9 @@
 
   .dot { width: 0.6rem; height: 0.6rem; border-radius: var(--vx-r-pill);
          background: var(--vx-fg-faint); flex: none; display: inline-block; }
-  .is-up      .dot { background: var(--vx-success); box-shadow: 0 0 0.9rem rgba(0,226,138,0.55); }
-  .is-slow    .dot { background: var(--vx-warn);    box-shadow: 0 0 0.9rem rgba(255,184,0,0.5); }
-  .is-down    .dot { background: var(--vx-danger);  box-shadow: 0 0 0.9rem rgba(255,61,1,0.55); }
+  .is-up      .dot { background: var(--vx-success); box-shadow: 0 0 0 0.28rem rgba(15,122,82,0.16); }
+  .is-slow    .dot { background: var(--vx-warn);    box-shadow: 0 0 0 0.28rem rgba(138,90,0,0.16); }
+  .is-down    .dot { background: var(--vx-danger);  box-shadow: 0 0 0 0.28rem rgba(192,48,10,0.16); }
   .is-pending .dot { background: var(--vx-fg-faint); }
 
   .checks { border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-card);
@@ -179,7 +179,7 @@
   <div class="shell nav-in">
     <a class="brand" href="/">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path fill="#FF3D01" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+        <path fill="#E23A00" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
       </svg>
       <span>VULCX</span>
     </a>

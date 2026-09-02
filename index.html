@@ -427,6 +427,14 @@
   @media (max-width: 720px) {
     :root { font-size: 15px; }
     h1 { font-size: 3rem; }
+    /* --vx-section-hero is 7.8rem, which is right below a wide nav and a dead
+       void below a narrow one — the first thing on a phone should be the
+       claim, not empty paper. */
+    .hero { padding-block: var(--vx-space-5) var(--vx-space-5); }
+    /* The separator is a ::before on each sibling, so a wrap leaves the bullet
+       orphaned at the start of the new line. Stack them, drop the bullet. */
+    .hero-proof { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .hero-proof span + span::before { content: none; }
     h2 { font-size: 2.1rem; }
     .hero p.lede { font-size: 1.2rem; }
     .shell { padding-inline: 1.3rem; }

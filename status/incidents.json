@@ -1,1 +1,8 @@
-[]
+[
+  {
+    "date": "2026-09-01",
+    "title": "Routing unavailable for 27 hours after an upstream RPC outage",
+    "status": "resolved",
+    "body": "Between 07:07 UTC+1 on 1 September and 10:16 UTC+1 on 2 September, GET /api/v1/quote returned \"no route found\" for every pair. Quotes, swap building and the WebSocket stream were all affected. No funds were at risk at any point — Vulcx never holds them, and a swap that cannot be quoted cannot be built or signed.\n\nThe trigger was upstream: the RPC provider the engine reads pool state from lost its feed and answered every request with \"node is unhealthy: no feed from upstream\". Fogo's public node was returning 502 over the same period, so this was chain-wide infrastructure rather than one provider.\n\nThree faults of our own turned that into a full outage instead of a degradation. The engine loads its pool set once at startup and, on failure, logged an error and gave up rather than retrying — so a routine restart during the upstream outage left it holding no pools, permanently. /health answered 200 the entire time, because it checked only that the process was alive, not that it could route. And the deploy script, which waits for that 200, fell out of its wait loop on timeout and reported success anyway. Every layer that should have surfaced this stayed quiet.\n\nAll three are fixed. Pool loading now retries with backoff until it succeeds; /health is a readiness check that returns 503 with the pool counts while the graph is empty; and the deploy script fails loudly instead of reporting success. The recovery was the new behaviour working: when the upstream feed returned, the engine reloaded 343 pools on its own on retry attempt 171, with nobody touching it.\n\nWhat we are still missing is monitoring that alerts on this without a person looking. The status page you are reading only checks when someone opens it."
+  }
+]

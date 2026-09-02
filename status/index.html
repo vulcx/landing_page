@@ -156,6 +156,7 @@
              border: 1px solid var(--vx-hairline-firm); border-radius: var(--vx-r-chip);
              padding: 0.1rem 0.5rem; color: var(--vx-fg-muted); }
   .inc-body { color: var(--vx-fg-muted); margin: 0.4rem 0 0; max-width: 62rem; }
+  .inc-body + .inc-body { margin-top: var(--vx-space-2); }
   .inc-none { color: var(--vx-fg-faint); font-family: var(--vx-font-mono);
               font-size: var(--vx-text-label); }
 
@@ -444,7 +445,13 @@
         head.appendChild(el('span', 'inc-title', inc.title || 'Incident'));
         if (inc.status) head.appendChild(el('span', 'inc-tag', inc.status));
         li.appendChild(head);
-        if (inc.body) li.appendChild(el('p', 'inc-body', inc.body));
+        // Split on blank lines: an incident write-up worth reading is several
+        // paragraphs, and textContent collapses them into one wall otherwise.
+        if (inc.body) {
+          String(inc.body).split(/\n\s*\n/).forEach(function (para) {
+            if (para.trim()) li.appendChild(el('p', 'inc-body', para.trim()));
+          });
+        }
         ul.appendChild(li);
       });
   }

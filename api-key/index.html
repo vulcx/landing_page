@@ -109,6 +109,10 @@
               color: var(--vx-fg-faint); line-height: 1.7; margin: var(--vx-space-3) 0 0; }
 
   form { display: flex; flex-direction: column; gap: var(--vx-space-3); }
+  /* An explicit display beats the UA stylesheet's [hidden]{display:none},
+     so `form.hidden = true` leaves the form on screen next to the success
+     panel unless this says otherwise. Same reason .msg[hidden] exists. */
+  form[hidden] { display: none; }
   .field { display: flex; flex-direction: column; gap: 0.5rem; }
   label { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
           letter-spacing: var(--vx-track-label); text-transform: uppercase;

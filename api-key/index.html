@@ -161,7 +161,10 @@
     h1 { font-size: 3rem; }
     .shell { padding-inline: 1.3rem; }
     .nav-links { display: none; }
-    .cols { grid-template-columns: 1fr; gap: var(--vx-space-5); }
+    /* minmax(0,1fr), not 1fr: a bare 1fr track will not shrink below its
+       content's min-content width, and the unbreakable curl URL in the
+       side panel then pushes the whole page into horizontal overflow. */
+    .cols { grid-template-columns: minmax(0, 1fr); gap: var(--vx-space-5); }
   }
   @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 </style>

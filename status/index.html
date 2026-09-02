@@ -164,7 +164,10 @@
     h1 { font-size: 3rem; }
     .shell { padding-inline: 1.3rem; }
     .nav-links { display: none; }
-    .check { grid-template-columns: 1fr auto; row-gap: 0.35rem; }
+    /* Three tracks so name, state and latency share one row; two tracks
+       pushed the latency cell onto a row by itself with an empty neighbour. */
+    .check { grid-template-columns: minmax(0, 1fr) auto auto; row-gap: 0.4rem;
+             column-gap: var(--vx-space-2); }
     .c-ep { grid-column: 1 / -1; order: 3; }
     .c-ms { order: 2; }
   }

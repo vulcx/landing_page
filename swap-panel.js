@@ -15,9 +15,14 @@
   var SWAP_COST = 5;           // /swap debits 5 units; /quote debits 1
   var EXPLORER = 'https://fogoscan.com';
 
-  /* Publishable API key for this origin. Empty = keyless: the panel polls and
-     is capped at ~1 req/s (burst 5), which is why the swap build costs the whole
-     burst and a retry after a failure 429s.
+  /* Publishable API key for this origin. Empty = keyless: the panel is capped
+     at the anonymous tier, 2 req/s with a burst of 20. A swap build costs 5 of
+     those, so one build plus a few quotes fits — it did not when the burst was
+     5 and a single build spent all of it.
+
+     Keyless still shares one bucket per IP, so visitors behind a common CGNAT
+     or corporate egress contend with each other. An origin-locked key is the
+     real fix and moves this page onto the keyed budget.
 
      This key ships in page source and is world-readable BY DESIGN — it is safe
      only because it is minted with allowed_origins locked to this site, which
@@ -34,12 +39,18 @@
   // idempotently inside the swap transaction itself — no separate setup step.
   var REFERRER_WALLET = 'BjpJiZB7mPAJeaXwTVPWUSFtMZfW7yHiM1thBzorut6Q';
 
-  /* Client-side mirror of the server's keyless bucket (burst 5, refill ~1/s).
-     Measured, not documented: 5 requests land, the 6th 429s. Spending blind here
-     means the swap build — which costs the whole burst — fails at random. */
+  /* Client-side mirror of the server's bucket. Keep in step with
+     ANON_RATE_LIMIT_RPS / ANON_RATE_LIMIT_BURST in route-engine's config, and
+     with the published numbers on the rate-limits docs page — spending blind
+     here means the swap build fails at random instead of waiting its turn.
+
+     This mirror is per tab and per page load. It cannot see a second tab, or
+     another visitor on the same IP, both of which share the real server-side
+     bucket. It smooths this page's own usage; it does not make contention go
+     away. */
   var budget = API_KEY
     ? { units: 200, cap: 200, rate: 100, last: Date.now() }   // published per-key budget
-    : { units: 5, cap: 5, rate: 1, last: Date.now() };
+    : { units: 20, cap: 20, rate: 2, last: Date.now() };      // anonymous tier
   function refill() {
     var now = Date.now();
     budget.units = Math.min(budget.cap, budget.units + (now - budget.last) / 1000 * budget.rate);
@@ -373,7 +384,7 @@
     // this races the TTL and comes back 410 before the wallet even opens, so we
     // fall back to a fresh server-side route guarded by slippageBps.
     // Re-quoting first would be better, but quote(1) + swap(5) = 6 units blows
-    // the keyless burst of 5.
+    // the anonymous burst.
     var age = q.quoteExpiresAtMs ? (q.validForMs - (q.quoteExpiresAtMs - Date.now())) : 1e9;
     var body = {
       userWallet: w.address,
@@ -413,7 +424,7 @@
       if (/reject|denied|cancel/i.test(msg)) msg = 'Cancelled in the wallet.';
       else if (err && err.code === 410) msg = 'Quote expired before signing — re-quoting.';
       else if (err && err.code === 409) msg = 'The quoted route moved. Re-quoting at the new price.';
-      else if (err && err.code === 429) msg = 'Rate limited — a swap build costs 5 of the 5 keyless burst units. Try again in a second.';
+      else if (err && err.code === 429) msg = 'Rate limited — too many requests from this network. Try again in a moment.';
       state.tx = { status: 'error', signature: null, error: msg };
       render();
       runQuote(true);

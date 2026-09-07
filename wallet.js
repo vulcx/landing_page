@@ -97,6 +97,29 @@ window.VulcxWallet = (function () {
     }]);
   }
 
+  /* The chain tells us why it failed; "Transaction failed on chain." threw that
+     away and left the user with nothing to act on. Slippage is both the most
+     common cause and the only one they can do something about, so name it.
+
+     6006 and 6036 are the aggregator's slippage errors (ExceededSlippage /
+     AmountOutBelowMinimum) — the same discriminants internal/builder's
+     simulation parser matches on. Anything else stays generic on purpose:
+     guessing at an unknown program error is worse than admitting we do not
+     know. */
+  function onChainFailureMessage(err) {
+    var s = '';
+    try { s = JSON.stringify(err); } catch (_) { s = String(err); }
+    if (/6006|6036|Slippage|AmountOutBelowMinimum/i.test(s)) {
+      return 'Price moved past your slippage tolerance before the swap landed. ' +
+             'Nothing was swapped. Raise slippage or retry at the new price.';
+    }
+    if (/insufficient|InsufficientFunds/i.test(s)) {
+      return 'Not enough balance to cover the swap and fees. Nothing was swapped.';
+    }
+    return 'The swap failed on chain and nothing was swapped. Retry, or raise ' +
+           'slippage if the price is moving quickly.';
+  }
+
   /* Poll until the network confirms, or the quote's block height passes. */
   function confirm(signature, lastValidBlockHeight, onTick) {
     var started = Date.now();
@@ -107,7 +130,7 @@ window.VulcxWallet = (function () {
           .then(function (res) {
             var st = res && res.value && res.value[0];
             if (st) {
-              if (st.err) return reject(new Error('Transaction failed on chain.'));
+              if (st.err) return reject(new Error(onChainFailureMessage(st.err)));
               if (st.confirmationStatus === 'confirmed' || st.confirmationStatus === 'finalized') {
                 return resolve(st.confirmationStatus);
               }

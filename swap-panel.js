@@ -148,11 +148,28 @@
       .finally(function () { if (inflight === ac) inflight = null; });
   }
 
+  // Build calls get a hard timeout. getQuote's AbortController exists to cancel
+  // a superseded quote, which is a different job — nothing bounded how long a
+  // build could hang, so a stalled connection left "Building..." disabled with
+  // no path out until the browser's own TCP timeout eventually fired.
+  var SWAP_TIMEOUT_MS = 20000;
+
   function postSwap(body) {
+    var ac = new AbortController();
+    var timedOut = false;
+    var timer = setTimeout(function () { timedOut = true; ac.abort(); }, SWAP_TIMEOUT_MS);
     return fetch(BASE + '/api/v1/swap', {
       method: 'POST',
+      signal: ac.signal,
       headers: authHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify(body),
+    }).catch(function (err) {
+      if (timedOut) {
+        var e = new Error('Timed out building the transaction. Nothing was signed or sent — try again.');
+        e.code = 'TIMEOUT';
+        throw e;
+      }
+      throw err;
     }).then(function (r) {
       return r.json().then(function (j) { return { http: r.status, body: j }; });
     }).then(function (res) {
@@ -165,7 +182,7 @@
       }
       if (res.http >= 400) { var e2 = new Error('HTTP ' + res.http); e2.code = res.http; throw e2; }
       return res.body.data || res.body;
-    });
+    }).finally(function () { clearTimeout(timer); });
   }
 
   /* ---------- quoting cycle ---------- */

@@ -329,7 +329,8 @@
 
   // The API reports pool types by their internal name; the venue brand differs.
   // Same map swap-panel.js carries — keep the two in step.
-  var VENUE_NAME = { Vortex: 'Valiant' };
+  // Wire value -> what a human reads. Keep in step with swap-panel.js.
+  var VENUE_NAME = { Vortex: 'Valiant', Flux: 'Fluxbeam', Cyclone: 'Blaze' };
   function venueName(poolType) {
     if (!poolType) return '';
     return VENUE_NAME[poolType] || poolType;

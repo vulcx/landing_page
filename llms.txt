@@ -12,7 +12,7 @@ Base URL: https://api.vulcx.xyz
 - `POST /api/v1/swap` — a ready-to-sign transaction
 - `POST /api/v1/instructions` — raw instructions, for callers assembling their own transaction
 - `GET /api/v1/price` — spot/mid USD price derived from live pool state
-- `GET /api/v1/stream` — WebSocket quote stream (this one requires a key)
+- `wss://api.vulcx.xyz/api/v1/stream` — WebSocket quote stream (this one requires a key)
 
 Rate limits are one published budget for every caller, debited by request cost
 rather than request count. A key is optional on REST — anonymous callers get a
@@ -21,8 +21,8 @@ free at https://vulcx.xyz/api-key/. Full reference: https://docs.vulcx.xyz
 
 ## Liquidity sources
 
-Valiant (concentrated liquidity), Fluxbeam (constant product and bonding curve),
-and Moonit (bonding curve).
+Valiant (concentrated liquidity) and Fluxbeam (constant product and bonding
+curve). Routes report these as the wire values `Vortex` and `Flux`.
 
 ## Status
 

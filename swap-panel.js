@@ -485,12 +485,19 @@
 
   // Keys are the wire values the API sends in routes[].poolType. Display names
   // are separate: the API still says "Vortex" for what is branded Valiant.
+  // Keyed on the WIRE value, not the brand. 'Fluxbeam' sat here for months and
+  // never matched anything: the server has always sent 'Flux'. 'Moonit' is a
+  // venue the engine no longer carries at all.
   var POOL_COLOR = {
-    Vortex:   'var(--vx-accent-1)',
-    Fluxbeam: 'var(--vx-accent-2)',
-    Moonit:   'var(--vx-accent-3)',
+    Vortex:  'var(--vx-accent-1)',
+    Flux:    'var(--vx-accent-2)',
+    Cyclone: 'var(--vx-accent-3)',
   };
-  var VENUE_NAME = { Vortex: 'Valiant' };
+  // Wire value -> what a human reads. Keep in step with status/index.html.
+  // Cyclone is not routable yet, so it cannot appear today; it is mapped so it
+  // never surfaces as a raw wire value if it ships. 'Blaze' is the engine's own
+  // name for it (internal/domain/pool.go) — confirm before it goes live.
+  var VENUE_NAME = { Vortex: 'Valiant', Flux: 'Fluxbeam', Cyclone: 'Blaze' };
   function venueName(t) { return VENUE_NAME[t] || t; }
   var FALLBACK = ['var(--vx-accent-1)','var(--vx-accent-2)','var(--vx-accent-3)','var(--vx-accent-4)'];
   // A split can hit several pools of the SAME venue; give each leg its own hue so the

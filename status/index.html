@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Status — Vulcx</title>
-<meta name="description" content="Live status for the Vulcx routing API on Fogo: health endpoint and a real quote, checked from your browser.">
+<meta name="description" content="Live status for the Vulcx routing API on Fogo: health endpoint, a real quote, and the swap-build canary, checked from your browser.">
 <link rel="canonical" href="https://vulcx.xyz/status/">
 <meta name="robots" content="index, follow">
 
@@ -110,6 +110,13 @@
   .is-slow    .dot { background: var(--vx-warn);    box-shadow: 0 0 0 0.28rem rgba(138,90,0,0.16); }
   .is-down    .dot { background: var(--vx-danger);  box-shadow: 0 0 0 0.28rem rgba(192,48,10,0.16); }
   .is-pending .dot { background: var(--vx-fg-faint); }
+  /* A deliberate non-answer — the probe is switched off, the engine predates
+     the endpoint, or the browser was not allowed to read it. None of those is
+     an outage, so none of them gets the red dot: a red row for a state nobody
+     can act on is exactly how a status page teaches people to skip it. Hollow,
+     not filled, so it also does not read as a pass. */
+  .is-unknown .dot { background: transparent;
+                     box-shadow: inset 0 0 0 2px var(--vx-fg-faint); }
 
   .checks { border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-card);
             background: var(--vx-bg-raised); margin-top: var(--vx-space-4);
@@ -130,7 +137,7 @@
             display: flex; align-items: center; gap: 0.6rem; color: var(--vx-fg-muted); }
   .c-ms   { font-family: var(--vx-font-mono); font-variant-numeric: tabular-nums;
             font-size: var(--vx-text-num); text-align: right; color: var(--vx-fg); }
-  .is-down .c-ms, .is-pending .c-ms { color: var(--vx-fg-faint); }
+  .is-down .c-ms, .is-pending .c-ms, .is-unknown .c-ms { color: var(--vx-fg-faint); }
 
   /* Extra line under a check — the quote's actual output, the error text. */
   .c-note { grid-column: 1 / -1; font-family: var(--vx-font-mono);
@@ -258,12 +265,33 @@
   var OUT_MINT = 'uSd2czE61Evaf76RNbq4KPpXnkiL3irdzgLFUMe3NoG';
   var IN_AMOUNT = 1000000000;
 
+  // A check's run() settles one of three ways:
+  //   resolve(string)  — pass; the string is the note under the row.
+  //   resolve(object)  — the endpoint answered, but the answer is neither a
+  //                      pass nor a failure. See unknown() and degraded().
+  //   reject(Error)    — down; the message is the note.
+  // The middle case is the whole point of this file's last revision: several
+  // real states here ("the probe is off", "this engine predates the check")
+  // are not outages, and collapsing them into pass/fail publishes a lie.
+  function unknown(label, note) { return { state: 'unknown', label: label, note: note }; }
+  function degraded(note)       { return { state: 'degraded', note: note }; }
+
   var CHECKS = [
     {
       id: 'api',
       name: 'API',
       endpoint: 'GET /health',
       // Reads the body: proves the process answers, not just that TCP opened.
+      //
+      // /health shipped with no Access-Control-Allow-Origin — it was registered
+      // above the CORS middleware and gin binds a route's chain at registration
+      // time — so the browser refuses to hand us the response and this row was
+      // permanently red while the API was perfectly healthy. Until the fix
+      // (route-engine branch swap-canary) is deployed, a TypeError here is that
+      // bug, not an outage, so say so instead of publishing a false red.
+      browserBlocked: 'browser was not allowed to read the response — /health sends no '
+        + 'Access-Control-Allow-Origin (fixed on route-engine branch swap-canary, not yet '
+        + 'deployed). Not an outage: check with curl https://api.vulcx.xyz/health',
       run: function (signal) {
         return fetch(API + '/health', { signal: signal, cache: 'no-store' })
           .then(function (r) {
@@ -308,6 +336,34 @@
                  + (venues.length ? ' · ' + venues.join(', ') : '');
           });
       }
+    },
+    {
+      id: 'swaps',
+      name: 'Swaps',
+      endpoint: 'GET /health/swap',
+      // The only check that proves a swap can actually be built. /health and
+      // /api/v1/quote both answered 200 straight through a total swap outage
+      // once, for hours, across four deploys — neither touches the builder, the
+      // LUTs, the blockhash feed or the chain. This endpoint serves a canary
+      // that routes, builds and simulates on a timer, so the number below is a
+      // cached verdict, not a live probe; the note carries its age.
+      run: function (signal) {
+        return fetch(API + '/health/swap', { signal: signal, cache: 'no-store' })
+          .then(function (r) {
+            // 404 is the expected answer from every engine deployed before the
+            // canary shipped. Reporting that as "down" would announce a swap
+            // outage on a healthy API — the opposite of what this row is for.
+            if (r.status === 404) {
+              // Label plus note read as one sentence: "not monitored (engine
+              // predates this check)".
+              return unknown('not monitored', '(engine predates this check — /health/swap is 404)');
+            }
+            // 503 is the canary's conclusive down; the reason is in the body,
+            // so both codes get parsed and the body decides.
+            if (r.status !== 200 && r.status !== 503) throw new Error('HTTP ' + r.status);
+            return r.json().then(function (j) { return swapVerdict(j || {}); });
+          });
+      }
     }
 
     // When self-hosting ships, add the license server back here. Use no-cors:
@@ -334,6 +390,55 @@
   function venueName(poolType) {
     if (!poolType) return '';
     return VENUE_NAME[poolType] || poolType;
+  }
+
+  // Reads a canary.Status body (route-engine internal/canary). The status
+  // vocabulary is deliberately the same one /health uses, plus two states that
+  // exist precisely so a monitor is not forced to call them failures:
+  // "disabled" (the operator did not turn the canary on) and "pending" (no
+  // probe has completed yet, e.g. the first seconds after a deploy).
+  function swapVerdict(j) {
+    switch (j.status) {
+      case 'ok':
+        return swapSummary(j);
+      case 'disabled':
+        // A node that was never asked to probe swaps is not a broken node.
+        return unknown('not monitored', j.reason || 'swap canary is not configured on this node');
+      case 'degraded':
+      case 'pending':
+        return degraded(j.reason || 'canary reports ' + j.status);
+      case 'down':
+        throw new Error(j.reason || 'canary reports swaps are down');
+      default:
+        throw new Error('unexpected canary status: ' + String(j.status));
+    }
+  }
+
+  // One segment per probed pair: label, hop count, compute units burned by the
+  // simulated transaction. Pairs[].pools holds pool addresses, not venue names,
+  // so there is nothing here to run through VENUE_NAME.
+  function swapSummary(j) {
+    var pairs = (j.pairs || []).map(function (p) {
+      var hops = p.hopCount;
+      return (p.pair || 'pair')
+        + (hops ? ' · ' + hops + (hops === 1 ? ' hop' : ' hops') : '')
+        + (p.computeUnits ? ' · ' + fmtCU(p.computeUnits) : '');
+    });
+    // The latency column times this fetch, not the swap. Without the age, a
+    // wedged probe loop would read as a fast green row.
+    return pairs.join(', ') + (j.ageMs != null ? ' · probed ' + fmtAge(j.ageMs) + ' ago' : '');
+  }
+
+  function fmtCU(cu) {
+    var n = Number(cu);
+    if (!isFinite(n)) return String(cu) + ' CU';
+    return (n >= 1000 ? Math.round(n / 1000) + 'k' : String(n)) + ' CU';
+  }
+
+  function fmtAge(ms) {
+    var s = Math.max(0, Math.round(Number(ms) / 1000));
+    if (s < 90) return s + 's';
+    return Math.round(s / 60) + 'm';
   }
 
   // amountOut is a string of base units; USDC on Fogo is 6dp.
@@ -373,54 +478,94 @@
     rows[c.id] = { row: row, label: label, ms: ms, note: note };
   });
 
-  function withTimeout(fn) {
+  // How each settled state paints. 'unknown' rows carry their own label
+  // because the reasons differ ("not monitored", "unverifiable") and a reader
+  // should be told which one they are looking at.
+  var ROW_STATE = {
+    ok:       { cls: 'is-up',      label: 'operational' },
+    slow:     { cls: 'is-slow',    label: 'degraded' },
+    degraded: { cls: 'is-slow',    label: 'degraded' },
+    unknown:  { cls: 'is-unknown', label: 'not monitored' },
+    down:     { cls: 'is-down',    label: 'down' }
+  };
+
+  function withTimeout(c) {
     var ctrl = new AbortController();
     var timer = setTimeout(function () { ctrl.abort(); }, TIMEOUT_MS);
     var t0 = performance.now();
-    return fn(ctrl.signal).then(
-      function (note) {
+    return c.run(ctrl.signal).then(
+      function (out) {
         clearTimeout(timer);
-        return { ok: true, ms: Math.round(performance.now() - t0), note: note || '' };
+        var ms = Math.round(performance.now() - t0);
+        if (out && out.state) return { state: out.state, label: out.label, ms: ms, note: out.note || '' };
+        return { state: ms > SLOW_MS ? 'slow' : 'ok', ms: ms, note: out || '' };
       },
       function (err) {
         clearTimeout(timer);
-        var msg = err && err.name === 'AbortError'
-          ? 'timed out after ' + (TIMEOUT_MS / 1000) + 's'
-          : (err && err.message) || 'request failed';
-        return { ok: false, ms: Math.round(performance.now() - t0), note: msg };
+        var ms = Math.round(performance.now() - t0);
+        if (err && err.name === 'AbortError') {
+          return { state: 'down', ms: ms, note: 'timed out after ' + (TIMEOUT_MS / 1000) + 's' };
+        }
+        // fetch rejects with a bare TypeError both for a refused connection and
+        // for a response the browser blocked on CORS, and gives us nothing to
+        // tell them apart. A check that knows it is currently unreadable for a
+        // known, non-outage reason says so; every other check still reads a
+        // TypeError as down, so a real outage cannot hide behind this branch.
+        if (err && err.name === 'TypeError' && c.browserBlocked) {
+          return { state: 'unknown', label: 'unverifiable', ms: ms, note: c.browserBlocked };
+        }
+        return { state: 'down', ms: ms, note: (err && err.message) || 'request failed' };
       }
     );
   }
 
   function runAll() {
     return Promise.all(CHECKS.map(function (c) {
-      return withTimeout(c.run).then(function (res) {
+      return withTimeout(c).then(function (res) {
         var r = rows[c.id];
-        var cls = !res.ok ? 'is-down' : (res.ms > SLOW_MS ? 'is-slow' : 'is-up');
-        r.row.className = 'check ' + cls;
-        r.label.textContent = !res.ok ? 'down' : (res.ms > SLOW_MS ? 'degraded' : 'operational');
-        r.ms.textContent = res.ok ? res.ms + ' ms' : '—';
+        var paint = ROW_STATE[res.state] || ROW_STATE.down;
+        r.row.className = 'check ' + paint.cls;
+        r.label.textContent = res.label || paint.label;
+        // Latency is only a fact worth printing when something was measured
+        // end to end; on a blocked or absent endpoint it would be the time to
+        // fail, dressed up as a service's response time.
+        r.ms.textContent = (res.state === 'ok' || res.state === 'slow') ? res.ms + ' ms' : '—';
         r.note.textContent = res.note;
-        return { ok: res.ok, slow: res.ok && res.ms > SLOW_MS };
+        return res.state;
       });
-    })).then(function (results) {
-      var down = results.filter(function (r) { return !r.ok; }).length;
-      var slow = results.filter(function (r) { return r.slow; }).length;
+    })).then(function (states) {
+      function count(s) {
+        return states.filter(function (x) { return x === s; }).length;
+      }
+      var down = count('down');
+      var slow = count('slow') + count('degraded');
+      var unknown = count('unknown');
+      // Unverified checks are not votes either way, so the verdict is taken
+      // over the ones that actually returned an answer. Saying "2 of 3 failing"
+      // when the third was never readable is the same false red in a sentence.
+      var judged = states.length - unknown;
+      var tail = unknown ? ' ' + unknown + ' not verified from here.' : '';
 
       var v = document.getElementById('verdict');
       var vt = document.getElementById('verdict-text');
-      if (down === results.length) {
+      if (judged === 0) {
+        v.className = 'verdict is-pending';
+        vt.textContent = 'Nothing here can be verified from a browser.';
+      } else if (down === judged) {
         v.className = 'verdict is-down';
-        vt.textContent = 'Nothing is answering from here.';
+        vt.textContent = 'Nothing is answering from here.' + tail;
       } else if (down > 0) {
         v.className = 'verdict is-down';
-        vt.textContent = down + ' of ' + results.length + ' checks failing.';
+        vt.textContent = down + ' of ' + judged + ' checks failing.' + tail;
       } else if (slow > 0) {
         v.className = 'verdict is-slow';
-        vt.textContent = 'All systems answering, ' + slow + ' slower than usual.';
+        // Not "slower than usual" any more: a check can now degrade on what the
+        // endpoint said rather than on how long it took to say it.
+        vt.textContent = 'All systems answering, ' + slow
+          + (slow === 1 ? ' check' : ' checks') + ' degraded.' + tail;
       } else {
         v.className = 'verdict is-up';
-        vt.textContent = 'All systems operational.';
+        vt.textContent = 'All systems operational.' + tail;
       }
 
       document.getElementById('checked').textContent =

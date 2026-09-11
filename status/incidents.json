@@ -1,5 +1,23 @@
 [
   {
+    "date": "2026-09-11",
+    "title": "Swaps reported as expired while they could still land",
+    "status": "resolved",
+    "body": "Until about 17:49 UTC on 11 September, every swap the API built carried a lastValidBlockHeight about 5.5 seconds out. Fogo keeps a blockhash valid for roughly 3000 blocks, about two minutes; the engine had taken Solana's 150-block lifetime, first as a constant and then from its RPC provider, which reports the same Solana figure for Fogo. The chain disagrees: swaps signed 20 and 60 seconds after they were built both landed.\n\nClients that stop waiting at lastValidBlockHeight, including this site's swap panel and the SDK's browser example, told anyone who took more than a few seconds to approve in their wallet that the swap had expired, while it could still land. Retrying from that message could produce a second swap. We do not know how many users hit it. If you saw \"Transaction expired before it landed\", check your wallet history before swapping again.\n\nThe engine now measures the lifetime on Fogo's own node at startup and reports the chain's figure: about two minutes."
+  },
+  {
+    "date": "2026-09-11",
+    "title": "/instructions returned every lookup table, making client-built swaps take about a minute",
+    "status": "resolved",
+    "body": "Until about 17:23 UTC on 11 September, POST /api/v1/instructions returned all 250 registered address lookup tables for any swap, including one that touches a single pool. A client has to fetch the tables before it can build the transaction, which took 55 to 65 seconds per swap in our tests, against about 1.5 seconds for POST /swap. Amounts were never affected. It now returns only the tables that actually shrink the transaction, usually one or two, and client-built swaps finish in about 2.5 seconds."
+  },
+  {
+    "date": "2026-09-11",
+    "title": "ExactOut swaps delivered the requested amount minus our fee",
+    "status": "resolved",
+    "body": "Until about 17:11 UTC on 11 September, an ExactOut swap delivered the amount you asked for minus Vulcx's 15 bps fee, and minus the integrator's fee when one was set: a request for 10000 units landed 9985. The on-chain program takes the fee out of the output, and the engine sized the route for the requested amount itself. The fee was the published rate; it came out of the output instead of the input, so an exact-output swap was not exact. We have not established when this began. ExactIn swaps were not affected.\n\nThe engine now routes for the requested amount plus the fees, so you receive exactly what you asked for and the fee comes out of the input. amountOut in responses is now that gross figure, consistent with every other response: you receive amountOut minus platformFeeAmount minus integratorFeeAmount."
+  },
+  {
     "date": "2026-09-01",
     "title": "Routing unavailable for 27 hours after an upstream RPC outage",
     "status": "resolved",

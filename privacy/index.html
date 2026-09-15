@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Vulcx</title>
+<meta name="description" content="What Vulcx collects when you use vulcx.xyz, the Vulcx Portal and the routing API, how long it is kept, and who else sees it.">
+<link rel="canonical" href="https://vulcx.xyz/privacy/">
+<meta name="robots" content="index, follow">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/design/tokens.css">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body { margin: 0;
+    background: var(--vx-bg);
+    color: var(--vx-fg);
+    font-family: var(--vx-font-ui);
+    font-size: var(--vx-text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; min-height: 100vh; }
+
+  a { color: var(--vx-fg); text-decoration: underline; text-underline-offset: 0.18em;
+      transition: color var(--vx-dur) var(--vx-ease); }
+  a:hover { color: var(--vx-ember); }
+
+  h1, h2 { font-family: var(--vx-font-display); font-weight: 600;
+           letter-spacing: var(--vx-track-tight); margin: 0; color: var(--vx-fg); }
+  h1 { font-size: var(--vx-text-h1); line-height: 0.98;
+       font-stretch: var(--vx-wdth-display); }
+  h2 { font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+       letter-spacing: var(--vx-track-label); text-transform: uppercase;
+       color: var(--vx-fg-muted); margin-top: var(--vx-space-6); margin-bottom: var(--vx-space-2); }
+
+  .shell { width: 100%; max-width: 104rem; margin: 0 auto;
+           padding-inline: var(--vx-space-5); }
+
+  /* ---- nav / footer: same as status/index.html ---- */
+  .nav-in { display: flex; align-items: center; justify-content: space-between;
+            gap: var(--vx-space-4); padding-block: var(--vx-space-2); }
+  .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+  .brand span { font-family: var(--vx-font-mono); font-size: 1.2rem; font-weight: 700;
+                letter-spacing: 0.1em; color: var(--vx-fg); }
+  .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); }
+  .nav-links a { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+                 letter-spacing: var(--vx-track-label); text-transform: uppercase;
+                 color: var(--vx-fg-muted); text-decoration: none; }
+  .nav-links a:hover { color: var(--vx-fg); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+         font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+         letter-spacing: var(--vx-track-label); text-transform: uppercase; text-decoration: none;
+         border-radius: var(--vx-r-chip); padding: 0.95rem 1.7rem; min-height: 44px;
+         border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+         transition: background-color var(--vx-dur) var(--vx-ease),
+                     border-color var(--vx-dur) var(--vx-ease); }
+  .btn-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
+  .btn-ghost:hover { border-color: var(--vx-ember); color: var(--vx-ember); }
+
+  footer { border-top: 1px solid var(--vx-hairline);
+           padding-block: var(--vx-space-4); margin-top: auto; }
+  .foot-in { display: flex; align-items: center; justify-content: space-between;
+             gap: var(--vx-space-3); flex-wrap: wrap; }
+  .foot-in a, .foot-in span { font-family: var(--vx-font-mono);
+    font-size: var(--vx-text-label); letter-spacing: var(--vx-track-label);
+    text-transform: uppercase; color: var(--vx-fg-muted); text-decoration: none; }
+  .foot-in a:hover { color: var(--vx-ember); }
+  .foot-links { display: flex; gap: var(--vx-space-3); flex-wrap: wrap; }
+
+  /* ---- page ---- */
+  main { padding-block: var(--vx-space-7) var(--vx-section); }
+  .doc { max-width: 68ch; }
+  .updated { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+             letter-spacing: var(--vx-track-label); text-transform: uppercase;
+             color: var(--vx-fg-faint); margin: var(--vx-space-3) 0 var(--vx-space-5); }
+  .doc p, .doc li { color: var(--vx-fg-muted); }
+  .doc strong { color: var(--vx-fg); font-weight: 600; }
+  .doc ul { padding-left: 1.2rem; margin: 0.4rem 0 0; }
+  .doc li + li { margin-top: 0.35rem; }
+  .doc code { font-family: var(--vx-font-mono); font-size: 0.92em; color: var(--vx-fg); }
+  .lead { color: var(--vx-fg); font-size: var(--vx-text-lead, 1.15em); }
+
+  @media (max-width: 760px) {
+    h1 { font-size: 3rem; }
+    .shell { padding-inline: 1.3rem; }
+    .nav-links { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="shell nav-in">
+    <a class="brand" href="/">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path fill="#E23A00" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+      </svg>
+      <span>VULCX</span>
+    </a>
+    <div class="nav-links">
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="/#endpoints">Quote API</a>
+      <a href="/#fees">Fees</a>
+      <a href="/api-key/">API key</a>
+      <a href="/status/">Status</a>
+      <a href="https://github.com/vulcx">GitHub</a>
+    </div>
+    <a class="btn btn-ghost" href="https://portal.vulcx.xyz">Portal</a>
+  </div>
+</nav>
+
+<main class="shell">
+  <div class="doc">
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated 15 September 2026</p>
+
+    <p class="lead">
+      This covers vulcx.xyz, the Vulcx Portal at portal.vulcx.xyz, and the routing API at
+      api.vulcx.xyz. We collect what running those services needs, keep it for a stated time,
+      and do not sell it, share it for advertising, or run analytics or tracking scripts.
+    </p>
+
+    <h2>Your Portal account</h2>
+    <p>You sign in to the Portal with Google or GitHub. From that provider we receive:</p>
+    <ul>
+      <li>your <strong>verified email address</strong> and <strong>name</strong>, and the
+        provider's ID for your account, so the same login returns you to the same account;</li>
+      <li>nothing else — we request only the <code>openid</code>, <code>email</code> and
+        <code>profile</code> scopes on Google and <code>read:user</code> / <code>user:email</code>
+        on GitHub, and never see your provider password.</li>
+    </ul>
+    <p>
+      If your provider's verified email matches an existing Vulcx account, the login is linked to
+      that account. Accounts created before OAuth sign-in may also hold a password hash.
+    </p>
+    <p>
+      Signing in sets one <strong>session cookie</strong> (httpOnly, valid for up to 30 days). With
+      each session we store the IP address and browser user agent it was created from. Account
+      actions — signing in, creating or revoking a key, changing fee settings — are written to an
+      audit log with the same two fields, kept for <strong>90 days</strong>.
+    </p>
+
+    <h2>API keys, usage and fees</h2>
+    <ul>
+      <li><strong>API keys</strong> are stored only as a hash; we cannot show a key again after it
+        is created.</li>
+      <li><strong>Usage</strong>: for each key we count requests per endpoint per day, and the USD
+        value of swaps built with it. These counts are kept for <strong>395 days</strong>. The
+        WebSocket quote stream is not metered.</li>
+      <li><strong>Fee settings</strong>: the default fee, fee ceiling and fee wallet address you set
+        on a key.</li>
+      <li><strong>Earnings</strong> shown in the Portal are read from public Fogo transactions that
+        paid your fee wallet. That data is public on the blockchain regardless of Vulcx.</li>
+    </ul>
+
+    <h2>Requests to the API</h2>
+    <p>
+      Every request to api.vulcx.xyz is logged with its IP address, path, status and user agent,
+      for abuse prevention and debugging. API key values are redacted before logs are written.
+      Web server logs are kept for <strong>14 days</strong> and application logs for
+      <strong>7 days</strong>. Requests made without a key are rate limited by IP address, in memory.
+    </p>
+
+    <h2>The swap panel on vulcx.xyz</h2>
+    <p>
+      To quote and build a swap, the panel sends your wallet address, the token pair and the amount
+      to the API. Your wallet signs the transaction in your browser — Vulcx never receives your
+      private keys — and the signed transaction is sent to a Fogo RPC node. Transactions on Fogo are
+      public and permanent.
+    </p>
+
+    <h2>The API key request form</h2>
+    <p>
+      If you ask for a key through the form, we store what you enter — email, product name and URL,
+      what you are building, expected volume and a contact handle — to review and answer the request.
+    </p>
+
+    <h2>Other services involved</h2>
+    <ul>
+      <li><strong>Google</strong> or <strong>GitHub</strong>, when you choose to sign in with them —
+        their own privacy policies apply to that sign-in.</li>
+      <li><strong>GitHub Pages</strong> hosts vulcx.xyz and may log visitors' IP addresses.</li>
+      <li><strong>Google Fonts</strong> serves the fonts on vulcx.xyz, so your browser requests them
+        from Google.</li>
+      <li><strong>Fogo RPC providers</strong> receive the transactions you submit.</li>
+      <li>Token logos are loaded from the URLs in each token's metadata, which may be third-party hosts.</li>
+    </ul>
+
+    <h2>Deleting your data</h2>
+    <p>
+      To delete your account, its keys and its usage records, message us at
+      <a href="https://t.me/vulcxsupport">t.me/vulcxsupport</a> from a handle we can tie to the
+      account, or tell us the account's email. Audit and server log entries expire on the schedule
+      above. Anything recorded on the Fogo blockchain cannot be deleted by us or anyone else.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      If this policy changes, the date at the top changes with it. Material changes to what we
+      collect will also be noted in the Portal.
+    </p>
+  </div>
+</main>
+
+<footer>
+  <div class="shell foot-in">
+    <span>Vulcx · Swap routing for Fogo</span>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="/api-key/">API key</a>
+      <a href="/status/">Status</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="https://github.com/vulcx" rel="me">GitHub</a>
+      <a href="https://x.com/vulcx_xyz" rel="me">X</a>
+      <a href="https://t.me/vulcxsupport" rel="me">Telegram</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

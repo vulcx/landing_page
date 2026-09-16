@@ -522,7 +522,7 @@
       <a href="#endpoints">Quote API</a>
       <a href="#fees">Fees</a>
       <a href="#self-host">Self-host</a>
-      <a href="/api-key/">API key</a>
+      <a href="https://portal.vulcx.xyz">Portal</a>
       <a href="/status/">Status</a>
       <a href="https://github.com/vulcx">GitHub</a>
     </div>
@@ -663,12 +663,12 @@
     <div class="sec-head">
       <span class="eyebrow">Rate limits</span>
       <h2>Debited by what a request costs, not how many you made.</h2>
-      <p>Your bucket is charged per the table on the right, so the same budget is many quotes, or a few transaction builds, or any mix. Start keyless — 1 unit per second, burst 5, enough to hold a live price on screen. A key raises that to 100 units per second, burst 200.</p>
-      <p>That ceiling is the same on every self-serve plan — paying us more does not buy a bigger bucket. A limit derived from trailing volume cannot be capacity-planned against, and it throttles a new integration hardest on day one, exactly when its quote-to-swap ratio is at its worst.</p>
+      <p>Your bucket is charged per the table on the right, so the same budget is many quotes, or a few transaction builds, or any mix. Start keyless — 2 units per second, burst 20, enough to hold a live price on screen.</p>
+      <p>A key from the <a href="https://portal.vulcx.xyz">portal</a> puts you on a plan, shared by every key on the account: Free is 20 units per second (burst 40), paid plans run from Starter at 40 to Pro at 2,000, with WebSocket stream connections from Starter up. Paid plans are billed in USDC.s on-chain, and the protocol fees your swaps pay are credited against each charge. <a href="https://portal.vulcx.xyz/pricing/">See pricing</a>.</p>
     </div>
     <div>
       <div class="limit-row"><span class="limit-cost">1</span><span class="limit-ep">/quote · /price</span><span class="limit-note">an in-memory read</span></div>
-      <div class="limit-row"><span class="limit-cost">3</span><span class="limit-ep">/cpi/route-accounts</span><span class="limit-note">an account set, no transaction</span></div>
+      <div class="limit-row"><span class="limit-cost">3</span><span class="limit-ep">/pools · /cpi/route-accounts</span><span class="limit-note">a corpus walk or an account set</span></div>
       <div class="limit-row"><span class="limit-cost">5</span><span class="limit-ep">/swap · /instructions</span><span class="limit-note">routing plus construction</span></div>
     </div>
   </div>
@@ -713,7 +713,7 @@
     <div class="foot-links">
       <a href="https://docs.vulcx.xyz">Docs</a>
       <a href="https://docs.vulcx.xyz/llms.txt">llms.txt</a>
-      <a href="/api-key/">API key</a>
+      <a href="https://portal.vulcx.xyz">Portal</a>
       <a href="/status/">Status</a>
       <a href="https://github.com/vulcx" rel="me">GitHub</a>
       <a href="https://x.com/vulcx_xyz" rel="me">X</a>

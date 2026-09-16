@@ -14,10 +14,12 @@ Base URL: https://api.vulcx.xyz
 - `GET /api/v1/price` — spot/mid USD price derived from live pool state
 - `wss://api.vulcx.xyz/api/v1/stream` — WebSocket quote stream (this one requires a key)
 
-Rate limits are one published budget for every caller, debited by request cost
-rather than request count. A key is optional on REST — anonymous callers get a
-small per-IP budget — and required only for the WebSocket stream. Request one
-free at https://vulcx.xyz/api-key/. Full reference: https://docs.vulcx.xyz
+Rate limits are set by plan and shared by every key on an account, debited by
+request cost rather than request count. A key is optional on REST — anonymous
+callers get a small per-IP budget — and required for the WebSocket stream, which
+needs a plan from Starter up. Get a key (self-serve, Google or GitHub sign-in) at
+https://portal.vulcx.xyz; plans at https://portal.vulcx.xyz/pricing/.
+Full reference: https://docs.vulcx.xyz
 
 ## Liquidity sources
 
@@ -34,7 +36,8 @@ Live checks against the production endpoints: https://vulcx.xyz/status/
 - Documentation: https://docs.vulcx.xyz
 - Machine-readable docs index: https://docs.vulcx.xyz/llms.txt
 - Status: https://vulcx.xyz/status/
-- Request an API key: https://vulcx.xyz/api-key/
+- Portal (API keys, usage, earnings, billing): https://portal.vulcx.xyz
+- Pricing: https://portal.vulcx.xyz/pricing/
 - Source: https://github.com/vulcx
 - X: https://x.com/vulcx_xyz
 - Telegram: https://t.me/vulcxsupport

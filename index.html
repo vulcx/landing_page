@@ -248,6 +248,23 @@
   .plan li { font-size: 1.22rem; color: var(--vx-fg-muted); }
   .plan li b { color: var(--vx-fg); font-weight: 500; }
   .plan .pill { margin-top: auto; align-self: flex-start; }
+  .plan-table-wrap { margin-top: 5rem; overflow-x: auto; border: 1px solid var(--vx-hairline-firm); border-radius: 1.2rem; }
+  .plan-table { width: 100%; min-width: 64rem; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  .plan-table th, .plan-table td { padding: 1.35rem 1.6rem; text-align: right; border-top: 1px solid var(--vx-hairline); font-size: 1.25rem; color: var(--vx-fg-muted); white-space: nowrap; }
+  .plan-table thead th { border-top: 0; font-family: var(--vx-font-mono); font-size: 0.9rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--vx-fg-faint); }
+  .plan-table th:first-child, .plan-table td:first-child { text-align: left; }
+  .plan-table tbody th { font-weight: 500; color: var(--vx-fg); }
+  .pt-name { font-size: 1.35rem; }
+  .plan-tag { margin-left: 0.6rem; font-family: var(--vx-font-mono); font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase;
+              color: var(--vx-ember); border: 1px solid rgba(255,79,31,0.45); border-radius: 999px; padding: 0.1rem 0.55rem; }
+  .plan-table td.pt-price { font-family: var(--vx-font-display); font-size: 1.9rem; color: var(--vx-fg); letter-spacing: -0.02em; }
+  .pt-price small { font-family: var(--vx-font-ui); font-size: 1.05rem; color: var(--vx-fg-faint); margin-left: 0.2rem; letter-spacing: 0; }
+  .plan-table tr.hot { background: linear-gradient(90deg, rgba(255,79,31,0.12), rgba(255,79,31,0.02)); }
+  .plan-table tr.hot th { box-shadow: inset 2px 0 0 var(--vx-ember); }
+  .pt-cta .pill { min-height: 36px; padding: 0 1.2rem; font-size: 1.12rem; }
+  .plan-note { margin-top: 1.6rem; font-size: 1.15rem; }
+  .plan-note a { color: var(--vx-fg); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .limits { margin-top: 3rem; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.4rem; }
   .limit { display: flex; align-items: baseline; gap: 1.2rem; padding: 1.4rem 0; border-top: 1px solid var(--vx-hairline); }
   .limit-cost { font-family: var(--vx-font-display); font-size: 2.6rem; color: var(--vx-ember); line-height: 1; width: 2.4rem; }
@@ -680,16 +697,15 @@
           <path class="wire" d="M300 210 C 440 210, 450 260, 530 260"/>
           <path class="wire" d="M300 310 C 440 310, 450 260, 530 260"/>
           <path class="wire" d="M300 410 C 450 410, 450 260, 530 260"/>
-          <path class="wire" d="M670 260 C 750 260, 760 110, 900 110"/>
-          <path class="wire" d="M670 260 C 760 260, 760 210, 900 210"/>
-          <path class="wire" d="M670 260 C 760 260, 760 310, 900 310"/>
-          <path class="wire" d="M670 260 C 750 260, 760 410, 900 410"/>
+          <path class="wire" d="M670 260 C 760 260, 760 160, 900 160"/>
+          <path class="wire" d="M670 260 L 900 260"/>
+          <path class="wire" d="M670 260 C 760 260, 760 360, 900 360"/>
           <path class="pulse" d="M300 110 C 450 110, 450 260, 530 260"/>
           <path class="pulse" d="M300 310 C 440 310, 450 260, 530 260"/>
-          <path class="pulse" d="M670 260 C 750 260, 760 110, 900 110"/>
-          <path class="pulse" d="M670 260 C 760 260, 760 310, 900 310"/>
+          <path class="pulse" d="M670 260 C 760 260, 760 160, 900 160"/>
+          <path class="pulse" d="M670 260 L 900 260"/>
           <path class="pulse" d="M300 410 C 450 410, 450 260, 530 260"/>
-          <path class="pulse" d="M670 260 C 750 260, 760 410, 900 410"/>
+          <path class="pulse" d="M670 260 C 760 260, 760 360, 900 360"/>
         </g>
         <g class="node"><rect x="40" y="78" width="260" height="64" rx="14"/><text x="64" y="106">Wallets</text><text class="sub" x="64" y="126">SWAP UI · /instructions</text></g>
         <g class="node"><rect x="40" y="178" width="260" height="64" rx="14"/><text x="64" y="206">Trading bots</text><text class="sub" x="64" y="226">STREAM · FIRM QUOTES</text></g>
@@ -701,10 +717,9 @@
           <path fill="#FF4F1F" d="M566 228 600 290 634 228h-17l-17 31-17-31Z"/>
           <text x="600" y="385" text-anchor="middle" fill="#f5f4f2" font-family="Geist, sans-serif" font-size="16">Vulcx router</text>
         </g>
-        <g class="node"><rect x="900" y="78" width="260" height="64" rx="14"/><text x="924" y="106">Valiant</text><text class="sub" x="924" y="126">CONCENTRATED LIQUIDITY</text></g>
-        <g class="node"><rect x="900" y="178" width="260" height="64" rx="14"/><text x="924" y="206">FluxBeam</text><text class="sub" x="924" y="226">CONSTANT PRODUCT</text></g>
-        <g class="node"><rect x="900" y="278" width="260" height="64" rx="14"/><text x="924" y="306">FluxBeam curves</text><text class="sub" x="924" y="326">BONDING CURVE LAUNCHES</text></g>
-        <g class="node"><rect x="900" y="378" width="260" height="64" rx="14"/><text x="924" y="406">Fogo mainnet</text><text class="sub" x="924" y="426">SETTLES ON-CHAIN</text></g>
+        <g class="node"><rect x="900" y="128" width="260" height="64" rx="14"/><text x="924" y="156">Valiant</text><text class="sub" x="924" y="176">CONCENTRATED LIQUIDITY</text></g>
+        <g class="node"><rect x="900" y="228" width="260" height="64" rx="14"/><text x="924" y="256">FluxBeam</text><text class="sub" x="924" y="276">CONSTANT PRODUCT</text></g>
+        <g class="node"><rect x="900" y="328" width="260" height="64" rx="14"/><text x="924" y="356">Fogo mainnet</text><text class="sub" x="924" y="376">SETTLES ON-CHAIN</text></g>
       </svg>
       <svg class="hub-narrow" style="display:none" viewBox="0 0 360 520" role="img" aria-label="Your integration calls Vulcx, which routes across Fogo liquidity">
         <g class="node"><rect x="20" y="20" width="320" height="70" rx="14"/><text x="44" y="50">Wallets · bots · dApps</text><text class="sub" x="44" y="72">YOUR INTEGRATION</text></g>
@@ -875,26 +890,56 @@
       <h2>Start free. Scale when your volume does.</h2>
       <p>Limits are per account and shared by every key. Paid plans are billed in USDC.s on-chain, and the protocol fees your swaps pay are credited against each charge.</p>
     </div>
-    <div class="plans">
-      <div class="plan">
-        <span class="plan-name">Free</span>
-        <span class="plan-price">$0</span>
-        <ul><li><b>20</b> units/s · burst 40</li><li><b>2</b> API keys</li><li>Your own fee on every swap</li></ul>
-        <a class="pill pill-ghost" href="https://portal.vulcx.xyz">Start for free</a>
-      </div>
-      <div class="plan hot">
-        <span class="plan-name">Builder</span>
-        <span class="plan-price">$49<small> / month</small></span>
-        <ul><li><b>120</b> units/s · burst 240</li><li><b>10</b> API keys</li><li><b>5</b> stream connections</li></ul>
-        <a class="pill pill-ember" href="https://portal.vulcx.xyz">Get Builder</a>
-      </div>
-      <div class="plan">
-        <span class="plan-name">Pro</span>
-        <span class="plan-price">$499<small> / month</small></span>
-        <ul><li><b>2,000</b> units/s · burst 4,000</li><li><b>50</b> API keys</li><li><b>150</b> stream connections</li></ul>
-        <a class="pill pill-ghost" href="https://portal.vulcx.xyz/pricing/">All plans</a>
-      </div>
+    <div class="plan-table-wrap">
+      <table class="plan-table">
+        <thead><tr><th scope="col">Plan</th><th scope="col">Price</th><th scope="col">Units / sec</th><th scope="col">Burst</th><th scope="col">API keys</th><th scope="col">Stream connections</th><th scope="col"><span class="sr">Choose</span></th></tr></thead>
+        <tbody>
+        <tr>
+          <th scope="row"><span class="pt-name">Free</span></th>
+          <td class="pt-price">$0<small></small></td>
+          <td>20</td><td>40</td><td>2</td><td>—</td>
+          <td class="pt-cta"><a class="pill pill-ghost" href="https://portal.vulcx.xyz">Start free</a></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="pt-name">Starter</span></th>
+          <td class="pt-price">$19<small>/mo</small></td>
+          <td>40</td><td>80</td><td>3</td><td>1</td>
+          <td class="pt-cta"><a class="pill pill-ghost" href="https://portal.vulcx.xyz">Get Starter</a></td>
+        </tr>
+        <tr class="hot">
+          <th scope="row"><span class="pt-name">Builder</span> <span class="plan-tag">Popular</span></th>
+          <td class="pt-price">$49<small>/mo</small></td>
+          <td>120</td><td>240</td><td>10</td><td>5</td>
+          <td class="pt-cta"><a class="pill pill-ember" href="https://portal.vulcx.xyz">Get Builder</a></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="pt-name">Growth</span></th>
+          <td class="pt-price">$99<small>/mo</small></td>
+          <td>300</td><td>600</td><td>15</td><td>15</td>
+          <td class="pt-cta"><a class="pill pill-ghost" href="https://portal.vulcx.xyz">Get Growth</a></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="pt-name">Scale</span></th>
+          <td class="pt-price">$249<small>/mo</small></td>
+          <td>800</td><td>1,600</td><td>25</td><td>50</td>
+          <td class="pt-cta"><a class="pill pill-ghost" href="https://portal.vulcx.xyz">Get Scale</a></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="pt-name">Pro</span></th>
+          <td class="pt-price">$499<small>/mo</small></td>
+          <td>2,000</td><td>4,000</td><td>50</td><td>150</td>
+          <td class="pt-cta"><a class="pill pill-ghost" href="https://portal.vulcx.xyz">Get Pro</a></td>
+        </tr>
+        <tr>
+          <th scope="row"><span class="pt-name">Enterprise</span></th>
+          <td class="pt-price">Custom<small></small></td>
+          <td>from 2,000</td><td>from 4,000</td><td>50+</td><td>150+</td>
+          <td class="pt-cta"><a class="pill pill-ghost" href="https://t.me/vulcxsupport">Contact us</a></td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+    <p class="plan-note">Annual billing costs ten months. Free keys keep one stream connection until 14 November 2026. Requests without a key work too, on a shared per-IP budget of 2 units/s (burst 20). <a href="https://portal.vulcx.xyz/pricing/">Full pricing →</a></p>
     <div class="limits">
       <div class="limit"><span class="limit-cost">1</span><div><span class="limit-ep">/quote · /price</span><span class="limit-note">an in-memory read</span></div></div>
       <div class="limit"><span class="limit-cost">3</span><div><span class="limit-ep">/cpi/route-accounts</span><span class="limit-note">an account set, no transaction</span></div></div>

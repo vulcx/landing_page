@@ -23,8 +23,7 @@ Full reference: https://docs.vulcx.xyz
 
 ## Liquidity sources
 
-Valiant (concentrated liquidity) and Fluxbeam (constant product and bonding
-curve). Routes report these as the wire values `Vortex` and `Flux`.
+Valiant (concentrated liquidity) and Fluxbeam (constant product). Routes report these as the wire values `Vortex` and `Flux`.
 
 ## Status
 

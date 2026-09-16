@@ -1,0 +1,44 @@
+/* Black system (DESIGN_SYSTEM.md §5) for pages outside the home page.
+   Loaded after each page's own <style>, so it only re-points tokens and
+   restyles the shared chrome; page-specific rules keep working. */
+:root {
+  --vx-bg: #000000;
+  --vx-bg-raised: #0c0c0e;
+  --vx-bg-inset: #060607;
+  --vx-bg-invert: #0c0c0e;
+  --vx-glass: #0c0c0e;
+  --vx-hairline: rgba(255,255,255,0.08);
+  --vx-hairline-firm: rgba(255,255,255,0.16);
+  --vx-fg: #f5f4f2;
+  --vx-fg-muted: rgba(245,244,242,0.64);
+  --vx-fg-faint: rgba(245,244,242,0.40);
+  --vx-fg-invert: #ffffff;
+  --vx-ember: #ff4f1f;
+  --vx-ember-soft: rgba(255,79,31,0.12);
+  --vx-mint: #ff4f1f;
+  --vx-mint-text: #ff8a5c;
+  --vx-mint-glow: none;
+  --vx-success: #34d399;
+  --vx-warn: #f5b544;
+  --vx-danger: #ff6b45;
+  --vx-font-display: "Geist", "Helvetica Neue", system-ui, sans-serif;
+  --vx-font-ui: "Geist", system-ui, -apple-system, sans-serif;
+  --vx-font-mono: "Geist Mono", ui-monospace, "SF Mono", monospace;
+}
+html { background: #000; color-scheme: dark; }
+body { background: #000; }
+h1, h2, h3 { font-weight: 450; letter-spacing: -0.02em; }
+code { background: rgba(255,255,255,0.07); }
+
+.nav { background: rgba(0,0,0,0.72); border-bottom-color: var(--vx-hairline); }
+.brand span { font-family: var(--vx-font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: 0.02em; text-transform: none; }
+.brand svg path { fill: #ff4f1f; }
+.nav-links a { font-family: var(--vx-font-ui); font-size: 1.22rem; letter-spacing: 0; text-transform: none; }
+.pill-ember:hover { background: #e03e10; }
+
+.btn { border-radius: 999px; font-family: var(--vx-font-ui); letter-spacing: 0; text-transform: none; font-size: 1.2rem; }
+.btn-primary { background: var(--vx-ember); color: #fff; }
+.btn-primary:hover { background: #e03e10; color: #fff; }
+
+.foot-in a, .foot-in span { font-family: var(--vx-font-ui); letter-spacing: 0; text-transform: none; font-size: 1.15rem; }
+.nav-cta a, .pill { text-decoration: none !important; }

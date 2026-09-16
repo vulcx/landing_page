@@ -371,7 +371,7 @@
       if (err.name === 'AbortError' || mySeq !== state.seq) return;
       state.status = 'error';
       state.error = err.code === 429
-        ? 'Rate limited — keyless callers get about 1 request per second (burst 5). Backing off.'
+        ? 'Rate limited — keyless callers get a small budget. Backing off.'
         : (err.message || 'Could not reach the router.');
       render();
       clearTimeout(refreshT);

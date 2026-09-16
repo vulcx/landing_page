@@ -5,14 +5,15 @@ Extracted from computed styles — not from screenshots, not from vibes.
 **Four systems have shipped from this file.** Section 1 audits every
 reference behind them. Section 2 is a post-mortem on the light editorial pass,
 kept because the failure is instructive. Section 3 documents the dark terminal.
-**Section 4 is the system in force.**
+**Section 5 is the system in force on the home page.**
 
 | | System | Ground | Display | Status |
 |---|---|---|---|---|
 | 1 | Fogo-derived | `#080420` indigo | Clash Display 600 | retired |
 | 2 | Light editorial (x402) | `#FFFFFF` | Instrument Serif 400 | **reverted same day** |
 | 3 | Dark terminal | `#0B0B0F` near-black | Archivo 600 condensed | retired |
-| 4 | Warm paper, dark anchor | `#F6F4EF` paper | Familjen Grotesk 600 | **in force** |
+| 4 | Warm paper, dark anchor | `#F6F4EF` paper | Familjen Grotesk 600 | home page retired 2026-09-16; status/privacy still use it |
+| 5 | Black, Helius-style | `#000000` | Geist 450 | **in force on the home page** |
 
 Constant across all four: the fluid `vw` root, `tabular-nums` on every number,
 one easing curve, and the token *names* — so `swap-panel.js` has never had to
@@ -138,7 +139,7 @@ and type were load-bearing for a different argument than ours.
 
 ---
 
-## 3. The Vulcx system (in force)
+## 3. The Vulcx system (retired 2026-09-02 — superseded by Section 4)
 
 Near-black, ember, mono-forward, dense. A router is judged on numbers, so the
 page is built to carry them. Source of truth is `design/tokens.css`.
@@ -299,3 +300,29 @@ anonymous.
 `swap-panel.js` reads nothing at runtime, but it *writes* `var(--vx-accent-N)`
 and `var(--vx-fg-faint)` into inline styles. Renaming either breaks the route
 legs silently — the bars render with no colour and nothing errors.
+
+
+---
+
+## 5. Black ground, one ember accent (home page, 2026-09-16)
+
+Adopted because the owner wanted the home page to read like helius.dev: a
+black ground, large light-weight type, pill buttons, and product sections laid
+out as copy-plus-proof rows.
+
+- **Ground and ink.** `#000` page, `#0c0c0e` raised, hairlines at 8% / 16%
+  white. Ink `#f5f4f2`, muted at 64%, faint at 40%.
+- **Accent.** Ember `#ff4f1f`, used for primary pills, eyebrows, checks and
+  the animated streaks — nothing else.
+- **Type.** Geist 450 for headlines (negative tracking), Geist for UI, Geist
+  Mono for data and eyebrows. Loaded from Google Fonts.
+- **Structure.** Announcement bar → sticky nav (Docs outlined pill, Sign in
+  ember pill to the portal) → hero with animated SVG streaks and the live
+  quote panel → stat band → hub diagram (integrations → router → venues) →
+  product rows (eyebrow, h2, two CTAs, check list, code window) → use-case
+  grid → pricing cards → closing CTA with an ember horizon → column footer.
+- **Contract kept.** Token names are overridden on `:root` inside
+  `index.html`, not in `tokens.css` (status/privacy still use system 4).
+  `#swap-panel` markup and all `.sp-*` / `.leg-*` / `.route*` rules are
+  unchanged, so `swap-panel.js` needed no edit. Responsive rules sit after
+  the panel rules on purpose — earlier, the panel's grid rules overrode them.

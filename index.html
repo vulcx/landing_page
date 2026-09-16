@@ -98,6 +98,17 @@
                  letter-spacing: var(--vx-track-label); text-transform: uppercase;
                  color: var(--vx-fg-muted); }
   .nav-links a:hover { color: var(--vx-fg); }
+  /* Nav CTAs: an outlined Docs pill beside a solid ember Sign in pill. */
+  .nav-cta { display: flex; align-items: center; gap: 0.7rem; }
+  .pill { display: inline-flex; align-items: center; justify-content: center; min-height: 40px;
+          padding: 0 1.45rem; border-radius: 999px; font-family: var(--vx-font-ui); font-size: 1.2rem;
+          font-weight: 500; white-space: nowrap; border: 1px solid transparent;
+          transition: background-color var(--vx-dur) var(--vx-ease), border-color var(--vx-dur) var(--vx-ease), color var(--vx-dur) var(--vx-ease); }
+  .pill-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
+  .pill-ghost:hover { border-color: var(--vx-fg); color: var(--vx-fg); }
+  .pill-ember { background: var(--vx-ember); color: #fff; }
+  .pill-ember:hover { background: #C43300; color: #fff; }
+  @media (max-width: 520px) { .nav-cta .pill-ghost { display: none; } }
 
   .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
          font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
@@ -518,15 +529,13 @@
       <span>VULCX</span>
     </a>
     <div class="nav-links">
-      <a href="https://docs.vulcx.xyz">Docs</a>
       <a href="#endpoints">Quote API</a>
       <a href="#fees">Fees</a>
       <a href="#self-host">Self-host</a>
-      <a href="https://portal.vulcx.xyz">Portal</a>
       <a href="/status/">Status</a>
       <a href="https://github.com/vulcx">GitHub</a>
     </div>
-    <a class="btn btn-primary" href="https://docs.vulcx.xyz">Start routing</a>
+    <div class="nav-cta"><a class="pill pill-ghost" href="https://docs.vulcx.xyz">Docs</a><a class="pill pill-ember" href="https://portal.vulcx.xyz">Sign in</a></div>
   </div>
 </nav>
 
@@ -668,7 +677,7 @@
     </div>
     <div>
       <div class="limit-row"><span class="limit-cost">1</span><span class="limit-ep">/quote · /price</span><span class="limit-note">an in-memory read</span></div>
-      <div class="limit-row"><span class="limit-cost">3</span><span class="limit-ep">/pools · /cpi/route-accounts</span><span class="limit-note">a corpus walk or an account set</span></div>
+      <div class="limit-row"><span class="limit-cost">3</span><span class="limit-ep">/cpi/route-accounts</span><span class="limit-note">an account set, no transaction</span></div>
       <div class="limit-row"><span class="limit-cost">5</span><span class="limit-ep">/swap · /instructions</span><span class="limit-note">routing plus construction</span></div>
     </div>
   </div>

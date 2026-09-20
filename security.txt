@@ -1,0 +1,16 @@
+# Vulcx security contact.
+#
+# If you have found a vulnerability in the API, the portal, or the on-chain
+# programs, tell us here before telling anyone else. We will acknowledge
+# within 72 hours. There is no bounty programme today; we will say so plainly
+# rather than leave you waiting on one.
+
+Contact: https://t.me/vulcxsupport
+Expires: 2027-09-21T00:00:00.000Z
+Preferred-Languages: en, vi
+Canonical: https://vulcx.xyz/.well-known/security.txt
+Policy: https://vulcx.xyz/privacy/
+
+# On-chain programs, in case the finding is in one of them:
+#   aggregator    Vu1cUxynmbPUsFqVz51FJJ2y69vX2yrkTS13ajomd9D  (Fogo mainnet)
+#   subscriptions Sub6S6TFFehq9QKvpBActTRYgopMcC3D56uVmjfNUFh  (Fogo mainnet)

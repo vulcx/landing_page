@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Not found — Vulcx</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/design/tokens.css">
+<style>
+  :root { --bg:#000; --fg:#f5f4f2; --muted:rgba(245,244,242,0.68); --ember:#ff4f1f; }
+  * { box-sizing: border-box; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; padding:2.4rem;
+         background:var(--bg); color:var(--fg);
+         font:400 1.6rem/1.6 ui-sans-serif,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:52rem; text-align:center; }
+  .code { font:500 1.2rem/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+          letter-spacing:.14em; text-transform:uppercase; color:var(--ember); }
+  h1 { font-size:clamp(2.8rem,6vw,4.4rem); line-height:1.1; margin:1.6rem 0 1rem; letter-spacing:-.02em; }
+  p { color:var(--muted); margin:0 0 2.4rem; }
+  .links { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
+  a.pill { display:inline-flex; align-items:center; min-height:44px; padding:0 1.8rem;
+           border-radius:999px; text-decoration:none; font-weight:500; }
+  a.solid { background:var(--ember); color:#10100f; }
+  a.ghost { border:1px solid rgba(245,244,242,0.28); color:var(--fg); }
+  a.pill:focus-visible { outline:2px solid var(--ember); outline-offset:3px; }
+</style>
+</head>
+<body>
+<main>
+  <p class="code">404</p>
+  <h1>That page isn’t here.</h1>
+  <p>It may have moved, or it may never have existed. The API is unaffected — check <a href="https://vulcx.xyz/status/" style="color:var(--ember)">status</a> if you are debugging a request.</p>
+  <div class="links">
+    <a class="pill solid" href="/">Home</a>
+    <a class="pill ghost" href="https://docs.vulcx.xyz">Documentation</a>
+    <a class="pill ghost" href="https://portal.vulcx.xyz">Portal</a>
+  </div>
+</main>
+</body>
+</html>

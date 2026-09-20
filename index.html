@@ -2,6 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>
+/* Frame guard. This page embeds a swap panel that asks a wallet to sign, so a
+   site that can iframe it can dress it up as something else and collect the
+   signature — clickjacking with funds at the end of it. The real fix is an
+   X-Frame-Options / CSP frame-ancestors response header, which GitHub Pages
+   cannot send (a <meta> CSP cannot carry frame-ancestors at all). Until the
+   apex sits behind something that can set headers, break out of the frame. */
+if (window.top !== window.self) { window.top.location = window.self.location; }
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Vulcx — Swap routing for Fogo</title>
 <meta name="description" content="Give Vulcx a token pair and an amount. It searches every pool on Fogo — up to five hops, splitting when that wins — and returns a signable transaction.">
@@ -217,6 +226,7 @@
   .window pre { margin: 0; padding: 1.6rem 1.8rem; font-family: var(--vx-font-mono); font-size: 1.1rem; line-height: 1.8;
                 color: var(--vx-fg); overflow-x: auto; font-variant-numeric: tabular-nums; }
   .c-key { color: var(--vx-fg-faint); } .c-str { color: #9ad7b8; } .c-num { color: #ffb38a; }
+  .c-com { color: #8a8a93; }
   .c-ember { color: var(--vx-ember); } .c-mint { color: var(--vx-success); }
 
   .fee-visual { padding: 1.4rem 1.8rem 1.8rem; }
@@ -755,19 +765,20 @@
       </div>
       <div class="window">
         <div class="window-bar"><i></i><i></i><i></i><span>GET /api/v1/quote</span></div>
-<pre><span class="c-key">$</span> curl <span class="c-str">"https://api.vulcx.xyz/api/v1/quote</span>
-    <span class="c-str">?inputMint=So111…112&amp;outputMint=uSd2…NoG</span>
-    <span class="c-str">&amp;amount=1000000000&amp;swapMode=ExactIn"</span>
+<pre><span class="c-com"># 10 USDC.s → FOGO. Amounts are base units: USDC.s has 6 decimals, FOGO 9.</span>
+<span class="c-key">$</span> curl <span class="c-str">"https://api.vulcx.xyz/api/v1/quote</span>
+    <span class="c-str">?inputMint=uSd2…NoG&amp;outputMint=So111…112</span>
+    <span class="c-str">&amp;amount=10000000&amp;swapMode=ExactIn"</span>
 
 {
-  <span class="c-key">"amountOut"</span>: <span class="c-str">"5867"</span>,
-  <span class="c-key">"priceImpactBps"</span>: <span class="c-num">0</span>,
+  <span class="c-key">"amountOut"</span>: <span class="c-str">"1515002609818"</span>,  <span class="c-com">// 1,515 FOGO</span>
+  <span class="c-key">"priceImpactBps"</span>: <span class="c-num">14</span>,
   <span class="c-key">"hopCount"</span>: <span class="c-num">1</span>,
   <span class="c-key">"routes"</span>: [{ <span class="c-key">"poolType"</span>: <span class="c-str">"Vortex"</span>, <span class="c-key">"percent"</span>: <span class="c-num">100</span> }],
   <span class="c-key">"quoteId"</span>: <span class="c-str">"q_4fc9e47d…"</span>,
   <span class="c-key">"validForMs"</span>: <span class="c-num">3000</span>,
   <span class="c-key">"firmForMs"</span>: <span class="c-num">400</span>,
-  <span class="c-key">"dataAgeMs"</span>: <span class="c-num">9</span>
+  <span class="c-key">"dataAgeMs"</span>: <span class="c-num">19</span>
 }</pre>
       </div>
     </div>
@@ -825,14 +836,14 @@
 <pre><span class="c-key">→</span> {
     <span class="c-key">"op"</span>: <span class="c-str">"subscribe"</span>,
     <span class="c-key">"pairs"</span>: [{
-      <span class="c-key">"in"</span>:  <span class="c-str">"So111…112"</span>,
-      <span class="c-key">"out"</span>: <span class="c-str">"uSd2…NoG"</span>,
-      <span class="c-key">"amount"</span>: <span class="c-str">"1000000000"</span>,
+      <span class="c-key">"in"</span>:  <span class="c-str">"uSd2…NoG"</span>,
+      <span class="c-key">"out"</span>: <span class="c-str">"So111…112"</span>,
+      <span class="c-key">"amount"</span>: <span class="c-str">"10000000"</span>,
       <span class="c-key">"exactIn"</span>: <span class="c-num">true</span>
     }]
   }
 
-<span class="c-key">←</span> { <span class="c-key">"type"</span>: <span class="c-str">"quote"</span>, <span class="c-key">"amountOut"</span>: <span class="c-str">"5867"</span>, … }
+<span class="c-key">←</span> { <span class="c-key">"type"</span>: <span class="c-str">"quote"</span>, <span class="c-key">"amountOut"</span>: <span class="c-str">"1515002609818"</span>, … }
 <span class="c-key">←</span> { <span class="c-key">"type"</span>: <span class="c-ember">"invalidate"</span>, <span class="c-key">"quoteId"</span>: <span class="c-str">"q_4fc9…"</span> }</pre>
       </div>
     </div>

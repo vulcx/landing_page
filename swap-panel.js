@@ -31,10 +31,15 @@
   var API_KEY = '';
   var WS_BASE = BASE.replace(/^http/, 'ws');
 
-  // Platform fee on swaps made here, in bps. /quote does not apply it, so
-  // applyPlatformFee() subtracts it client-side and the figure on screen
+  // Our own integrator fee on swaps made here, in bps. /quote does not apply
+  // it, so applyPlatformFee() subtracts it client-side and the figure on screen
   // matches what the built transaction delivers.
   var PLATFORM_FEE_BPS = 10;
+  // The protocol's own rate, set on chain and the same for every caller.
+  // /quote does not deduct it either, and it is not in the quote's fields, so
+  // it starts at the live value and is corrected from the first build response
+  // (/swap reports platformFeeBps) in case the on-chain rate ever moves.
+  var PROTOCOL_FEE_BPS = 15;
   // Vulcx's fee-collection wallet on Fogo. Its output-mint ATA is created
   // idempotently inside the swap transaction itself — no separate setup step.
   var REFERRER_WALLET = 'BjpJiZB7mPAJeaXwTVPWUSFtMZfW7yHiM1thBzorut6Q';
@@ -123,6 +128,36 @@
     return h;
   }
 
+  // The API's stable contract is body.code; body.error is prose that may be
+  // reworded. Branch on the code, and say what the reader can do about it.
+  var ERROR_TEXT = {
+    NO_ROUTE: 'No route for this pair right now.',
+    QUOTE_EXPIRED: 'That price expired — re-quoting.',
+    QUOTE_STALE: 'The price moved while you were confirming — re-quoting.',
+    SIM_SLIPPAGE: 'The price moved past your slippage setting. Raise it or try a smaller size.',
+    SIM_INSUFFICIENT: 'Not enough balance for this swap and its fees.',
+    FEE_CAP_EXCEEDED: 'The fee on this swap is above the allowed ceiling.',
+    RATE_LIMITED: 'Rate limited — keyless callers get a small budget. Backing off.',
+  };
+
+  function apiError(res, fallback) {
+    var body = res.body || {};
+    var raw = body.error;
+    var code = body.code || (raw && raw.code) || res.http;
+    var msg = ERROR_TEXT[code];
+    if (!msg && code === 'SIM_FAILED' && /AccountNotFound/i.test(JSON.stringify(raw || ''))) {
+      msg = 'This wallet holds no FOGO yet, so the swap cannot be simulated.';
+    }
+    if (!msg) {
+      var prose = typeof raw === 'string' ? raw : (raw && (raw.message || raw.code)) || fallback;
+      msg = prose.charAt(0).toUpperCase() + prose.slice(1) + '.';
+    }
+    var e = new Error(msg);
+    e.code = code;
+    e.http = res.http;
+    return e;
+  }
+
   function getQuote(params) {
     if (inflight) inflight.abort();
     var ac = new AbortController();
@@ -134,11 +169,7 @@
       })
       .then(function (res) {
         if (res.body && res.body.success === false) {
-          var raw = res.body.error;
-          var msg = typeof raw === 'string' ? raw : (raw && (raw.message || raw.code)) || 'Quote failed';
-          var e = new Error(msg.charAt(0).toUpperCase() + msg.slice(1) + '.');
-          e.code = (raw && raw.code) || res.http;
-          throw e;
+          throw apiError(res, 'Quote failed');
         }
         if (res.http >= 400) {
           var e2 = new Error('HTTP ' + res.http); e2.code = res.http; throw e2;
@@ -174,14 +205,14 @@
       return r.json().then(function (j) { return { http: r.status, body: j }; });
     }).then(function (res) {
       if (res.body && res.body.success === false) {
-        var raw = res.body.error;
-        var msg = typeof raw === 'string' ? raw : (raw && raw.message) || 'Swap build failed';
-        var e = new Error(msg.charAt(0).toUpperCase() + msg.slice(1) + '.');
-        e.code = res.http;
-        throw e;
+        throw apiError(res, 'Swap build failed');
       }
       if (res.http >= 400) { var e2 = new Error('HTTP ' + res.http); e2.code = res.http; throw e2; }
-      return res.body.data || res.body;
+      var data = res.body.data || res.body;
+      // The build is the only response carrying the protocol's own rate. Keep
+      // the display in step with the chain if it ever changes.
+      if (data && typeof data.platformFeeBps === 'number') PROTOCOL_FEE_BPS = data.platformFeeBps;
+      return data;
     }).finally(function () { clearTimeout(timer); });
   }
 
@@ -194,15 +225,33 @@
   // "min received" on the raw pre-fee basis, so the panel showed a floor 0.4%
   // under the quote while the user had 0.5% selected — a tighter window than the
   // one they chose, and two numbers that could not both be right.
+  //
+  // The two figures are not on the same basis. amountOut is gross: neither fee
+  // has been taken off it, so both come off here. otherAmountThreshold already
+  // has the protocol fee out of it, so only our own rate applies — taking the
+  // protocol rate off twice would show a floor below the one the program will
+  // actually enforce.
   function applyPlatformFee(q) {
-    if (!q || !PLATFORM_FEE_BPS) return;
-    var keep = BigInt(10000 - PLATFORM_FEE_BPS);
-    ['amountOut', 'otherAmountThreshold'].forEach(function (k) {
-      if (!q[k]) return;
+    if (!q) return;
+    // The program floors each fee on its own, so subtract them the same way
+    // rather than compounding one multiplication: on small amounts the two
+    // disagree by a base unit, and the figure on screen has to be the one the
+    // wallet will actually receive.
+    var cut = function (v, rates) {
+      if (!v) return v;
       try {
-        q[k] = (BigInt(q[k]) * keep / BigInt(10000)).toString();
-      } catch (e) { /* non-integer: leave it untouched rather than guess */ }
-    });
+        var gross = BigInt(v);
+        var net = gross;
+        rates.forEach(function (bps) {
+          if (bps) net -= gross * BigInt(bps) / BigInt(10000);
+        });
+        return net.toString();
+      } catch (e) {
+        return v; // non-integer: leave it untouched rather than guess
+      }
+    };
+    q.amountOut = cut(q.amountOut, [PROTOCOL_FEE_BPS, PLATFORM_FEE_BPS]);
+    q.otherAmountThreshold = cut(q.otherAmountThreshold, [PLATFORM_FEE_BPS]);
   }
 
   function scheduleRefresh(q) {
@@ -312,10 +361,6 @@
     // on every tick.
     merged.amountOut = msg.amountOut;
     merged.otherAmountThreshold = null;
-    try {
-      merged.otherAmountThreshold =
-        (BigInt(msg.amountOut) * BigInt(10000 - state.slippageBps) / BigInt(10000)).toString();
-    } catch (e) { /* leave null: render falls back to em dash */ }
 
     if (typeof msg.hops === 'number') merged.hopCount = msg.hops;
     if (typeof msg.priceImpactBps === 'number') {
@@ -329,6 +374,13 @@
     merged.quoteExpiresAtMs = msg.quoteExpiresAtMs || null;
 
     applyPlatformFee(merged);
+    // The floor is derived after the fees, not before: a push carries the gross
+    // amount, while REST's own threshold already has the protocol fee out of it.
+    // Deriving it here keeps both paths on the same net basis the program uses.
+    try {
+      merged.otherAmountThreshold =
+        (BigInt(merged.amountOut) * BigInt(10000 - state.slippageBps) / BigInt(10000)).toString();
+    } catch (e) { /* leave null: render falls back to em dash */ }
     state.quote = merged; state.status = 'quoted'; state.error = null;
     setStale(false);
     render();
@@ -363,6 +415,7 @@
     }).then(function (q) {
       if (mySeq !== state.seq) return;
       applyPlatformFee(q);
+      q.requestedAmountIn = base;
       state.quote = q; state.status = 'quoted'; state.error = null;
       render();
       scheduleRefresh(q);
@@ -370,12 +423,13 @@
     }).catch(function (err) {
       if (err.name === 'AbortError' || mySeq !== state.seq) return;
       state.status = 'error';
-      state.error = err.code === 429
-        ? 'Rate limited — keyless callers get a small budget. Backing off.'
+      var limited = err.http === 429 || err.code === 429 || err.code === 'RATE_LIMITED';
+      state.error = limited
+        ? ERROR_TEXT.RATE_LIMITED
         : (err.message || 'Could not reach the router.');
       render();
       clearTimeout(refreshT);
-      refreshT = setTimeout(function () { runQuote(true); }, err.code === 429 ? 6000 : 4000);
+      refreshT = setTimeout(function () { runQuote(true); }, limited ? 6000 : 4000);
     });
   }
 
@@ -628,10 +682,20 @@
 
     var sev = q && q.priceImpactSeverity;
     var loud = sev === 'high' || sev === 'extreme';
-    el.warn.hidden = !(loud && q.priceImpactWarning);
-    if (!el.warn.hidden) {
-      el.warn.textContent = q.priceImpactWarning;
-      el.warn.className = 'sp-warn sev-' + sev;
+    // A size the pools cannot absorb comes back quoted for less, and the build
+    // uses that smaller amount. Nothing else on screen says the trade shrank.
+    var partial = q && q.amountIn && q.requestedAmountIn && q.amountIn !== q.requestedAmountIn;
+    if (partial) {
+      el.warn.hidden = false;
+      el.warn.textContent = 'Only ' + fromBaseUnits(q.amountIn, decimalsOf(state.inMint)) + ' ' +
+        symbolOf(state.inMint) + ' can fill right now — the rest has no route.';
+      el.warn.className = 'sp-warn sev-high';
+    } else {
+      el.warn.hidden = !(loud && q.priceImpactWarning);
+      if (!el.warn.hidden) {
+        el.warn.textContent = q.priceImpactWarning;
+        el.warn.className = 'sp-warn sev-' + sev;
+      }
     }
 
     el.sig.hidden = !(q && q.quoteSignature);

@@ -206,9 +206,8 @@
       <span>VULCX</span>
     </a>
     <div class="nav-links">
-      <a href="/#endpoints">Quote API</a>
+      <a href="/#api">Quote API</a>
       <a href="/#fees">Fees</a>
-      <a href="/#self-host">Self-host</a>
       <a href="/status/" aria-current="page">Status</a>
       <a href="https://github.com/vulcx">GitHub</a>
     </div>
@@ -296,12 +295,13 @@
       // /health shipped with no Access-Control-Allow-Origin — it was registered
       // above the CORS middleware and gin binds a route's chain at registration
       // time — so the browser refuses to hand us the response and this row was
-      // permanently red while the API was perfectly healthy. Until the fix
-      // (route-engine branch swap-canary) is deployed, a TypeError here is that
-      // bug, not an outage, so say so instead of publishing a false red.
-      browserBlocked: 'browser was not allowed to read the response — /health sends no '
-        + 'Access-Control-Allow-Origin (fixed on route-engine branch swap-canary, not yet '
-        + 'deployed). Not an outage: check with curl https://api.vulcx.xyz/health',
+      // permanently red while the API was perfectly healthy. /health has sent
+      // the header since the swap-canary deploy, so a TypeError here now means
+      // the visitor's own network blocked the call: a proxy, an extension or a
+      // captive portal. Still not an outage, so keep saying how to check.
+      browserBlocked: 'your browser was not allowed to read the response — usually a proxy, '
+        + 'an extension or an offline network, not an outage. Check with '
+        + 'curl https://api.vulcx.xyz/health',
       run: function (signal) {
         return fetch(API + '/health', { signal: signal, cache: 'no-store' })
           .then(function (r) {

@@ -83,6 +83,7 @@
     tx: { status: 'idle', signature: null, error: null },
   };
   var debounceT = null, refreshT = null, tickT = null, inflight = null;
+  var ANNOUNCE_MS = 900;       // quiet period before a settled result is read out
 
   /* ---------- amounts ---------- */
 
@@ -603,16 +604,18 @@
 
   function tokenPicker(side) {
     var mint = side === 'in' ? state.inMint : state.outMint;
-    return '<button type="button" class="sp-token" data-side="' + side + '">' +
+    return '<button type="button" class="sp-token" data-side="' + side + '"' +
+      ' aria-expanded="false" aria-controls="sp-list-' + side + '"' +
+      ' aria-label="' + (side === 'in' ? 'Token to pay: ' : 'Token to receive: ') + symbolOf(mint) + '">' +
       logoImg(mint, 'sp-token-logo') +
       '<span>' + symbolOf(mint) + '</span>' +
       '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" ' +
-        'stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>' +
+        'stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>' +
       '</button>' +
-      '<div class="sp-tokenlist" data-side="' + side + '" hidden>' +
+      '<div class="sp-tokenlist" id="sp-list-' + side + '" data-side="' + side + '" hidden>' +
         tokens.map(function (t) {
           return '<button type="button" data-mint="' + t.mint + '" data-side="' + side + '"' +
-            (t.mint === mint ? ' class="on"' : '') + '>' +
+            (t.mint === mint ? ' class="on" aria-current="true"' : '') + '>' +
             logoImg(t.mint, 'sp-token-logo') + '<span>' + t.symbol + '</span></button>';
         }).join('') +
       '</div>';
@@ -705,12 +708,64 @@
     }
     if (!q) { el.firm.hidden = true; el.fresh.style.transform = 'scaleX(0)'; }
     renderAction();
+    announceState(q, outHuman);
+  }
+
+  /* ---------- screen-reader announcements ----------
+     One polite live region. render() runs on every refresh and every stream
+     tick, so reading each one out would never stop talking. Only a change a
+     reader would act on is announced — pair, amount, route composition, an
+     error, the transaction's status — and only once the panel has been quiet
+     for ANNOUNCE_MS, so a burst of renders collapses into one message. */
+  var spoken = { quote: '', tx: '' }, pending = {}, announceT = null;
+
+  function queueAnnounce(slot, key, text) {
+    if (spoken[slot] === key) return;
+    spoken[slot] = key;
+    pending[slot] = text;
+    clearTimeout(announceT);
+    announceT = setTimeout(function () {
+      var msg = [pending.quote, pending.tx].filter(Boolean).join(' ');
+      pending = {};
+      if (el.live && msg) el.live.textContent = msg;
+    }, ANNOUNCE_MS);
+  }
+
+  function announceState(q, outHuman) {
+    if (state.status === 'error') {
+      queueAnnounce('quote', 'e|' + state.error, state.error);
+    } else if (q && state.status === 'quoted') {
+      var routes = q.routes || [];
+      var legs = routes.map(function (r) { return venueName(r.poolType) + ' ' + r.percent + '%'; });
+      var key = [state.inMint, state.outMint, q.requestedAmountIn || q.amountIn,
+                 legs.join(','), el.warn.hidden ? '' : el.warn.textContent].join('|');
+      var text = 'Quote: ' + state.amount + ' ' + symbolOf(state.inMint) + ' for about ' +
+        outHuman + ' ' + symbolOf(state.outMint) + '.' +
+        (legs.length ? ' Route: ' + legs.join(', ') + '.' : '') +
+        (el.warn.hidden ? '' : ' ' + el.warn.textContent);
+      queueAnnounce('quote', key, text);
+    }
+
+    var t = state.tx;
+    var TX_TEXT = {
+      waiting: 'Waiting for rate budget.',
+      signing: 'Building the transaction.',
+      confirming: 'Sign the transaction in your wallet.',
+      landing: 'Submitted to Fogo, waiting for confirmation.',
+      sent: 'Swap confirmed.',
+    };
+    if (t.status === 'error') queueAnnounce('tx', 'e|' + t.error, t.error);
+    else if (TX_TEXT[t.status]) queueAnnounce('tx', t.status + '|' + (t.signature || ''), TX_TEXT[t.status]);
+    else if (state.wallet) queueAnnounce('tx', 'w|' + state.wallet.address, state.wallet.label + ' connected.');
+    else spoken.tx = '';
   }
 
   function renderSlip() {
     if (!el.slip) return;
     [].forEach.call(el.slip.querySelectorAll('button[data-bps]'), function (b) {
-      b.classList.toggle('on', parseInt(b.dataset.bps, 10) === state.slippageBps);
+      var on = parseInt(b.dataset.bps, 10) === state.slippageBps;
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
 
@@ -751,14 +806,22 @@
       }
     }
 
-    // wallet picker
+    // wallet picker. Built once per open, not on every render: a quote refresh
+    // rewriting it would throw keyboard focus off the button the user is on.
     if (state.picking) {
-      el.picker.hidden = false;
-      el.picker.innerHTML = '<span class="mono-mini">Choose a wallet</span>' +
-        state.picking.map(function (w2, i) {
-          return '<button type="button" data-idx="' + i + '">' + w2.name + '</button>';
-        }).join('');
-    } else { el.picker.hidden = true; el.picker.innerHTML = ''; }
+      if (el.picker._list !== state.picking) {
+        el.picker._list = state.picking;
+        el.picker.innerHTML = '<span class="mono-mini" id="sp-picker-title">Choose a wallet</span>' +
+          state.picking.map(function (w2, i) {
+            return '<button type="button" data-idx="' + i + '">' + w2.name + '</button>';
+          }).join('');
+      }
+      if (el.picker.hidden) {
+        el.picker.hidden = false;
+        var first = el.picker.querySelector('button');
+        if (first) first.focus();
+      }
+    } else { el.picker.hidden = true; el.picker.innerHTML = ''; el.picker._list = null; }
 
     // transaction status line
     var msg = '', cls = 'sp-txmsg';
@@ -801,14 +864,14 @@
             '<input class="sp-amt" id="sp-in" inputmode="decimal" autocomplete="off" spellcheck="false" value="1">' +
             '<span class="sp-pick" id="sp-pick-in"></span></label>' +
           '<button class="sp-flip" id="sp-flip" type="button" aria-label="Swap direction">' +
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v18M7 21l-4-4M17 21V3M17 3l4 4"/></svg>' +
+            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3v18M7 21l-4-4M17 21V3M17 3l4 4"/></svg>' +
           '</button>' +
           '<label class="sp-row"><span class="sp-lab">You receive</span>' +
             '<input class="sp-amt" id="sp-out" readonly placeholder="0">' +
             '<span class="sp-pick" id="sp-pick-out"></span></label>' +
         '</div>' +
         '<p class="sp-warn" id="sp-warn" hidden></p>' +
-        '<div class="legs" id="sp-legs"></div>' +
+        '<div class="legs" id="sp-legs" role="group" aria-label="Route"></div>' +
         '<div class="rule"></div>' +
         '<div class="route-meta" id="sp-meta"></div>' +
         '<div class="sp-actions">' +
@@ -821,8 +884,9 @@
           '</div>' +
           '<button class="btn btn-primary sp-go" id="sp-go" type="button"></button>' +
         '</div>' +
-        '<div class="sp-picker" id="sp-picker" hidden></div>' +
+        '<div class="sp-picker" id="sp-picker" role="group" aria-labelledby="sp-picker-title" hidden></div>' +
         '<p class="sp-txmsg" id="sp-txmsg" hidden></p>' +
+        '<p class="sr" id="sp-live" aria-live="polite" aria-atomic="true"></p>' +
       '</div>';
 
     el.panel = document.getElementById('sp-root');
@@ -839,6 +903,7 @@
     el.picker = document.getElementById('sp-picker');
     el.txmsg  = document.getElementById('sp-txmsg');
     el.walletChip = document.getElementById('sp-wallet');
+    el.live   = document.getElementById('sp-live');
 
     el.go.addEventListener('click', function () {
       if (!state.wallet) connectWallet(); else doSwap();
@@ -854,6 +919,7 @@
       var b = e.target.closest('button[data-idx]');
       if (!b) return;
       finishConnect(state.picking[parseInt(b.dataset.idx, 10)]);
+      el.go.focus();   // the picker goes away once the wallet answers
     });
     VulcxWallet.onChange(function () { if (!state.wallet) renderAction(); });
     renderSlip();
@@ -869,6 +935,7 @@
         var wasHidden = open.hidden;
         closeLists();
         open.hidden = !wasHidden;
+        toggle.setAttribute('aria-expanded', wasHidden ? 'true' : 'false');
         return;
       }
       var opt = e.target.closest('.sp-tokenlist button[data-mint]');
@@ -884,7 +951,23 @@
       }
       closeLists();
       renderPickers();
+      focusToggle(side);   // the option that had focus was just re-rendered away
       runQuote(false);
+    });
+    // Escape closes whichever popup is open and hands focus back to its trigger.
+    host.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      var list = host.querySelector('.sp-tokenlist:not([hidden])');
+      if (list) {
+        e.preventDefault();
+        closeLists();
+        focusToggle(list.dataset.side);
+      } else if (state.picking) {
+        e.preventDefault();
+        state.picking = null;
+        renderAction();
+        el.go.focus();
+      }
     });
     document.addEventListener('click', function (e) {
       if (!e.target.closest('.sp-pick')) closeLists();
@@ -914,6 +997,12 @@
 
   function closeLists() {
     [].forEach.call(document.querySelectorAll('.sp-tokenlist'), function (n) { n.hidden = true; });
+    [].forEach.call(document.querySelectorAll('.sp-token'), function (b) { b.setAttribute('aria-expanded', 'false'); });
+  }
+
+  function focusToggle(side) {
+    var b = document.querySelector('.sp-token[data-side="' + side + '"]');
+    if (b) b.focus();
   }
 
   function renderPickers() {

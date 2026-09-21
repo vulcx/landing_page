@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Security — Vulcx</title>
+<meta name="description" content="The Vulcx programs on Fogo, their upgrade authorities and audit status, what the routing API can and cannot do, and how to report a vulnerability.">
+<link rel="canonical" href="https://vulcx.xyz/security/">
+<meta name="robots" content="index, follow">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/design/tokens.css">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body { margin: 0;
+    background: var(--vx-bg);
+    color: var(--vx-fg);
+    font-family: var(--vx-font-ui);
+    font-size: var(--vx-text-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    display: flex; flex-direction: column; min-height: 100vh; }
+
+  a { color: var(--vx-fg); text-decoration: underline; text-underline-offset: 0.18em;
+      transition: color var(--vx-dur) var(--vx-ease); }
+  a:hover { color: var(--vx-ember); }
+
+  h1, h2 { font-family: var(--vx-font-display); font-weight: 600;
+           letter-spacing: var(--vx-track-tight); margin: 0; color: var(--vx-fg); }
+  h1 { font-size: var(--vx-text-h1); line-height: 0.98;
+       font-stretch: var(--vx-wdth-display); }
+  h2 { font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+       letter-spacing: var(--vx-track-label); text-transform: uppercase;
+       color: var(--vx-fg-muted); margin-top: var(--vx-space-6); margin-bottom: var(--vx-space-2); }
+
+  .shell { width: 100%; max-width: 104rem; margin: 0 auto;
+           padding-inline: var(--vx-space-5); }
+
+  /* ---- nav / footer: same as status/index.html ---- */
+  .nav-in { display: flex; align-items: center; justify-content: space-between;
+            gap: var(--vx-space-4); padding-block: var(--vx-space-2); }
+  .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); }
+  .nav-links a { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+                 letter-spacing: var(--vx-track-label); text-transform: uppercase;
+                 color: var(--vx-fg-muted); text-decoration: none; }
+  .nav-links a:hover { color: var(--vx-fg); }
+  /* Nav CTAs: an outlined Docs pill beside a solid ember Sign in pill. */
+  .nav-cta { display: flex; align-items: center; gap: 0.7rem; }
+  .pill { display: inline-flex; align-items: center; justify-content: center; min-height: 40px;
+          padding: 0 1.45rem; border-radius: 999px; font-family: var(--vx-font-ui); font-size: 1.2rem;
+          font-weight: 500; white-space: nowrap; border: 1px solid transparent;
+          transition: background-color var(--vx-dur) var(--vx-ease), border-color var(--vx-dur) var(--vx-ease), color var(--vx-dur) var(--vx-ease); }
+  .pill-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
+  .pill-ghost:hover { border-color: var(--vx-fg); color: var(--vx-fg); }
+  .pill-ember { background: var(--vx-ember); color: #fff; }
+  .pill-ember:hover { background: #C43300; color: #fff; }
+  @media (max-width: 520px) { .nav-cta .pill-ghost { display: none; } }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+         font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+         letter-spacing: var(--vx-track-label); text-transform: uppercase; text-decoration: none;
+         border-radius: var(--vx-r-chip); padding: 0.95rem 1.7rem; min-height: 44px;
+         border: 1px solid transparent; cursor: pointer; white-space: nowrap;
+         transition: background-color var(--vx-dur) var(--vx-ease),
+                     border-color var(--vx-dur) var(--vx-ease); }
+  .btn-ghost { border-color: var(--vx-hairline-firm); color: var(--vx-fg); }
+  .btn-ghost:hover { border-color: var(--vx-ember); color: var(--vx-ember); }
+
+  footer { border-top: 1px solid var(--vx-hairline);
+           padding-block: var(--vx-space-4); margin-top: auto; }
+  .foot-in { display: flex; align-items: center; justify-content: space-between;
+             gap: var(--vx-space-3); flex-wrap: wrap; }
+  .foot-in a, .foot-in span { font-family: var(--vx-font-mono);
+    font-size: var(--vx-text-label); letter-spacing: var(--vx-track-label);
+    text-transform: uppercase; color: var(--vx-fg-muted); text-decoration: none; }
+  .foot-in a:hover { color: var(--vx-ember); }
+  .foot-links { display: flex; gap: var(--vx-space-3); flex-wrap: wrap; }
+
+  /* ---- page ---- */
+  main { padding-block: var(--vx-space-7) var(--vx-section); }
+  .doc { max-width: 68ch; }
+  .updated { font-family: var(--vx-font-mono); font-size: var(--vx-text-label);
+             letter-spacing: var(--vx-track-label); text-transform: uppercase;
+             color: var(--vx-fg-faint); margin: var(--vx-space-3) 0 var(--vx-space-5); }
+  .doc p, .doc li { color: var(--vx-fg-muted); }
+  .doc strong { color: var(--vx-fg); font-weight: 600; }
+  .doc ul { padding-left: 1.2rem; margin: 0.4rem 0 0; }
+  .doc li + li { margin-top: 0.35rem; }
+  .doc code, td code { font-family: var(--vx-font-mono); font-size: 0.92em; color: var(--vx-fg);
+                       overflow-wrap: anywhere; }
+  .lead { color: var(--vx-fg); font-size: var(--vx-text-lead, 1.15em); }
+  .small { font-size: 0.92em; }
+
+  /* ---- programs table ---- */
+  .table-wrap { overflow-x: auto; margin-block: var(--vx-space-3) var(--vx-space-2);
+                border: 1px solid var(--vx-hairline); border-radius: var(--vx-r-panel);
+                -webkit-overflow-scrolling: touch; }
+  .table-wrap:focus-visible, pre:focus-visible { outline: 2px solid var(--vx-ember); outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; min-width: 46rem; font-size: 0.95em; }
+  th, td { text-align: left; vertical-align: top; padding: 0.85rem 1.1rem;
+           border-bottom: 1px solid var(--vx-hairline); }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  thead th { font-family: var(--vx-font-mono); font-size: var(--vx-text-label); font-weight: 500;
+             letter-spacing: var(--vx-track-label); text-transform: uppercase; color: var(--vx-fg-muted); }
+  tbody th { font-weight: 500; color: var(--vx-fg-muted); white-space: nowrap; width: 11rem; }
+  td { color: var(--vx-fg); width: 40%; }
+  .addr, .mono { font-family: var(--vx-font-mono); font-size: 0.9em; }
+  .addr { overflow-wrap: anywhere; word-break: break-all; }
+  .note { color: var(--vx-fg-faint); font-size: 0.9em; }
+
+  pre { overflow-x: auto; background: var(--vx-bg-inset); border: 1px solid var(--vx-hairline);
+        border-radius: var(--vx-r-panel); padding: 1rem 1.2rem; margin: var(--vx-space-2) 0;
+        font-size: 0.85em; line-height: 1.55; max-width: 100%; }
+  pre code { background: none; white-space: pre; }
+
+  @media (max-width: 760px) {
+    h1 { font-size: 3rem; }
+    .shell { padding-inline: 1.3rem; }
+    .nav-links { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+<link rel="stylesheet" href="/design/dark.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <div class="shell nav-in">
+    <a class="brand" href="/">
+      <svg width="24" height="24" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#FF4F1F" fill-rule="evenodd" d="M4 7h11l9 16.2L33 7h11L24 43ZM8.4 7h2.6l11 19.8-1.4 2.4ZM39.6 7H37L26 26.8l1.4 2.4Z"/>
+      </svg>
+      <span>Vulcx</span>
+    </a>
+    <div class="nav-links">
+      <a href="/#api">Quote API</a>
+      <a href="/#fees">Fees</a>
+      <a href="/status/">Status</a>
+      <a href="https://github.com/vulcx">GitHub</a>
+    </div>
+    <div class="nav-cta"><a class="pill pill-ghost" href="https://docs.vulcx.xyz">Docs</a><a class="pill pill-ember" href="https://portal.vulcx.xyz">Sign in</a></div>
+  </div>
+</nav>
+
+<main class="shell" id="main" tabindex="-1">
+  <div class="doc">
+    <h1>Security</h1>
+    <p class="updated">Last verified on chain 21 September 2026</p>
+
+    <p class="lead">
+      This page lists the programs Vulcx runs on Fogo, who can change them, what has and has not been
+      audited, and how to report a problem. Where something is weak, we say so here instead of leaving
+      you to find out.
+    </p>
+
+    <h2>In short</h2>
+    <ul>
+      <li>Two programs run on Fogo mainnet: the <strong>aggregator</strong>, which executes routed swaps,
+        and <strong>subscriptions</strong>, which bills paid Portal plans.</li>
+      <li>Both are <strong>upgradeable</strong>, and each is controlled by <strong>one key</strong>, not a
+        multisig.</li>
+      <li>The aggregator has <strong>no third-party audit</strong> and its source is not public.</li>
+      <li>The subscriptions program is a public fork of the Solana Foundation program, which Cantina
+        audited. Our changes to it have <strong>not</strong> been audited.</li>
+      <li>Neither deployed binary can yet be matched to its source by a reproducible
+        (<code>solana-verify</code>) build.</li>
+    </ul>
+
+    <h2>Deployed programs</h2>
+    <p>
+      Values read from <code>https://mainnet.fogo.io</code> with <code>solana program show</code> and
+      <code>solana program dump</code> on 21 September 2026.
+    </p>
+  </div>
+
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Vulcx programs deployed on Fogo mainnet">
+    <table>
+      <thead>
+        <tr><th scope="col"></th><th scope="col">Aggregator</th><th scope="col">Subscriptions</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Program ID</th>
+          <td><a class="addr" href="https://fogoscan.com/account/Vu1cUxynmbPUsFqVz51FJJ2y69vX2yrkTS13ajomd9D">Vu1cUxynmbPUsFqVz51FJJ2y69vX2yrkTS13ajomd9D</a></td>
+          <td><a class="addr" href="https://fogoscan.com/account/Sub6S6TFFehq9QKvpBActTRYgopMcC3D56uVmjfNUFh">Sub6S6TFFehq9QKvpBActTRYgopMcC3D56uVmjfNUFh</a></td></tr>
+        <tr><th scope="row">What it does</th>
+          <td>Executes a routed swap across Fogo venues and takes the protocol and integrator fees.</td>
+          <td>Holds Portal plans and subscriptions; lets a listed puller collect a plan's price each period.</td></tr>
+        <tr><th scope="row">Upgrade authority</th>
+          <td><a class="addr" href="https://fogoscan.com/account/Ct1DVKNkhZV5qvXqu5Hr7rN9NfVDWpVQFxaUqHjhfpG2">Ct1DVKNkhZV5qvXqu5Hr7rN9NfVDWpVQFxaUqHjhfpG2</a><br><span class="note">One keypair. Also the protocol admin.</span></td>
+          <td><a class="addr" href="https://fogoscan.com/account/Diqk84jysNnf5DAcbXKgyGanVtrvB5gHmB6wRwC8QD23">Diqk84jysNnf5DAcbXKgyGanVtrvB5gHmB6wRwC8QD23</a><br><span class="note">One keypair, used for nothing else.</span></td></tr>
+        <tr><th scope="row">ProgramData</th>
+          <td><span class="addr">HFtJ1wcBxFMpGPYSiufDJRJFG5qEM3q5eHojjbD435x7</span></td>
+          <td><span class="addr">EMhMLzbRWLPA6y63KyQwzJ7KBiiGakrT9yGPcbXuDqv9</span></td></tr>
+        <tr><th scope="row">Last deployed slot</th>
+          <td><span class="mono">747248004</span> <span class="note">(15 Sep 2026)</span></td>
+          <td><span class="mono">748275835</span> <span class="note">(15 Sep 2026)</span></td></tr>
+        <tr><th scope="row">Executable hash</th>
+          <td><span class="addr">bb62113f983bcd1cf867e9d5b0351b95275cf623a531e793db53ebb5bb78fc7c</span></td>
+          <td><span class="addr">497b41d5863f8932b9824972a28aae1fcedd20c5166fc2122453c8b303d88d58</span></td></tr>
+        <tr><th scope="row">Source</th>
+          <td>Private. Not published yet.</td>
+          <td>Public: <a href="https://github.com/vulcx/subscriptions/tree/fogo">vulcx/subscriptions</a>, branch <code>fogo</code>.</td></tr>
+        <tr><th scope="row">Third-party audit</th>
+          <td>None.</td>
+          <td>Upstream program: Cantina. Vulcx's changes: none.</td></tr>
+        <tr><th scope="row">Reproducible build</th>
+          <td>No.</td>
+          <td>No.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="doc">
+    <p class="small">
+      The executable hash is the SHA-256 of the dumped program with its trailing zero padding removed,
+      which is how <code>solana-verify get-program-hash</code> computes it. It tells you whether the
+      code has changed since this page was written. It does not prove which source the code was built
+      from; that needs a reproducible build, and neither program has one yet. The deploy dates come from
+      our deploy records, because the public RPC no longer serves blocks that old.
+    </p>
+
+    <h2>Audits</h2>
+    <p>
+      <strong>Aggregator: no third-party audit has been done.</strong> After the current deploy we dumped
+      the program and compared it with a local build of the commit we meant to ship (<code>4ce6b4e</code>):
+      the code bytes are identical. That is our own check. It is not an audit, and because the source is
+      private you cannot repeat it.
+    </p>
+    <p>
+      <strong>Subscriptions: the upstream code is audited; our fork adds unaudited changes.</strong> The
+      program is a fork of the
+      <a href="https://github.com/solana-foundation/subscriptions">Solana Foundation subscriptions program</a>
+      at release <code>program-v0.5.0</code>. Cantina audited that code; the reports are in the repo's
+      <a href="https://github.com/vulcx/subscriptions/tree/fogo/audits"><code>audits/</code></a> folder.
+      Our <code>fogo</code> branch changes two things, and no auditor has reviewed either change:
+    </p>
+    <ul>
+      <li>the program ID. The program hardcodes its own address, so the upstream binary cannot run at
+        ours;</li>
+      <li>how new accounts are funded for rent. Fogo's rent parameters differ from Solana's, and the
+        upstream code would under-fund accounts on Fogo. The fix adds one helper file and changes a few
+        call sites (about 120 lines in <code>program/</code>).</li>
+    </ul>
+    <p>
+      To see the whole difference, compare <code>program-v0.5.0</code> with <code>fogo</code> in the fork.
+    </p>
+
+    <h2>Upgrade authority</h2>
+    <p>
+      Both programs are upgradeable. Whoever holds a program's upgrade authority can replace its code at
+      any time, with no delay and no second signer.
+    </p>
+    <ul>
+      <li><strong>Aggregator.</strong> The authority <code>Ct1DVK…fpG2</code> is a single keypair. The
+        same key is <code>admin</code> in the program's on-chain config account
+        (<code>3YBXPNkeGoCr6CNpDQ67iF3jYQfcwMPgLSoov3NvwF11</code>), so it can also change the protocol
+        fee (15 bps today; the program caps protocol plus integrator fees at 100 bps), change the fee
+        recipient, and turn swaps off.</li>
+      <li><strong>Subscriptions.</strong> The authority <code>Diqk84…QD23</code> is a separate single
+        keypair that does nothing else. We kept it apart from the aggregator key on purpose, for the
+        reason below.</li>
+    </ul>
+    <p>
+      <strong>Why there is no multisig yet.</strong> On Solana, a program's upgrade authority would
+      normally be a Squads multisig. On Fogo mainnet today, Squads v4 is not deployed. Squads v3 is
+      deployed, but it is upgradeable, and its upgrade authority is a single wallet
+      (<code>ADSmJz…4Hc8</code>) set at genesis. We don't know who holds that wallet. A v3 multisig would
+      therefore be only as safe as that unknown key, which is why we have not moved to one. We will
+      revisit this when Fogo has a multisig whose own code cannot be changed by one party.
+    </p>
+    <p><strong>What this means for you:</strong></p>
+    <ul>
+      <li><strong>Swaps.</strong> The aggregator holds no standing approval over your tokens. It can only
+        move what you sign for in a given transaction. A malicious upgrade could therefore affect swaps
+        signed after it, but it could not reach tokens you never put into a Vulcx transaction.</li>
+      <li><strong>Subscriptions.</strong> Subscribing makes an address controlled by the program (a PDA) the
+        SPL Token delegate on your USDC.s account with an unlimited allowance (<code>u64::MAX</code>). That is how the upstream
+        program works. The current code only lets a plan's listed puller collect up to the plan's price
+        each period. A malicious upgrade could remove that limit and move USDC.s from any subscriber's
+        account without a new signature. This is why the subscriptions key matters more than any other
+        key we hold. Cancelling a subscription does not remove the approval; to remove it, revoke the
+        delegate on your USDC.s account in your wallet.</li>
+    </ul>
+
+    <h2>What the API can and cannot do</h2>
+    <ul>
+      <li><strong>It builds transactions; it never signs them.</strong> The routing API at api.vulcx.xyz
+        returns unsigned transactions or instructions. Your wallet signs them, and Vulcx never receives
+        your private keys.</li>
+      <li><strong>It can still return a bad transaction.</strong> A bug or a compromised server could
+        return a transaction you did not intend to sign. Check what your wallet shows before approving,
+        including the programs the transaction calls and the amounts. A Vulcx swap calls the aggregator
+        program above.</li>
+      <li><strong>Fees and slippage are enforced on chain.</strong> The program rejects protocol plus
+        integrator fees above 100 bps, and it checks your minimum output after fees are taken. The API
+        can quote whatever it likes, but a swap that breaks either rule fails on chain.</li>
+      <li><strong>API keys and rate limits are off-chain only.</strong> They control access to the API.
+        They play no part in the on-chain programs.</li>
+      <li><strong>Billing uses one server key.</strong> A server-held puller key collects subscription
+        payments. The program only lets it pull up to a plan's price each period, and only into the
+        treasury account the plan names. If that key leaked, an attacker could trigger the normal
+        per-period charge into that treasury, but could not take more or send it anywhere else.</li>
+    </ul>
+
+    <h2>Reporting a vulnerability</h2>
+    <p>
+      Contact us on Telegram at <a href="https://t.me/vulcxsupport">t.me/vulcxsupport</a> before telling
+      anyone else. This is the same contact as our
+      <a href="/.well-known/security.txt">security.txt</a>. Please don't post exploitable details in a
+      public channel or issue.
+    </p>
+    <p><strong>In scope:</strong> the two programs above, the routing API (api.vulcx.xyz), the Portal
+      (portal.vulcx.xyz) and this website. <strong>Out of scope:</strong> the venues a route passes
+      through, the Fogo runtime and its RPC nodes, and wallets.</p>
+    <p><strong>Please include:</strong></p>
+    <ul>
+      <li>what is affected: the program ID, endpoint or page;</li>
+      <li>steps to reproduce, or a transaction signature or simulation that shows the issue;</li>
+      <li>what you think an attacker could do with it;</li>
+      <li>how you would like to be credited, if at all.</li>
+    </ul>
+    <p>
+      <strong>What to expect:</strong> we will acknowledge your report within 72 hours and tell you
+      plainly whether we agree it is a problem. We are a small team, so fixes take as long as they
+      take, and we will keep you told. There is no bug bounty programme today.
+    </p>
+
+    <h2>Check it yourself</h2>
+    <p>These commands only read from the chain. They need the Solana CLI:</p>
+<pre tabindex="0" aria-label="Commands to verify the program facts on this page"><code>solana program show Vu1cUxynmbPUsFqVz51FJJ2y69vX2yrkTS13ajomd9D --url https://mainnet.fogo.io
+solana program show Sub6S6TFFehq9QKvpBActTRYgopMcC3D56uVmjfNUFh --url https://mainnet.fogo.io
+
+# executable hash, if you have solana-verify installed
+solana-verify get-program-hash Vu1cUxynmbPUsFqVz51FJJ2y69vX2yrkTS13ajomd9D --url https://mainnet.fogo.io</code></pre>
+    <p>
+      If the authority, slot or hash you get differs from this page, the program has changed since we last
+      updated it. Please tell us.
+    </p>
+  </div>
+</main>
+
+<footer>
+  <div class="shell foot-in">
+    <span>Vulcx · Swap routing for Fogo</span>
+    <div class="foot-links">
+      <a href="/">Home</a>
+      <a href="https://docs.vulcx.xyz">Docs</a>
+      <a href="https://portal.vulcx.xyz">Portal</a>
+      <a href="/status/">Status</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/security/">Security</a>
+      <a href="https://github.com/vulcx" rel="me">GitHub</a>
+      <a href="https://x.com/vulcx_xyz" rel="me">X</a>
+      <a href="https://t.me/vulcxsupport" rel="me">Telegram</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

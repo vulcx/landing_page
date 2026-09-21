@@ -447,6 +447,11 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
             padding-block: 0.8rem; }
   .sp.is-error .sp-msg { color: var(--vx-ember); }
   #swap-panel .legs { min-height: 7rem; }
+  /* Reserve the mounted panel's height, so the page does not jump when
+     swap-panel.js fills the empty host after the token list arrives. Set a
+     little under the measured height at each breakpoint (39.5 / 47 / 55-64rem
+     with one leg), so the reserve never leaves a gap under a short quote. */
+  #swap-panel.route { min-height: 39rem; }
   #swap-panel .leg-fill { transition: width var(--vx-dur) var(--vx-ease); }
 
   a.leg-kind { color: var(--vx-fg-faint); text-decoration: none;
@@ -518,6 +523,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
     .legs::before, .legs::after, .leg::before, .leg::after { display: none; }
     .hub .hub-wide { display: none; }
     .hub-narrow { display: block !important; }
+    #swap-panel.route { min-height: 46rem; }
   }
   @media (max-width: 720px) {
     :root { font-size: 15px; }
@@ -540,6 +546,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
     .nav-cta { margin-left: 0; }
     .foot-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .route { padding: 1.3rem; }
+    #swap-panel.route { min-height: 55rem; }
     .token-badge { width: 3rem; height: 3rem; font-size: 0.8rem; }
     .leg-venue { width: 5.6rem; font-size: 0.85rem; }
     .sp-row { flex-wrap: wrap; }
@@ -605,6 +612,8 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 </head>
 <body>
 
+<a class="skip" href="#main">Skip to content</a>
+
 <div class="announce"><b>New:</b> API keys, usage and earnings are self-serve in the Vulcx portal.<a href="https://portal.vulcx.xyz">Open the portal →</a></div>
 
 <nav class="nav" id="nav">
@@ -632,6 +641,8 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
     </div>
   </div>
 </nav>
+
+<main id="main" tabindex="-1">
 
 <header class="hero">
   <svg class="streaks" viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
@@ -678,7 +689,9 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
       </div>
     </div>
     <div class="hero-panel">
-      <div id="swap-panel" class="route"></div>
+      <div id="swap-panel" class="route">
+        <noscript><p class="sp-msg">The live swap needs JavaScript. Turn it on to get a quote and swap here — or call the API directly, below.</p></noscript>
+      </div>
     </div>
   </div>
 </header>
@@ -766,7 +779,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
       </div>
       <div class="window">
         <div class="window-bar"><i></i><i></i><i></i><span>GET /api/v1/quote</span></div>
-<pre><span class="c-com"># 10 USDC.s → FOGO. Amounts are base units: USDC.s has 6 decimals, FOGO 9.</span>
+<pre tabindex="0" role="region" aria-label="Example: GET /api/v1/quote"><span class="c-com"># 10 USDC.s → FOGO. Amounts are base units: USDC.s has 6 decimals, FOGO 9.</span>
 <span class="c-key">$</span> curl <span class="c-str">"https://api.vulcx.xyz/api/v1/quote</span>
     <span class="c-str">?inputMint=uSd2…NoG&amp;outputMint=So111…112</span>
     <span class="c-str">&amp;amount=10000000&amp;swapMode=ExactIn"</span>
@@ -801,7 +814,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
       </div>
       <div class="window">
         <div class="window-bar"><i></i><i></i><i></i><span>POST /api/v1/swap</span></div>
-<pre>{
+<pre tabindex="0" role="region" aria-label="Example: POST /api/v1/swap">{
   <span class="c-key">"quoteId"</span>: <span class="c-str">"q_4fc9e47d…"</span>,
   <span class="c-key">"firm"</span>: <span class="c-num">true</span>
 }
@@ -834,7 +847,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
       </div>
       <div class="window">
         <div class="window-bar"><i></i><i></i><i></i><span>wss://api.vulcx.xyz/api/v1/stream</span></div>
-<pre><span class="c-key">→</span> {
+<pre tabindex="0" role="region" aria-label="Example: wss://api.vulcx.xyz/api/v1/stream"><span class="c-key">→</span> {
     <span class="c-key">"op"</span>: <span class="c-str">"subscribe"</span>,
     <span class="c-key">"pairs"</span>: [{
       <span class="c-key">"in"</span>:  <span class="c-str">"uSd2…NoG"</span>,
@@ -902,7 +915,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
       <h2>Start free. Scale when your volume does.</h2>
       <p>Limits are per account and shared by every key. Paid plans are billed in USDC.s on-chain, and the protocol fees your swaps pay are credited against each charge.</p>
     </div>
-    <div class="plan-table-wrap">
+    <div class="plan-table-wrap" tabindex="0" role="region" aria-label="Plan comparison">
       <table class="plan-table">
         <thead><tr><th scope="col">Plan</th><th scope="col">Price</th><th scope="col">Units / sec</th><th scope="col">Burst</th><th scope="col">API keys</th><th scope="col">Stream connections</th><th scope="col"><span class="sr">Choose</span></th></tr></thead>
         <tbody>
@@ -971,6 +984,8 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
   </div>
 </section>
 
+</main>
+
 <footer>
   <div class="shell">
     <div class="foot-grid">
@@ -985,7 +1000,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
       </div>
       <div class="foot-col"><h4>Product</h4><a href="#api">Quote &amp; swap</a><a href="#stream">Streaming</a><a href="#fees">Fees</a><a href="https://portal.vulcx.xyz/pricing/">Pricing</a></div>
       <div class="foot-col"><h4>Developers</h4><a href="https://docs.vulcx.xyz">Docs</a><a href="https://docs.vulcx.xyz/llms.txt">llms.txt</a><a href="https://www.npmjs.com/package/@vulcx/sdk">SDK</a><a href="https://github.com/vulcx">GitHub</a></div>
-      <div class="foot-col"><h4>Account</h4><a href="https://portal.vulcx.xyz">Portal</a><a href="/status/">Status</a><a href="/privacy/">Privacy</a></div>
+      <div class="foot-col"><h4>Account</h4><a href="https://portal.vulcx.xyz">Portal</a><a href="/status/">Status</a><a href="/privacy/">Privacy</a><a href="/security/">Security</a></div>
       <div class="foot-col"><h4>Community</h4><a href="https://x.com/vulcx_xyz" rel="me">X</a><a href="https://t.me/vulcxsupport" rel="me">Telegram</a><a href="https://fogo.io">Fogo</a></div>
     </div>
     <div class="foot-bottom"><span>© 2026 Vulcx</span><span>Self-hosting: one binary, coming later — <a href="https://t.me/vulcxsupport">ask to be told</a></span></div>
@@ -1000,14 +1015,31 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
     var toggle = document.getElementById('nav-toggle');
     var links = document.getElementById('nav-links');
     if (!toggle || !links) return;
-    function closeMenu() { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); }
+    // Below 1000px the links are a drawer. Closed, it is inert; open, the page
+    // behind it is, so Tab stays inside the nav. Above it, none of this applies.
+    var mobile = window.matchMedia('(max-width: 1000px)');
+    var behind = document.querySelectorAll('.skip, .announce, main, footer');
+    function sync() {
+      var open = links.classList.contains('open');
+      var hide = mobile.matches && !open;
+      links.inert = hide;
+      if (hide) links.setAttribute('aria-hidden', 'true'); else links.removeAttribute('aria-hidden');
+      [].forEach.call(behind, function (n) { n.inert = mobile.matches && open; });
+    }
+    function closeMenu() { links.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); sync(); }
     toggle.addEventListener('click', function () {
       var open = links.classList.toggle('open');
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      sync();
+      if (open) links.querySelector('a').focus();
     });
     links.addEventListener('click', function (e) { if (e.target.tagName === 'A') closeMenu(); });
     document.addEventListener('click', function (e) { if (!links.contains(e.target) && !toggle.contains(e.target)) closeMenu(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && links.classList.contains('open')) { closeMenu(); toggle.focus(); }
+    });
     window.addEventListener('resize', closeMenu);
+    sync();
   })();
 </script>
 <script src="token-meta.js" defer></script>

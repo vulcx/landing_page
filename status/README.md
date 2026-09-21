@@ -62,12 +62,16 @@ header. A browser therefore cannot read it, the fetch rejects, and **the API row
 permanently red while the API was perfectly healthy** — the page's own worst failure
 mode, shipped by the page's most trusted check.
 
-The engine-side fix is on route-engine branch **`swap-canary`** (builds the CORS
-middleware before the health routes and attaches it explicitly; pinned by
-`internal/http/health_cors_test.go`). It is not deployed yet, and neither is
-`/health/swap` — until it is, the API row reads `unverifiable` with the reason, and
-the Swaps row reads `not monitored`. Both rows correct themselves the moment the
-deploy lands; nothing here needs a second edit.
+The engine-side fix (the `swap-canary` work: CORS middleware built before the health
+routes and attached explicitly, pinned by `internal/http/health_cors_test.go`) is
+**deployed**, and so is `/health/swap`. Verified against production 2026-09-21:
+`/health` returns `Access-Control-Allow-Origin: *`, and `/health/swap` answers with a
+real FOGO/USDC route built every 60 seconds. Both rows read green in normal operation.
+
+The `unverifiable` state and its `browserBlocked` reason stay in the page on purpose.
+If a visitor's own network — a proxy, an extension, a captive portal — blocks the
+request, the fetch still rejects with a bare `TypeError`, and the page should say
+"we could not check from here" rather than report an outage that is not happening.
 
 ## Recording an incident
 

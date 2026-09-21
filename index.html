@@ -17,6 +17,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <link rel="canonical" href="https://vulcx.xyz/">
 
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#000000">
@@ -28,7 +29,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <meta property="og:url" content="https://vulcx.xyz/">
 <meta property="og:title" content="Vulcx — Swap routing for Fogo">
 <meta property="og:description" content="Give Vulcx a token pair and an amount. It searches every pool on Fogo — up to five hops, splitting when that wins — and returns a signable transaction.">
-<meta property="og:image" content="https://vulcx.xyz/assets/og.png?v=2">
+<meta property="og:image" content="https://vulcx.xyz/assets/og.png?v=3">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Vulcx — the swap router for every app, bot and wallet on Fogo.">
@@ -38,7 +39,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <meta name="twitter:creator" content="@vulcx_xyz">
 <meta name="twitter:title" content="Vulcx — Swap routing for Fogo">
 <meta name="twitter:description" content="Give Vulcx a token pair and an amount. It searches every pool on Fogo — up to five hops, splitting when that wins — and returns a signable transaction.">
-<meta name="twitter:image" content="https://vulcx.xyz/assets/og.png?v=2">
+<meta name="twitter:image" content="https://vulcx.xyz/assets/og.png?v=3">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -136,7 +137,7 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
   .nav.scrolled { border-bottom-color: var(--vx-hairline); }
   .nav-in { display: flex; align-items: center; justify-content: space-between; gap: var(--vx-space-4); height: 5.4rem; }
   .brand { display: flex; align-items: center; gap: 0.6rem; color: var(--vx-fg); }
-  .brand span { font-family: var(--vx-font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: 0.02em; }
+  .brand span { font-family: var(--vx-font-display); font-size: 1.5rem; font-weight: 600; letter-spacing: -0.03em; }
   .brand:hover { color: var(--vx-fg); }
   .nav-links { display: flex; align-items: center; gap: var(--vx-space-4); margin-left: auto; }
   .nav-links a { font-size: 1.22rem; color: var(--vx-fg-muted); }
@@ -609,8 +610,8 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
 <nav class="nav" id="nav">
   <div class="shell nav-in">
     <a class="brand" href="/">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path fill="#FF4F1F" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/>
+      <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#FF4F1F" fill-rule="evenodd" d="M4 7h11l9 16.2L33 7h11L24 43ZM8.4 7h2.6l11 19.8-1.4 2.4ZM39.6 7H37L26 26.8l1.4 2.4Z"/>
       </svg>
       <span>Vulcx</span>
     </a>
@@ -975,7 +976,9 @@ if (window.top !== window.self) { window.top.location = window.self.location; }
     <div class="foot-grid">
       <div class="foot-brand">
         <a class="brand" href="/">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path fill="#FF4F1F" d="M2.4 3.8 12 21.1 21.6 3.8h-4.8L12 12.5 7.2 3.8Z"/></svg>
+          <svg width="22" height="22" viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#FF4F1F" fill-rule="evenodd" d="M4 7h11l9 16.2L33 7h11L24 43ZM8.4 7h2.6l11 19.8-1.4 2.4ZM39.6 7H37L26 26.8l1.4 2.4Z"/>
+      </svg>
           <span>Vulcx</span>
         </a>
         <p>Swap routing for Fogo. Every pool, one call.</p>

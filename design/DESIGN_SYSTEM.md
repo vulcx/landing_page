@@ -19,6 +19,24 @@ Constant across all four: the fluid `vw` root, `tabular-nums` on every number,
 one easing curve, and the token *names* — so `swap-panel.js` has never had to
 change when the system did.
 
+## The mark (2026-09-22)
+
+Direction B, "Lanes": a solid ember V with a lane cut into each arm that
+closes before the point — a split route merging back into one output. Picked
+over a converging-node V, a forge-stamp tile and a crossing-bars X.
+
+- **One source.** `brand/build.py` holds the path and generates everything:
+  `favicon.ico`/`.svg`, `assets/icon-512.png`, `assets/apple-touch-icon.png`,
+  `assets/og.png`, `brand/avatar-400.png` (GitHub, X), `brand/x-header-1500x500.png`,
+  `brand/lockup-on-{dark,light}.svg`, the portal's `app/icon.svg`/`favicon.ico`/`apple-icon.png`
+  and the docs' `logo/*.svg`/`favicon.svg`. Change the mark there and re-run; never edit an output.
+- **Small sizes** (16–32 px) use the bare V silhouette; the slits are sub-pixel below ~24 px.
+- **Wordmark** "Vulcx" — sentence case, never VULCX — Geist 600, tracking −0.03em,
+  mark and cap height centred together. Outlined in the SVG lockups so they
+  render where web fonts do not (Mintlify, READMEs).
+- **Colour** ember `#FF4F1F` on `#000`; text `#F5F4F2` on dark, `#111` on light.
+  The mark is always ember; there is no gradient version.
+
 ---
 
 ## 1. Reference audit

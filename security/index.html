@@ -291,8 +291,9 @@
         program works. The current code only lets a plan's listed puller collect up to the plan's price
         each period. A malicious upgrade could remove that limit and move USDC.s from any subscriber's
         account without a new signature. This is why the subscriptions key matters more than any other
-        key we hold. Cancelling a subscription does not remove the approval; to remove it, revoke the
-        delegate on your USDC.s account in your wallet.</li>
+        key we hold. Cancelling your last subscription in the portal revokes the approval in the same
+        transaction. An older cancellation left it in place; the portal's Billing page has a
+        <em>Revoke approval</em> button for that, or revoke the delegate in your wallet.</li>
     </ul>
 
     <h2>What the API can and cannot do</h2>
